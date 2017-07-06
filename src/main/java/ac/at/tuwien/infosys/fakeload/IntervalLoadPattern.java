@@ -1,33 +1,15 @@
 package ac.at.tuwien.infosys.fakeload;
 
-
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by martensigwart on 29.06.17.
+ * Created by martensigwart on 06.07.17.
  */
-public class SimpleLoadPattern extends AbstractLoadPattern {
+public class IntervalLoadPattern extends AbstractLoadPattern {
 
 
-    /**
-     * Duration of the load pattern
-     */
-    private long duration;
+    IntervalLoadPattern() {
 
-    /**
-     * CPU load in percent
-     */
-    private int cpuLoad;
-
-    /**
-     * Memory load in bytes
-     */
-    private long memoryLoad;
-
-
-
-    SimpleLoadPattern() {
-        super();
     }
 
     @Override
@@ -59,7 +41,5 @@ public class SimpleLoadPattern extends AbstractLoadPattern {
     public boolean contains(LoadPattern pattern) {
         return false;
     }
-
-
 
 }
