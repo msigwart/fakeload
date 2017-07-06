@@ -3,6 +3,8 @@ package ac.at.tuwien.infosys.fakeload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by martensigwart on 30.06.17.
  */
@@ -14,7 +16,7 @@ public class SomeClass {
         log.info("Entered someMethod()");
 
         // Execute FakeLoad
-        FakeLoad fakeLoad = new FakeLoad("100ms", "50%", "1024m");
+        FakeLoad fakeLoad = new FakeLoad(100, "50%", "1024m");
         fakeLoad.execute();
 
         // some code
@@ -24,10 +26,10 @@ public class SomeClass {
     public void someOtherMethod() {
         log.info("Entered someOtherMethod()");
 
-        // Create LoadPattern
-        LoadPattern pattern = new LoadPattern();
-        pattern.addLoad("60s", "30%", "2048k");
-        pattern.addIntervalLoad("200ms", "10s", "50%", "1024m");
+        // Create SimpleLoadPattern
+        SimpleLoadPattern pattern = new SimpleLoadPattern();
+        pattern.addLoad(60, TimeUnit.SECONDS, "30%", "2048k");
+        pattern.addIntervalLoad(200, TimeUnit.MILLISECONDS, 10, TimeUnit.SECONDS, "50%", "1024m");
 
         // Execute FakeLoad
         FakeLoad fakeLoad = new FakeLoad(pattern);
