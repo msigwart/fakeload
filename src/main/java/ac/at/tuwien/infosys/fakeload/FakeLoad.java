@@ -4,6 +4,7 @@ import ac.at.tuwien.infosys.fakeload.internal.FakeLoadDispatcher;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Represents the main API for the FakeLoad Library.
@@ -20,7 +21,7 @@ public final class FakeLoad {
 
 
     public FakeLoad() {
-        load = new LoadPattern();
+        load = LoadPatterns.createLoadPattern();
     }
 
     public FakeLoad(LoadPattern pattern) {
@@ -28,13 +29,13 @@ public final class FakeLoad {
     }
 
     public FakeLoad(long duration, String... loads) {
-        load = new LoadPattern();
+        load = LoadPatterns.createLoadPattern();
         load.addLoad(duration, loads);
     }
 
-    public FakeLoad(String duration, String... loads) {
-        load = new LoadPattern();
-        load.addLoad(duration, loads);
+    public FakeLoad(long duration, TimeUnit unit, String... loads) {
+        load = LoadPatterns.createLoadPattern();
+        load.addLoad(duration, unit, loads);
     }
 
 
@@ -46,13 +47,13 @@ public final class FakeLoad {
     }
 
     public void setLoad(long duration, String... loads) {
-        this.load = new LoadPattern();
+        this.load = LoadPatterns.createLoadPattern();
         load.addLoad(duration, loads);
     }
 
-    public void setLoad(String duration, String... loads) {
-        this.load = new LoadPattern();
-        load.addLoad(duration, loads);
+    public void setLoad(long duration, TimeUnit unit, String... loads) {
+        this.load = LoadPatterns.createLoadPattern();
+        load.addLoad(duration, unit, loads);
     }
 
 
