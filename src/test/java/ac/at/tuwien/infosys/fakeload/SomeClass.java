@@ -15,8 +15,8 @@ public class SomeClass {
     public void someMethod() {
         log.info("Entered someMethod()");
 
-        // Execute FakeLoad
-        FakeLoad fakeLoad = new FakeLoad(100, "50%", "1024m");
+        // Execute AbstractFakeLoad
+        FakeLoad fakeLoad = FakeLoads.createLoad(100, "50%", "1024m");
         fakeLoad.execute();
 
         // some code
@@ -26,17 +26,45 @@ public class SomeClass {
     public void someOtherMethod() {
         log.info("Entered someOtherMethod()");
 
-        // Create SimpleLoadPattern
-        SimpleLoadPattern pattern = new SimpleLoadPattern();
+        // Create LoadPattern with Builder pattern
+        LoadPattern pattern = new LoadPatternBuilder().build();
         pattern.addLoad(60, TimeUnit.SECONDS, "30%", "2048k");
         pattern.addIntervalLoad(200, TimeUnit.MILLISECONDS, 10, TimeUnit.SECONDS, "50%", "1024m");
 
-        // Execute FakeLoad
-        FakeLoad fakeLoad = new FakeLoad(pattern);
-        fakeLoad.execute();
+        // Execute AbstractFakeLoad
+//        AbstractFakeLoad fakeLoad = new AbstractFakeLoad(pattern);
+//        fakeLoad.execute();
+//
+//        pattern = new LoadPatternBuilder(10, TimeUnit.SECONDS)
+//                .cpuLoad(50).memoryLoad(600).build();
+//
+//        fakeLoad.setLoad(pattern);
+//        fakeLoad.execute();
+//
+//
+//        // Create LoadPattern with Factory pattern
+//        pattern = LoadPatterns.createLoadPattern();
+//        pattern.addLoad(60, TimeUnit.SECONDS, "30%", "2048k");
+//        pattern.addIntervalLoad(200, TimeUnit.MILLISECONDS, 10, TimeUnit.SECONDS, "50%", "1024m");
+//
+//        // Execute AbstractFakeLoad
+//        fakeLoad = new AbstractFakeLoad(pattern);
+//        fakeLoad.execute();
 
         // some code
         log.info("Leaving someOtherMethod()...");
+    }
+
+    public void yetAnotherMethod() {
+        log.info("Entered yetAnotherMethod()");
+
+        FakeLoad fakeLoad = new MutableFakeLoad()
+                .withCpuLoad(80)
+                .withMemoryLoad(300, MemoryUnit.MB);
+
+        fakeLoad.execute();
+
+        log.info("Leaving yetAnotherMethod()");
     }
 
 }

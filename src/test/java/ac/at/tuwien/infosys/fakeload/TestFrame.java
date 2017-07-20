@@ -1,7 +1,11 @@
 package ac.at.tuwien.infosys.fakeload;
 
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by martensigwart on 30.06.17.
@@ -13,11 +17,21 @@ public class TestFrame {
     public static void main(String... args) {
         log.info("Welcome to FakeLoad - TestFrame");
 
-        SomeClass someClass = new SomeClass();
+        AbstractFoo parent = new ImmutableFoo();
+        AbstractFoo child = new ImmutableFoo();
+//        AbstractFoo parent = new MutableFoo();
+//        AbstractFoo child = new MutableFoo();
 
-        someClass.someMethod();
+        AbstractFoo foo = child.add(parent);
+        System.out.println(foo);
+        AbstractFoo foo1 = child.add(foo);
+        System.out.println(foo1);
 
-        someClass.someOtherMethod();
+//        SomeClass someClass = new SomeClass();
+//
+//        someClass.someMethod();
+//
+//        someClass.someOtherMethod();
 
     }
 

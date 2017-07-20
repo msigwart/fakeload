@@ -5,6 +5,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Test class to test the functionality of the {@Link LoadPattern} interface.
  *
@@ -49,6 +51,13 @@ public class LoadPatternTest {
         grandParent.addLoad(parent);
         greatGrandParent.addLoad(grandParent);
     }
+
+
+//    @Test(expected = IllegalArgumentException.class)
+//    public void testCreation() {
+//        LoadPattern pattern = new Simp
+//        LoadPattern pattern = LoadPatterns.createLoadPattern(-100, TimeUnit.MILLISECONDS, "someloads");
+//    }
 
 
 
