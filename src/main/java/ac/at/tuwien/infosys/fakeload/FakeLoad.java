@@ -1,78 +1,44 @@
 package ac.at.tuwien.infosys.fakeload;
 
-import ac.at.tuwien.infosys.fakeload.internal.FakeLoadDispatcher;
-
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Represents the main API for the FakeLoad Library.
- * If a client wants to simulate a certain system load he/she should instantiate a FakeLoad object
- * and then, subsequently, call that object's execute method.
+ * If clients want to create 'fake' system load they should instantiate a FakeLoad object with the desired system load
+ * instructions and then, subsequently, call that object's execute method, which simulates the specified system loads.
  *
  * @Author Marten Sigwart
- * @version 1.0
+ * @since 1.0
  */
-public final class FakeLoad {
+public interface FakeLoad {
 
+    void execute();
 
-    private LoadPattern load;
+    FakeLoad withDuration(long duration, TimeUnit unit);
 
+    FakeLoad withCpuLoad(int cpuLoad);
 
-    public FakeLoad() {
-        load = LoadPatterns.createLoadPattern();
-    }
+    FakeLoad withMemoryLoad(long amount, MemoryUnit unit);
 
-    public FakeLoad(LoadPattern pattern) {
-        load = pattern;
-    }
+    FakeLoad withDiskIOLoad(long diskIOLoad);
 
-    public FakeLoad(long duration, String... loads) {
-        load = LoadPatterns.createLoadPattern();
-        load.addLoad(duration, loads);
-    }
+    FakeLoad withNetIOLoad(long netIOLoad);
 
-    public FakeLoad(long duration, TimeUnit unit, String... loads) {
-        load = LoadPatterns.createLoadPattern();
-        load.addLoad(duration, unit, loads);
-    }
+    FakeLoad addLoad(FakeLoad load);
 
+    FakeLoad addLoads(Collection<FakeLoad> loads);
 
+    boolean contains(FakeLoad load);
 
+    Collection<FakeLoad> getLoads();
 
+    void simulateCpu();
 
-    public void setLoad(LoadPattern pattern) {
-        this.load = pattern;
-    }
+    void simulateMemory();
 
-    public void setLoad(long duration, String... loads) {
-        this.load = LoadPatterns.createLoadPattern();
-        load.addLoad(duration, loads);
-    }
+    void simulateNetIO();
 
-    public void setLoad(long duration, TimeUnit unit, String... loads) {
-        this.load = LoadPatterns.createLoadPattern();
-        load.addLoad(duration, unit, loads);
-    }
-
-
-    /**
-     *  This method submits the load pattern of the FakeLoad instance to the {@Link FakeLoadDispatcher} singleton instance.
-     *  The method blocks until the requested load simulation completes.
-     */
-    public void execute() {
-        try {
-
-            // wait until simulation completes
-            Future<String> future = FakeLoadDispatcher.getInstance().submitLoad(load);
-            String response = future.get();
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-    }
+    void simulateDiskIO();
 
 }
