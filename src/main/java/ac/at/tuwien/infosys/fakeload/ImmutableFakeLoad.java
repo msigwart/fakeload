@@ -36,12 +36,12 @@ public final class ImmutableFakeLoad extends AbstractFakeLoad {
         this.loads = Collections.unmodifiableList(loads);
     }
 
-    public ImmutableFakeLoad() {
+    ImmutableFakeLoad() {
         this(0L, TimeUnit.MILLISECONDS, 0,
                 0, 0L, 0L, 0L, new ArrayList<>());
     }
 
-    public ImmutableFakeLoad(long duration, TimeUnit unit) {
+    ImmutableFakeLoad(long duration, TimeUnit unit) {
         this(duration, unit, 0,
                 0, 0L, 0L, 0L, new ArrayList<>());
     }
@@ -49,6 +49,11 @@ public final class ImmutableFakeLoad extends AbstractFakeLoad {
     @Override
     public FakeLoad withDuration(long duration, TimeUnit unit) {
         return new ImmutableFakeLoad(duration, unit, repetitions, cpuLoad, memoryLoad, diskIOLoad, netIOLoad, loads);
+    }
+
+    @Override
+    public FakeLoad repeat(int noOfRepetitions) {
+        return null;
     }
 
     @Override

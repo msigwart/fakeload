@@ -92,12 +92,5 @@ public interface FakeLoad {
 
     Collection<FakeLoad> getLoads();
 
-    void simulateCpu();
-
-    void simulateMemory();
-
-    void simulateNetIO();
-
-    void simulateDiskIO();
 
 }

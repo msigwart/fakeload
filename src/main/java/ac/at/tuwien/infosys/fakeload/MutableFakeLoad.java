@@ -21,11 +21,11 @@ public final class MutableFakeLoad extends AbstractFakeLoad {
     private List<FakeLoad> loads;
 
 
-    public MutableFakeLoad() {
+    MutableFakeLoad() {
         this.loads = new ArrayList<>();
     }
 
-    public MutableFakeLoad(long duration, TimeUnit unit) {
+    MutableFakeLoad(long duration, TimeUnit unit) {
         this();
         this.duration = duration;
         this.unit = unit;
@@ -37,6 +37,11 @@ public final class MutableFakeLoad extends AbstractFakeLoad {
         this.duration = duration;
         this.unit = unit;
         return this;
+    }
+
+    @Override
+    public FakeLoad repeat(int noOfRepetitions) {
+        return null;
     }
 
     @Override
