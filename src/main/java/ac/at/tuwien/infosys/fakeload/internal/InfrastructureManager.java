@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * This class manages the simulation infrastructure of the fake load library.
@@ -27,12 +28,11 @@ public class InfrastructureManager {
     /** Executor service to run the infrastructure */
     private static ExecutorService executorService;
 
+    /** Represents the connection to the infrastructure */
+    private static final Connection connection = new Connection();
 
     /** Indicates whether or not the infrastructure is running */
     private boolean isRunning;
-
-    /** Represents the connection to the infrastructure */
-    private Connection connection;
 
     /** Number of available processors */
     private final int noOfCores;
@@ -44,7 +44,6 @@ public class InfrastructureManager {
     InfrastructureManager() {
         log.debug("Creating singleton instance...");
         this.isRunning = false;
-        this.connection = new Connection();
         this.simulatorThreads = new ArrayList<>();
         this.noOfCores = Runtime.getRuntime().availableProcessors();
     }
@@ -94,10 +93,12 @@ public class InfrastructureManager {
         }
 
         // Create memory simulation thread
+        LoadControl memoryControl = simulationControl.getMemoryControl();
+        simulatorThreads.add(Simulators.createMemorySimulator(memoryControl));
 
         // Execute simulation threads
         try {
-            executorService.invokeAll(simulatorThreads);
+            List<Future<Void>> futures = executorService.invokeAll(simulatorThreads);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

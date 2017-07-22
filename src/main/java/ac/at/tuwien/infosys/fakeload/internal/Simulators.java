@@ -1,5 +1,7 @@
 package ac.at.tuwien.infosys.fakeload.internal;
 
+import java.util.concurrent.Callable;
+
 /**
  * Factory and utility methods for simulator classes defined in this package.
  *
@@ -17,5 +19,9 @@ public final class Simulators {
     // Suppress default constructor for non-instantiability
     private Simulators() {
         throw new AssertionError();
+    }
+
+    public static Callable<Void> createMemorySimulator(LoadControl memoryControl) {
+        return new MemorySimulator(memoryControl);
     }
 }
