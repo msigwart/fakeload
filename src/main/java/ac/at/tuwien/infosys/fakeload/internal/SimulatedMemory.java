@@ -1,6 +1,5 @@
 package ac.at.tuwien.infosys.fakeload.internal;
 
-import common.enums.WorkloadUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +58,4 @@ public class SimulatedMemory {
         usedMemory.clear();
     }
 
-    public void allocateMemory(Integer value, WorkloadUnit unit) {
-
-    }
 }
