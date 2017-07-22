@@ -17,21 +17,21 @@ public class TestFrame {
     public static void main(String... args) {
         log.info("Welcome to FakeLoad - TestFrame");
 
-        AbstractFoo parent = new ImmutableFoo();
-        AbstractFoo child = new ImmutableFoo();
+//        AbstractFoo parent = new ImmutableFoo();
+//        AbstractFoo child = new ImmutableFoo();
 //        AbstractFoo parent = new MutableFoo();
 //        AbstractFoo child = new MutableFoo();
 
-        AbstractFoo foo = child.add(parent);
-        System.out.println(foo);
-        AbstractFoo foo1 = child.add(foo);
-        System.out.println(foo1);
+//        AbstractFoo foo = child.add(parent);
+//        System.out.println(foo);
+//        AbstractFoo foo1 = child.add(foo);
+//        System.out.println(foo1);
 
-//        SomeClass someClass = new SomeClass();
-//
-//        someClass.someMethod();
-//
-//        someClass.someOtherMethod();
+        SomeClass someClass = new SomeClass();
+
+        someClass.someMethod();
+
+        someClass.someOtherMethod();
 
     }
 
