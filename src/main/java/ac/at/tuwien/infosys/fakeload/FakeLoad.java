@@ -41,7 +41,7 @@ public interface FakeLoad {
      * @param unit the time unit of the duration
      * @return returns the FakeLoad object containing the provided parameters.
      */
-    FakeLoad withDuration(long duration, TimeUnit unit);        // name alternative: for(10, TimeUnit.SECONDS)
+    FakeLoad lasting(long duration, TimeUnit unit);        // name alternative: for(10, TimeUnit.SECONDS)
 
     /**
      * Returns a {@code FakeLoad} instance with the number of specified repetitions set.
@@ -93,4 +93,15 @@ public interface FakeLoad {
     Collection<FakeLoad> getLoads();
 
 
+    int getCpuLoad();
+
+    long getMemoryLoad();
+
+    long getDiskIOLoad();
+
+    long getNetIOLoad();
+
+    long getDuration();
+
+    TimeUnit getTimeUnit();
 }

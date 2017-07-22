@@ -33,7 +33,7 @@ public final class MutableFakeLoad extends AbstractFakeLoad {
 
 
     @Override
-    public FakeLoad withDuration(long duration, TimeUnit unit) {
+    public FakeLoad lasting(long duration, TimeUnit unit) {
         this.duration = duration;
         this.unit = unit;
         return this;
@@ -88,6 +88,36 @@ public final class MutableFakeLoad extends AbstractFakeLoad {
     @Override
     public Collection<FakeLoad> getLoads() {
         return loads;
+    }
+
+    @Override
+    public int getCpuLoad() {
+        return 0;
+    }
+
+    @Override
+    public long getMemoryLoad() {
+        return 0;
+    }
+
+    @Override
+    public long getDiskIOLoad() {
+        return 0;
+    }
+
+    @Override
+    public long getNetIOLoad() {
+        return 0;
+    }
+
+    @Override
+    public long getDuration() {
+        return 0;
+    }
+
+    @Override
+    public TimeUnit getTimeUnit() {
+        return null;
     }
 
 }

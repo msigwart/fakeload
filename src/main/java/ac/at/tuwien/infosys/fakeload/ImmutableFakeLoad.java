@@ -47,7 +47,7 @@ public final class ImmutableFakeLoad extends AbstractFakeLoad {
     }
 
     @Override
-    public FakeLoad withDuration(long duration, TimeUnit unit) {
+    public FakeLoad lasting(long duration, TimeUnit unit) {
         return new ImmutableFakeLoad(duration, unit, repetitions, cpuLoad, memoryLoad, diskIOLoad, netIOLoad, loads);
     }
 
@@ -106,6 +106,36 @@ public final class ImmutableFakeLoad extends AbstractFakeLoad {
     @Override
     public Collection<FakeLoad> getLoads() {
         return loads;
+    }
+
+    @Override
+    public int getCpuLoad() {
+        return cpuLoad;
+    }
+
+    @Override
+    public long getMemoryLoad() {
+        return memoryLoad;
+    }
+
+    @Override
+    public long getDiskIOLoad() {
+        return diskIOLoad;
+    }
+
+    @Override
+    public long getNetIOLoad() {
+        return netIOLoad;
+    }
+
+    @Override
+    public long getDuration() {
+        return duration;
+    }
+
+    @Override
+    public TimeUnit getTimeUnit() {
+        return unit;
     }
 
 
