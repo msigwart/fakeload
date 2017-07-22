@@ -6,6 +6,7 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/../visp-loadsimulation/visp-loadsimulator/pom.xml" />
         <option value="$PROJECT_DIR$/../visp-loadsimulation/visp-loadsimulator-common/pom.xml" />
+        <option value="$PROJECT_DIR$/../dummyproject/pom.xml" />
       </list>
     </option>
   </component>

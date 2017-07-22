@@ -7,6 +7,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="dummyproject" />
         <module name="fakeload-api" />
         <module name="loadsimulator" />
         <module name="loadsimulator (1) (at.tuwien.infosys.visp)" />
@@ -14,6 +15,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">
+      <module name="dummyproject" target="1.5" />
       <module name="fakeload-api" target="1.8" />
       <module name="loadsimulator" target="1.5" />
       <module name="loadsimulator (1) (at.tuwien.infosys.visp)" target="1.8" />
