@@ -11,11 +11,16 @@ package ac.at.tuwien.infosys.fakeload;
  */
 public final class FakeLoads {
 
+    /**
+     * Creates a new empty {@code FakeLoad} instance.
+     * @return a newly created {@code LoadPattern} instance
+     */
     public static FakeLoad createLoad() {
         return new ImmutableFakeLoad();
     }
 
     public static FakeLoad createLoad(long duration, String... loads) {
+        // TODO return FakeLoad with provided parameters
         return new ImmutableFakeLoad();
     }
 
