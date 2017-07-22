@@ -1,7 +1,7 @@
 package ac.at.tuwien.infosys.fakeload.internal;
 
+import ac.at.tuwien.infosys.fakeload.FakeLoad;
 import ac.at.tuwien.infosys.fakeload.LoadPattern;
-import ac.at.tuwien.infosys.fakeload.SimpleLoadPattern;
 
 import java.util.concurrent.*;
 
@@ -32,6 +32,11 @@ public class FakeLoadDispatcher {
     }
 
 
+    private int cpuLoad;
+    private long memoryLoad;
+    private long diskIOLoad;
+    private long netIOLoad;
+
 
     /**
      * Represents the connection to the simulation infrastructure through which load requests can be dispatched.
@@ -46,7 +51,7 @@ public class FakeLoadDispatcher {
      * Private constructor for use in singleton pattern.
      */
     private FakeLoadDispatcher() {
-        this.connection = InfrastructureManager.getInstance().getConnection();
+        this.connection = new InfrastructureManager().getConnection();
         this.scheduler = Executors.newSingleThreadScheduledExecutor();
     }
 
@@ -55,8 +60,17 @@ public class FakeLoadDispatcher {
 
 
 
-    public Future<String> submitLoad(LoadPattern pattern) {
-        return handleLoad(pattern);
+//    public Future<String> submitLoad(LoadPattern pattern) {
+//        return handleLoad(pattern);
+//    }
+
+    public Future<String> submitLoad(FakeLoad load) {
+        return handleLoad(load);
+    }
+
+    private Future<String> handleLoad(FakeLoad load) {
+
+        return null;
     }
 
 
