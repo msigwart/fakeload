@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 public abstract class AbstractFakeLoad implements FakeLoad {
 
     /**
+     *  {@inheritDoc}
      *  This method submits the load pattern of the AbstractFakeLoad instance to the {@Link FakeLoadDispatcher} singleton instance.
      *  The method blocks until the requested load simulation completes.
      */

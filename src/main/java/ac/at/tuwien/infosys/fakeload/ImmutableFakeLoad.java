@@ -74,11 +74,6 @@ public final class ImmutableFakeLoad extends AbstractFakeLoad {
 
     @Override
     public FakeLoad addLoad(FakeLoad load) {
-        // check to avoid stack overflow error
-        if (load.contains(this)) {
-            throw new IllegalArgumentException("The calling FakeLoad is part of the load it is trying to add.");
-        }
-
         // add load
         List<FakeLoad> newLoads;
         if (this.loads.size() > 0) {
@@ -107,6 +102,23 @@ public final class ImmutableFakeLoad extends AbstractFakeLoad {
     public Collection<FakeLoad> getLoads() {
         return loads;
     }
+
+
+    @Override
+    public boolean contains(FakeLoad load) {
+        if (this.equals(load)) {
+            return true;
+        }
+
+        // check if pattern is contained in child patterns
+        for (FakeLoad l : this.getLoads()) {
+            return l.contains(load);
+        }
+
+        // if not found anywhere return false
+        return false;
+    }
+
 
     @Override
     public boolean equals(Object o) {
