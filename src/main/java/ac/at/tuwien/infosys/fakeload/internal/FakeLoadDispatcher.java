@@ -2,6 +2,8 @@ package ac.at.tuwien.infosys.fakeload.internal;
 
 import ac.at.tuwien.infosys.fakeload.FakeLoad;
 import ac.at.tuwien.infosys.fakeload.LoadPattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.*;
 
@@ -12,6 +14,8 @@ import java.util.concurrent.*;
  * @Author Marten Sigwart
  */
 public class FakeLoadDispatcher {
+
+    private static final Logger log = LoggerFactory.getLogger(FakeLoadDispatcher.class);
 
 //-------------------------------------------------------------
 // Singleton Methods
@@ -44,50 +48,54 @@ public class FakeLoadDispatcher {
     private Connection connection;
 
     /** Executor Service for scheduling simulation loads */
-    private ScheduledExecutorService scheduler;
+    private ScheduledThreadPoolExecutor scheduler;
 
+    private final InfrastructureManager infraManager;
 
     /**
      * Private constructor for use in singleton pattern.
      */
     private FakeLoadDispatcher() {
-        this.connection = new InfrastructureManager().getConnection();
-        this.scheduler = Executors.newSingleThreadScheduledExecutor();
+        this.infraManager = new InfrastructureManager();
+        this.connection = new InfrastructureManager().createConnection();
+        this.scheduler = new ScheduledThreadPoolExecutor(1);
     }
 
 
-
-
-
-
-//    public Future<String> submitLoad(LoadPattern pattern) {
-//        return handleLoad(pattern);
-//    }
 
     public Future<String> submitLoad(FakeLoad load) {
-        return handleLoad(load);
+        return scheduleLoad(load);
     }
 
-    private Future<String> handleLoad(FakeLoad load) {
+    private Future<String> scheduleLoad(FakeLoad fakeLoad) {
+        log.debug("Scheduling load...");
+        connection.increaseCpu(fakeLoad.getCpuLoad());
+        connection.increaseMemory(fakeLoad.getMemoryLoad());
+        connection.increaseDiskIO(fakeLoad.getDiskIOLoad());
+        connection.increaseNetIO(fakeLoad.getNetIOLoad());
 
-        return null;
-    }
+        Future<String> future = scheduler.schedule(() -> {
 
+            connection.decreaseCpu(fakeLoad.getCpuLoad());
+            connection.decreaseMemory(fakeLoad.getMemoryLoad());
+            connection.decreaseDiskIO(fakeLoad.getDiskIOLoad());
+            connection.decreaseNetIO(fakeLoad.getNetIOLoad());
 
-    private Future<String> handleLoad(LoadPattern pattern) {
-        connection.dispatchLoad();
-
-        return scheduler.schedule(() -> {
-
-            connection.dispatchLoad();
             return "";
 
-        }, 2, TimeUnit.SECONDS);
+        }, fakeLoad.getDuration(), fakeLoad.getTimeUnit());
+
+        scheduler.schedule(() -> {
+            log.debug("Shutting down infrastructure...");
+            infraManager.stopInfrastructure();
+            log.debug("Shut down infrastructure");
+            scheduler.shutdown();
+            return "";
+        }, 60, TimeUnit.SECONDS);
+
+        log.debug("Finished scheduling.");
+        return future;
     }
 
 
-
-//    private void connectToInfrastructure() {
-//        //connection = InfrastructureManager.getInstance().getConnection();
-//    }
 }

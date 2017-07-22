@@ -31,8 +31,8 @@ public class InfrastructureManager {
     /** Represents the connection to the infrastructure */
     private static final Connection connection = new Connection();
 
-    /** Indicates whether or not the infrastructure is running */
-    private boolean isRunning;
+
+
 
     /** Number of available processors */
     private final int noOfCores;
@@ -42,10 +42,12 @@ public class InfrastructureManager {
 
 
     InfrastructureManager() {
-        log.debug("Creating singleton instance...");
-        this.isRunning = false;
+        log.debug("Creating Infrastructure Manager");
         this.simulatorThreads = new ArrayList<>();
         this.noOfCores = Runtime.getRuntime().availableProcessors();
+        if (executorService == null) {
+            executorService = Executors.newFixedThreadPool(this.noOfCores+2);
+        }
     }
 
 
@@ -55,7 +57,7 @@ public class InfrastructureManager {
      * Creates a connection to the simulation infrastructure.
      * @return
      */
-    public Connection getConnection() {
+    public Connection createConnection() {
         setupInfrastructure();
         return connection;
     }
@@ -67,11 +69,11 @@ public class InfrastructureManager {
     private void setupInfrastructure() {
         log.debug("Setting up infrastructure...");
 
-        if (!isRunning) {
-            startInfrastructure();
-        } else {
-            log.debug("Infrastructure already running");
-        }
+//        if (!isRunning) {
+//            startInfrastructure();
+//        } else {
+//            log.debug("Infrastructure already running");
+//        }
     }
 
     private synchronized void startInfrastructure() {
@@ -102,12 +104,11 @@ public class InfrastructureManager {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        isRunning = true;
 
         log.debug("Successfully started infrastructure");
     }
 
-    private synchronized void stopInfrastructure() {
+    public synchronized void stopInfrastructure() {
         executorService.shutdownNow();
     }
 
