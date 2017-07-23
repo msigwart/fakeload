@@ -1,6 +1,5 @@
 package ac.at.tuwien.infosys.fakeload.internal;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.concurrent.atomic.AtomicInteger;
