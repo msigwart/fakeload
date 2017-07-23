@@ -3,23 +3,28 @@ package ac.at.tuwien.infosys.fakeload.internal;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by martensigwart on 23.07.17.
  */
 public class MyRunnable implements Runnable {
 
+    private static AtomicInteger threadId = new AtomicInteger(0);
+
+    private final int id;
     private final Connection connection;
     private final List<Instruction> instructions;
 
     MyRunnable(Connection connection, List<Instruction> instructions) {
+        this.id = threadId.getAndIncrement();
         this.connection = connection;
         this.instructions = instructions;
     }
 
     @Override
     public void run() {
-        System.out.println("Running");
+        System.out.println(id + ": Started");
         while(!Thread.currentThread().isInterrupted()) {
             ListIterator<Instruction> iterator = instructions.listIterator();
 
@@ -30,14 +35,15 @@ public class MyRunnable implements Runnable {
                     switch (i.type) {
 
                         case INCREASE:
-                            System.out.println("Increasing " + i.loadType + " by " + i.change);
+                            System.out.println(id + ": Increasing " + i.loadType + " by " + i.change);
                             increase(i.loadType, i.change);
                             break;
                         case DECREASE:
-                            System.out.println("Decreasing " + i.loadType + " by " + i.change);
+                            System.out.println(id + ": Decreasing " + i.loadType + " by " + i.change);
                             decrease(i.loadType, i.change);
                             break;
                     }
+                    iterator.remove();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
