@@ -21,19 +21,19 @@ final class Connection {
         netIOLoad = new AtomicLong(0L);
     }
 
-    public int getCpuLoad() {
+    int getCpuLoad() {
         return cpuLoad.get();
     }
 
-    public long getMemoryLoad() {
+    long getMemoryLoad() {
         return memoryLoad.get();
     }
 
-    public long getDiskIOLoad() {
+    long getDiskIOLoad() {
         return diskIOLoad.get();
     }
 
-    public long getNetIOLoad() {
+    long getNetIOLoad() {
         return netIOLoad.get();
     }
 

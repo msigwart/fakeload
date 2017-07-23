@@ -1,7 +1,6 @@
 package ac.at.tuwien.infosys.fakeload.internal;
 
 import ac.at.tuwien.infosys.fakeload.FakeLoad;
-import ac.at.tuwien.infosys.fakeload.LoadPattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,29 +68,32 @@ public class FakeLoadDispatcher {
 
     private Future<String> scheduleLoad(FakeLoad fakeLoad) {
         log.debug("Scheduling load...");
-        connection.increaseCpu(fakeLoad.getCpuLoad());
-        connection.increaseMemory(fakeLoad.getMemoryLoad());
-        connection.increaseDiskIO(fakeLoad.getDiskIOLoad());
-        connection.increaseNetIO(fakeLoad.getNetIOLoad());
+        connection.increaseAndGetCpu(fakeLoad.getCpuLoad());
+        connection.increaseAndGetMemory(fakeLoad.getMemoryLoad());
+        connection.increaseAndGetDiskIO(fakeLoad.getDiskIOLoad());
+        connection.increaseAndGetNetIO(fakeLoad.getNetIOLoad());
 
         Future<String> future = scheduler.schedule(() -> {
 
-            connection.decreaseCpu(fakeLoad.getCpuLoad());
-            connection.decreaseMemory(fakeLoad.getMemoryLoad());
-            connection.decreaseDiskIO(fakeLoad.getDiskIOLoad());
-            connection.decreaseNetIO(fakeLoad.getNetIOLoad());
+            cpuLoad     = connection.decreaseAndGetCpu(fakeLoad.getCpuLoad());
+            memoryLoad  = connection.decreaseAndGetMemory(fakeLoad.getMemoryLoad());
+            diskIOLoad  = connection.decreaseAndGetDiskIO(fakeLoad.getDiskIOLoad());
+            netIOLoad   = connection.decreaseAndGetNetIO(fakeLoad.getNetIOLoad());
+
+            if (cpuLoad==0 && memoryLoad==0 && diskIOLoad==0 && netIOLoad==0 ) {
+                scheduler.schedule(() -> {
+                    log.debug("Shutting down infrastructure...");
+                    infraManager.stopInfrastructure();
+                    log.debug("Shut down infrastructure");
+                    scheduler.shutdown();
+                    return "";
+                }, 5, TimeUnit.SECONDS);
+            }
 
             return "";
 
         }, fakeLoad.getDuration(), fakeLoad.getTimeUnit());
 
-        scheduler.schedule(() -> {
-            log.debug("Shutting down infrastructure...");
-            infraManager.stopInfrastructure();
-            log.debug("Shut down infrastructure");
-            scheduler.shutdown();
-            return "";
-        }, 60, TimeUnit.SECONDS);
 
         log.debug("Finished scheduling.");
         return future;
