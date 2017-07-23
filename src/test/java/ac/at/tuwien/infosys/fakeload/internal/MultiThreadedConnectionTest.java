@@ -17,10 +17,18 @@ public class MultiThreadedConnectionTest {
     public void test() {
 
         List<Instruction> schedule1 = new LinkedList<>();
-        schedule1.add(new Instruction(INCREASE, CPU, 2, 10));
+        schedule1.add(new Instruction(INCREASE, CPU, 1, 20));
+        schedule1.add(new Instruction(INCREASE, CPU, 2, 20));
+        schedule1.add(new Instruction(INCREASE, CPU, 2, 20));
+        schedule1.add(new Instruction(DECREASE, CPU, 2, 20));
+        schedule1.add(new Instruction(DECREASE, CPU, 2, 20));
+        schedule1.add(new Instruction(DECREASE, CPU, 2, 20));
 
         List<Instruction> schedule2 = new LinkedList<>();
         schedule2.add(new Instruction(INCREASE, CPU, 2, 20));
+        schedule2.add(new Instruction(INCREASE, CPU, 2, 20));
+        schedule2.add(new Instruction(DECREASE, CPU, 2, 20));
+        schedule2.add(new Instruction(DECREASE, CPU, 2, 20));
 
         Connection con = new Connection();
         MyRunnable r1 = new MyRunnable(con, schedule1);
@@ -31,9 +39,38 @@ public class MultiThreadedConnectionTest {
         try {
             t1.start();
             t2.start();
-            Thread.sleep(3*1000);
-
-            Assert.assertEquals(30, con.getCpuLoad());
+            // 0 s
+            Assert.assertEquals(0, con.getCpuLoad());
+            Thread.sleep(1500);
+            // 1,5 s
+            Assert.assertEquals(20, con.getCpuLoad());
+            Thread.sleep(1000);
+            // 2,5 s
+            Assert.assertEquals(40, con.getCpuLoad());
+            Thread.sleep(1000);
+            // 3,5 s
+            Assert.assertEquals(60, con.getCpuLoad());
+            Thread.sleep(1000);
+            // 4,5 s
+            Assert.assertEquals(80, con.getCpuLoad());
+            Thread.sleep(1000);
+            // 5,5
+            Assert.assertEquals(100, con.getCpuLoad());
+            Thread.sleep(1000);
+            // 6,5
+            Assert.assertEquals(80, con.getCpuLoad());
+            Thread.sleep(1000);
+            // 7,5
+            Assert.assertEquals(60, con.getCpuLoad());
+            Thread.sleep(1000);
+            // 8,5
+            Assert.assertEquals(40, con.getCpuLoad());
+            Thread.sleep(1000);
+            // 9,5
+            Assert.assertEquals(20, con.getCpuLoad());
+            Thread.sleep(2000);
+            // 11,5
+            Assert.assertEquals(0, con.getCpuLoad());
 
         } catch (InterruptedException e) {
             e.printStackTrace();
