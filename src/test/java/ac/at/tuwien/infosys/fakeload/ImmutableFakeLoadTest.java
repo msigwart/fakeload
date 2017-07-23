@@ -23,4 +23,35 @@ public class ImmutableFakeLoadTest {
         Assert.assertFalse(parent.contains(other));
     }
 
+    @Test
+    public void testEqualsAndHash() {
+        FakeLoad f1 = new ImmutableFakeLoad(5, TimeUnit.SECONDS);
+        FakeLoad f2 = new ImmutableFakeLoad(5, TimeUnit.SECONDS);
+        FakeLoad f3 = new ImmutableFakeLoad(5, TimeUnit.SECONDS);
+        FakeLoad f4 = new ImmutableFakeLoad(3, TimeUnit.SECONDS);
+
+        // Reflexity
+        Assert.assertTrue(f1.equals(f1));
+        Assert.assertFalse(f1.equals(null));
+        Assert.assertFalse(f1.equals(f4));
+
+        // Symmetry
+        Assert.assertTrue(f1.equals(f2));
+        Assert.assertTrue(f2.equals(f1));
+
+        Assert.assertFalse(f1.equals(f4));
+        Assert.assertFalse(f4.equals(f1));
+
+        // Transitivity
+        if (f1.equals(f2) && f2.equals(f3)) {
+            Assert.assertTrue(f1.equals(f3));
+        }
+
+        // Hashcode
+        Assert.assertTrue(f1.hashCode() == f1.hashCode());
+        Assert.assertTrue(f1.hashCode() == f2.hashCode());
+        Assert.assertTrue(f1.hashCode() == f3.hashCode());
+
+    }
+
 }
