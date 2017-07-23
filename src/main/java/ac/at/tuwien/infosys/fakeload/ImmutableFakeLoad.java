@@ -184,4 +184,18 @@ public final class ImmutableFakeLoad extends AbstractFakeLoad {
         result = 31 * result + loads.hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "ImmutableFakeLoad{" +
+                "duration=" + duration +
+                ", unit=" + unit +
+                ", repetitions=" + repetitions +
+                ", cpuLoad=" + cpuLoad +
+                ", memoryLoad=" + memoryLoad +
+                ", diskIOLoad=" + diskIOLoad +
+                ", netIOLoad=" + netIOLoad +
+                ", loads=" + loads +
+                '}';
+    }
 }
