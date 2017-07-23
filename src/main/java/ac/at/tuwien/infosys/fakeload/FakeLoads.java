@@ -19,6 +19,22 @@ public final class FakeLoads {
         return new ImmutableFakeLoad();
     }
 
+
+    /**
+     * Creates a new {@code FakeLoad} object with the specified parameters.
+     *
+     * <p> Parameter <b>loads</b> is a String array containing load instructions for different simulation aspects.
+     * <ul>
+     *  <li> CPU load is specified as percentage, e.g. for a CPU load of 60 percent specify "60%"</li>
+     *  <li> Memory can be specified as Bytes(b), kB(k), MB(m) or GB(g), e.g. for a memory allocation of 1024 MB specify "1024m"</li>
+     *  <li>TODO Network IO</li>
+     *  <li>TODO File IO</li>
+     * </ul>
+     * </p>
+     *
+     * @param duration how long the specified loads shall be executed in milliseconds (ms)
+     * @param loads strings containing specific load instructions for different aspects.
+     */
     public static FakeLoad createLoad(long duration, String... loads) {
         // TODO return FakeLoad with provided parameters
         return new ImmutableFakeLoad();
