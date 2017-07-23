@@ -12,28 +12,11 @@ import java.util.concurrent.*;
  *
  * @Author Marten Sigwart
  */
-public class FakeLoadDispatcher {
+public enum FakeLoadDispatcher {
+
+    INSTANCE;
 
     private static final Logger log = LoggerFactory.getLogger(FakeLoadDispatcher.class);
-
-//-------------------------------------------------------------
-// Singleton Methods
-//-------------------------------------------------------------
-
-    /** Singleton instance */
-    private static FakeLoadDispatcher instance;
-
-    /**
-     * Retrieves this class' singleton instance
-     * @return the singleton FakeLoadDispatcher instance
-     */
-    public static FakeLoadDispatcher getInstance() {
-        if (instance == null) {
-            instance = new FakeLoadDispatcher();
-        }
-        return instance;
-    }
-
 
     private int cpuLoad;
     private long memoryLoad;
@@ -52,9 +35,9 @@ public class FakeLoadDispatcher {
     private final InfrastructureManager infraManager;
 
     /**
-     * Private constructor for use in singleton pattern.
+     * Constructor
      */
-    private FakeLoadDispatcher() {
+    FakeLoadDispatcher() {
         this.infraManager = new InfrastructureManager();
         this.connection = new InfrastructureManager().createConnection();
         this.scheduler = new ScheduledThreadPoolExecutor(1);

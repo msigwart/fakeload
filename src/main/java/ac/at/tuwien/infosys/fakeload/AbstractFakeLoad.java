@@ -19,7 +19,7 @@ public abstract class AbstractFakeLoad implements FakeLoad {
         try {
 
             // wait until simulation completes
-            Future<String> future = FakeLoadDispatcher.getInstance().submitLoad(this);
+            Future<String> future = FakeLoadDispatcher.INSTANCE.submitLoad(this);
             String response = future.get();
 
         } catch (InterruptedException e) {
