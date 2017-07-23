@@ -5,7 +5,20 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Represents the main API for the FakeLoad Library.
- * If clients want to create 'fake' system load they should instantiate a FakeLoad object with the desired system load
+ * With instances of this type clients can create and execute 'fake' system load.
+ *
+ * <p>
+ * The client can specify what kind of load (e.g. CPU, RAM, …), how much of it (e.g. 80%, 1024MB, …)
+ * and for how long a specific load (e.g. 10 s, 100 ms, …) is being simulated.
+ * </p>
+ *
+ * <p>
+ * Further, a fake load can itself consist of other {@code FakeLoad} instances thus giving the client the possibility to
+ * create complex patterns of system load instructions.
+ * </p>
+ *
+ * TODO How to use
+ * they should instantiate a FakeLoad object with the desired system load
  * instructions and then, subsequently, call that object's execute method, which simulates the specified system loads.
  *
  * @Author Marten Sigwart
