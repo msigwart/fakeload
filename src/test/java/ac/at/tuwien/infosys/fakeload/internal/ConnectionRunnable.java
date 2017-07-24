@@ -1,4 +1,9 @@
-package ac.at.tuwien.infosys.fakeload.internal;
+package ac.at.tuwien.infosys.fakeload.internal.util;
+
+import ac.at.tuwien.infosys.fakeload.internal.Connection;
+import ac.at.tuwien.infosys.fakeload.internal.Decrease;
+import ac.at.tuwien.infosys.fakeload.internal.Increase;
+import ac.at.tuwien.infosys.fakeload.internal.Instruction;
 
 import java.util.List;
 import java.util.ListIterator;
@@ -7,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Created by martensigwart on 23.07.17.
  */
-public class MyRunnable implements Runnable {
+public class ConnectionRunnable implements Runnable {
 
     private static AtomicInteger threadId = new AtomicInteger(0);
 
@@ -15,7 +20,7 @@ public class MyRunnable implements Runnable {
     private final Connection connection;
     private final List<Instruction> instructions;
 
-    MyRunnable(Connection connection, List<Instruction> instructions) {
+    ConnectionRunnable(Connection connection, List<Instruction> instructions) {
         this.id = threadId.getAndIncrement();
         this.connection = connection;
         this.instructions = instructions;
@@ -30,18 +35,17 @@ public class MyRunnable implements Runnable {
             while (iterator.hasNext()) {
                 Instruction i = iterator.next();
                 try {
-                    Thread.sleep(i.offSet*1000);
-                    switch (i.type) {
+                    Thread.sleep(i.getOffSet()*1000);
 
-                        case INCREASE:
-                            System.out.println(id + ": Increasing " + i.loadType + " by " + i.change);
-                            increase(i.loadType, i.change);
-                            break;
-                        case DECREASE:
-                            System.out.println(id + ": Decreasing " + i.loadType + " by " + i.change);
-                            decrease(i.loadType, i.change);
-                            break;
+                    if (i instanceof Increase) {
+                        System.out.println(id + ": Increasing " + i.getLoadType() + " by " + i.getChange());
+                        increase(i.getLoadType(), i.getChange());
+
+                    } else if (i instanceof Decrease) {
+                        System.out.println(id + ": Decreasing " + i.getLoadType() + " by " + i.getChange());
+                        decrease(i.getLoadType(), i.getChange());
                     }
+
                     iterator.remove();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
