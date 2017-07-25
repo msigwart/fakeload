@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * </p>
  *
  * @author Marten Sigwart
- * @since 1.0
+ * @since 1.8
  */
 public class LoadControl {
 

@@ -27,10 +27,10 @@ import java.util.concurrent.*;
  *
  * <p>
  * The simulation infrastructure consists of multiple threads each with a different simulation task.
- * For more information on the simulation infrastructure see {@link InfrastructureManager}.
+ * For more information on the simulation infrastructure see {@link SimulationInfrastructure}.
  *
  * @see FakeLoad
- * @see InfrastructureManager
+ * @see SimulationInfrastructure
  * @since 1.8
  * @Author Marten Sigwart
  */

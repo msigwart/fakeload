@@ -7,7 +7,7 @@ import java.util.concurrent.Callable;
  *
  * <p> Contains methods that create and return instances of different system simulators.
  *
- * @since 1.0
+ * @since 1.8
  * @author Marten Sigwart
  */
 public final class Simulators {
