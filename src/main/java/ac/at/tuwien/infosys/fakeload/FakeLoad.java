@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * instructions and then, subsequently, call that object's execute method, which simulates the specified system loads.
  *
  * @Author Marten Sigwart
- * @since 1.0
+ * @since 1.8
  */
 public interface FakeLoad {
 

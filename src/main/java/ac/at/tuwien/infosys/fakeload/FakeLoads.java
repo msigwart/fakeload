@@ -6,7 +6,7 @@ package ac.at.tuwien.infosys.fakeload;
  * <p> Contains methods that create and return instances of the {@link FakeLoad} interface.
  * The actual type of the objects returned depends on the parameters passed to the factory methods.
  *
- * @since 1.0
+ * @since 1.8
  * @author Marten Sigwart
  */
 public final class FakeLoads {
