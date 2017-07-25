@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
- * Represents the simulation infrastructure of the FakeLoad Library.
+ * Represents a simulation infrastructure for the FakeLoad Library.
  *
  * <p>
  * The simulation infrastructure consists of different tasks. Each task serves a specific simulation purpose.
@@ -25,6 +25,14 @@ import java.util.concurrent.Future;
  * created by the infrastructure actually match the desired system load. For further details see {@link ControlTask}.
  *
  * <p>
+ * Multiple fake loads being executed simultaneously should produce a system load which is the aggregation of all
+ * load instructions contained in these fake loads. If thread A executes a fake load of 20% CPU and thread B executes
+ * a fake load of 30% CPU the resulting system load should be 20% + 30% = 50%.
+ * The {@code DefaultFakeLoadDispatcher} is responsible for this aggregation as well as reporting any faults concerning
+ * any passing of load limitations of the system. For example executing a CPU load of more than 100% is not possible,
+ * therefore if accumulated CPU load of the FakeLoad instances being executed exceeds that an error should be thrown.
+ *
+ * <p> TODO may not suppose to be singleton
  * Note: {@code SimulationInfrastructure} is singleton, thus, there only exists one instance per process.
  * The instance can be obtained via {@code SimulationInfrastructure.INSTANCE}.
  *
@@ -111,12 +119,37 @@ enum SimulationInfrastructure {
         executorService.shutdownNow();
     }
 
-    /**
-     * @return returns the connection to the simulation infrastructure.
-     */
-    synchronized Connection getConnection() {
-        return connection;
+
+    public void increaseCpu(long cpuLoad) {
+        connection.increaseCpu(cpuLoad);
+
     }
 
+    public void increaseMemory(long memoryLoad) {
+        connection.increaseMemory(memoryLoad);
+    }
 
+    public void increaseDiskIO(long diskIOLoad) {
+        connection.increaseDiskIO(diskIOLoad);
+    }
+
+    public void increaseNetIO(long netIOLoad) {
+        connection.increaseNetIO(netIOLoad);
+    }
+
+    public void decreaseCpu(long cpuLoad) {
+        connection.decreaseCpu(cpuLoad);
+    }
+
+    public void decreaseMemory(long memoryLoad) {
+        connection.decreaseMemory(memoryLoad);
+    }
+
+    public void decreaseDiskIO(long diskIOLoad) {
+        connection.decreaseDiskIO(diskIOLoad);
+    }
+
+    public void decreaseNetIO(long netIOLoad) {
+        connection.decreaseNetIO(netIOLoad);
+    }
 }
