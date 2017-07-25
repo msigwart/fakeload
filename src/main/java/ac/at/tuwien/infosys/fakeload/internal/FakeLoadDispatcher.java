@@ -32,7 +32,7 @@ import java.util.concurrent.*;
  * @see FakeLoad
  * @see SimulationInfrastructure
  * @since 1.8
- * @Author Marten Sigwart
+ * @author Marten Sigwart
  */
 public enum FakeLoadDispatcher {
 

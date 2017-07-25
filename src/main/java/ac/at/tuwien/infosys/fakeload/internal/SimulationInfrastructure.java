@@ -76,6 +76,14 @@ enum SimulationInfrastructure {
     }
 
 
+    /**
+     * Starts the simulation infrastructure.
+     *
+     * <p>
+     * First, it checks whether the thread pool used for execution of simulator tasks
+     * has been shutdown. If it has been shutdown in the meantime, it creates a new one.
+     * Then, all necessary simulation tasks are started.
+     */
     synchronized void start() {
         log.debug("Starting infrastructure...");
 
@@ -93,6 +101,12 @@ enum SimulationInfrastructure {
         log.debug("Successfully started infrastructure");
     }
 
+    /**
+     * Stops the simulation infrastructure.
+     *
+     * <p>
+     * In particular, the current thread pool is shutdown.
+     */
     synchronized void stop() {      //TODO What happens if not started yet?
         executorService.shutdownNow();
     }
