@@ -1,14 +1,16 @@
 package ac.at.tuwien.infosys.fakeload.internal.util;
 
+import ac.at.tuwien.infosys.fakeload.internal.ConnectionRunnable;
+
 /**
  * Created by martensigwart on 23.07.17.
  */
-abstract class Instruction {
-    private ConnectionRunnable.LoadType loadType;
+public abstract class Instruction {
+    private LoadType loadType;
     private int offSet; //in seconds
     private long change;
 
-    Instruction(ConnectionRunnable.LoadType loadType, int offSet, long change) {
+    Instruction(LoadType loadType, int offSet, long change) {
         if (change <= 0) {
             throw new IllegalArgumentException("change must be a positive value");
         }
@@ -17,34 +19,21 @@ abstract class Instruction {
         this.change = change;
     }
 
-    long getChange() {
+    public long getChange() {
         return this.change;
     }
 
-    int getOffSet() {
+    public int getOffSet() {
         return offSet;
     }
 
-    ConnectionRunnable.LoadType getLoadType() {
+    public LoadType getLoadType() {
         return loadType;
     }
 
-
-
-}
-
-final class Increase extends Instruction {
-
-    Increase(ConnectionRunnable.LoadType loadType, int offSet, long change) {
-        super(loadType, offSet, change);
+    public enum  LoadType {
+        CPU, MEMORY, DISKIO, NETIO
     }
 
 }
 
-final class Decrease extends Instruction {
-
-    Decrease(ConnectionRunnable.LoadType loadType, int offSet, long change) {
-        super(loadType, offSet, change);
-    }
-
-}

@@ -1,9 +1,8 @@
-package ac.at.tuwien.infosys.fakeload.internal.util;
+package ac.at.tuwien.infosys.fakeload.internal;
 
-import ac.at.tuwien.infosys.fakeload.internal.Connection;
-import ac.at.tuwien.infosys.fakeload.internal.Decrease;
-import ac.at.tuwien.infosys.fakeload.internal.Increase;
-import ac.at.tuwien.infosys.fakeload.internal.Instruction;
+import ac.at.tuwien.infosys.fakeload.internal.util.Decrease;
+import ac.at.tuwien.infosys.fakeload.internal.util.Increase;
+import ac.at.tuwien.infosys.fakeload.internal.util.Instruction;
 
 import java.util.List;
 import java.util.ListIterator;
@@ -54,7 +53,7 @@ public class ConnectionRunnable implements Runnable {
         }
     }
 
-    private void increase(LoadType type, long increase) {
+    private void increase(Instruction.LoadType type, long increase) {
         switch (type) {
 
             case CPU:
@@ -73,7 +72,7 @@ public class ConnectionRunnable implements Runnable {
     }
 
 
-    private void decrease(LoadType type, long decrease) {
+    private void decrease(Instruction.LoadType type, long decrease) {
         switch (type) {
 
             case CPU:
@@ -91,9 +90,6 @@ public class ConnectionRunnable implements Runnable {
         }
     }
 
-    enum  LoadType {
-        CPU, MEMORY, DISKIO, NETIO
-    }
 
 
 }
