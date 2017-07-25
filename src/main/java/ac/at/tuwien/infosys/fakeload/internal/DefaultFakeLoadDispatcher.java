@@ -7,18 +7,19 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.*;
 
 /**
- * This class is responsible for scheduling and dispatching fake loads to the simulation infrastructure.
+ * Interface to represent a fake load dispatcher. A fake load dispatcher is responsible
+ * for scheduling and dispatching fake loads to the simulation infrastructure.
  *
  * <p>
  * Whenever a {@link FakeLoad}'s {@code execute()} method is called, the fake load gets propagated to
- * the {@code FakeLoadDispatcher} instance. Then, the system load instructions contained within the FakeLoad object
+ * the {@code DefaultFakeLoadDispatcher} instance. Then, the system load instructions contained within the FakeLoad object
  * are parsed and scheduled before being dispatched to the simulation infrastructure.
  *
  * <p>
  * Multiple fake loads being executed simultaneously should produce a system load which is the aggregation of all
  * load instructions contained in these fake loads. If thread A executes a fake load of 20% CPU and thread B executes
  * a fake load of 30% CPU the resulting system load should be 20% + 30% = 50%.
- * The {@code FakeLoadDispatcher} is responsible for this aggregation as well as reporting any faults concerning
+ * The {@code DefaultFakeLoadDispatcher} is responsible for this aggregation as well as reporting any faults concerning
  * any passing of load limitations of the system. For example executing a CPU load of more than 100% is not possible,
  * therefore if accumulated CPU load of the FakeLoad instances being executed exceeds that an error should be thrown.
  *
@@ -27,18 +28,16 @@ import java.util.concurrent.*;
  *
  * <p>
  * The simulation infrastructure consists of multiple threads each with a different simulation task.
- * For more information on the simulation infrastructure see {@link SimulationInfrastructure}.
+ * For more information on the simulation infrastructure see {@link DefaultInfrastructure}.
  *
  * @see FakeLoad
- * @see SimulationInfrastructure
+ * @see DefaultInfrastructure
  * @since 1.8
  * @author Marten Sigwart
  */
-public enum FakeLoadDispatcher {
+public class DefaultFakeLoadDispatcher implements FakeLoadDispatcher {
 
-    INSTANCE;
-
-    private static final Logger log = LoggerFactory.getLogger(FakeLoadDispatcher.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultFakeLoadDispatcher.class);
 
     private int cpuLoad;
     private long memoryLoad;
@@ -47,21 +46,20 @@ public enum FakeLoadDispatcher {
 
 
     /**
-     * Represents the connection to the simulation infrastructure through which load requests can be dispatched.
+     * Executor Service for scheduling simulation loads
      */
-    private Connection connection;
-
-    /** Executor Service for scheduling simulation loads */
     private ScheduledThreadPoolExecutor scheduler;
 
-    private final SimulationInfrastructure infrastructure;
+    /**
+     * Connection to the simulation infrastructure
+     */
+    private final DefaultInfrastructure infrastructure;
 
     /**
      * Constructor
      */
-    FakeLoadDispatcher() {
-        infrastructure = SimulationInfrastructure.INSTANCE;
-        connection = infrastructure.getConnection();
+    DefaultFakeLoadDispatcher(DefaultInfrastructure infrastructure) {
+        this.infrastructure = infrastructure;
         scheduler = new ScheduledThreadPoolExecutor(1);
     }
 
@@ -73,27 +71,17 @@ public enum FakeLoadDispatcher {
 
     private Future<String> scheduleLoad(FakeLoad fakeLoad) {
         log.debug("Scheduling load...");
-        connection.increaseAndGetCpu(fakeLoad.getCpuLoad());
-        connection.increaseAndGetMemory(fakeLoad.getMemoryLoad());
-        connection.increaseAndGetDiskIO(fakeLoad.getDiskIOLoad());
-        connection.increaseAndGetNetIO(fakeLoad.getNetIOLoad());
+        infrastructure.increaseCpu(fakeLoad.getCpuLoad());
+        infrastructure.increaseMemory(fakeLoad.getMemoryLoad());
+        infrastructure.increaseDiskIO(fakeLoad.getDiskIOLoad());
+        infrastructure.increaseNetIO(fakeLoad.getNetIOLoad());
 
         Future<String> future = scheduler.schedule(() -> {
 
-            cpuLoad     = connection.decreaseAndGetCpu(fakeLoad.getCpuLoad());
-            memoryLoad  = connection.decreaseAndGetMemory(fakeLoad.getMemoryLoad());
-            diskIOLoad  = connection.decreaseAndGetDiskIO(fakeLoad.getDiskIOLoad());
-            netIOLoad   = connection.decreaseAndGetNetIO(fakeLoad.getNetIOLoad());
-
-            if (cpuLoad==0 && memoryLoad==0 && diskIOLoad==0 && netIOLoad==0 ) {
-                scheduler.schedule(() -> {
-                    log.debug("Shutting down infrastructure...");
-                    infrastructure.stop();
-                    log.debug("Shut down infrastructure");
-                    scheduler.shutdown();
-                    return "";
-                }, 5, TimeUnit.SECONDS);
-            }
+            infrastructure.decreaseCpu(fakeLoad.getCpuLoad());
+            infrastructure.decreaseMemory(fakeLoad.getMemoryLoad());
+            infrastructure.decreaseDiskIO(fakeLoad.getDiskIOLoad());
+            infrastructure.decreaseNetIO(fakeLoad.getNetIOLoad());
 
             return "";
 
