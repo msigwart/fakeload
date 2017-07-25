@@ -1,17 +1,16 @@
 package ac.at.tuwien.infosys.fakeload;
 
-import ac.at.tuwien.infosys.fakeload.internal.FakeLoadDispatcher;
+import ac.at.tuwien.infosys.fakeload.internal.DefaultFakeLoadDispatcher;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 
 public abstract class AbstractFakeLoad implements FakeLoad {
 
     /**
      *  {@inheritDoc}
-     *  This method submits the load pattern of the AbstractFakeLoad instance to the {@Link FakeLoadDispatcher} singleton instance.
+     *  This method submits the load pattern of the AbstractFakeLoad instance to the {@Link DefaultFakeLoadDispatcher} singleton instance.
      *  The method blocks until the requested load simulation completes.
      */
     @Override
@@ -19,7 +18,7 @@ public abstract class AbstractFakeLoad implements FakeLoad {
         try {
 
             // wait until simulation completes
-            Future<String> future = FakeLoadDispatcher.INSTANCE.submitLoad(this);
+            Future<String> future = DefaultFakeLoadDispatcher.INSTANCE.submitLoad(this);
             String response = future.get();
 
         } catch (InterruptedException e) {

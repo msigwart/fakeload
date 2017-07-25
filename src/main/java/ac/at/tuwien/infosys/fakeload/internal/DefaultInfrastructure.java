@@ -18,7 +18,7 @@ import java.util.concurrent.Future;
  * <p>
  * The simulation infrastructure consists of different tasks. Each task serves a specific simulation purpose.
  * There will be tasks responsible for CPU load simulation, for memory simulation, and more.
- * The {@code SimulationInfrastructure} instance provides methods for starting and stopping the execution of simulator tasks.
+ * The {@code DefaultInfrastructure} instance provides methods for starting and stopping the execution of simulator tasks.
  *
  * <p>
  * Further, there exists a task responsible for controlling the simulator tasks, that is, it checks whether the loads
@@ -32,19 +32,19 @@ import java.util.concurrent.Future;
  * any passing of load limitations of the system. For example executing a CPU load of more than 100% is not possible,
  * therefore if accumulated CPU load of the FakeLoad instances being executed exceeds that an error should be thrown.
  *
- * <p> TODO may not suppose to be singleton
- * Note: {@code SimulationInfrastructure} is singleton, thus, there only exists one instance per process.
- * The instance can be obtained via {@code SimulationInfrastructure.INSTANCE}.
+ * <p> TODO maybe should not be singleton
+ * Note: {@code DefaultInfrastructure} is singleton, thus, there only exists one instance per process.
+ * The instance can be obtained via {@code DefaultInfrastructure.INSTANCE}.
  *
  * @author Marten Sigwart
  * @since 1.8
  *
  */
-enum SimulationInfrastructure {
+enum DefaultInfrastructure {
 
     INSTANCE;
 
-    private static final Logger log = LoggerFactory.getLogger(SimulationInfrastructure.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultInfrastructure.class);
 
     /** Executor service to run the infrastructure */
     private ExecutorService executorService;
@@ -59,7 +59,7 @@ enum SimulationInfrastructure {
     private final List<Callable<Void>> simulatorTasks;
 
 
-    SimulationInfrastructure() {
+    DefaultInfrastructure() {
         this.noOfCores = Runtime.getRuntime().availableProcessors();
         this.executorService = Executors.newFixedThreadPool(this.noOfCores+2);
 
@@ -120,36 +120,37 @@ enum SimulationInfrastructure {
     }
 
 
-    public void increaseCpu(long cpuLoad) {
-        connection.increaseCpu(cpuLoad);
 
+
+    synchronized void increaseCpu(long cpuLoad) throws MaximumLoadExceededException {
+        connection.increaseCpu(cpuLoad);
     }
 
-    public void increaseMemory(long memoryLoad) {
+    synchronized void increaseMemory(long memoryLoad) throws MaximumLoadExceededException {
         connection.increaseMemory(memoryLoad);
     }
 
-    public void increaseDiskIO(long diskIOLoad) {
+    synchronized void increaseDiskIO(long diskIOLoad) throws MaximumLoadExceededException {
         connection.increaseDiskIO(diskIOLoad);
     }
 
-    public void increaseNetIO(long netIOLoad) {
+    synchronized void increaseNetIO(long netIOLoad) throws MaximumLoadExceededException {
         connection.increaseNetIO(netIOLoad);
     }
 
-    public void decreaseCpu(long cpuLoad) {
+    synchronized void decreaseCpu(long cpuLoad) {
         connection.decreaseCpu(cpuLoad);
     }
 
-    public void decreaseMemory(long memoryLoad) {
+    synchronized void decreaseMemory(long memoryLoad) {
         connection.decreaseMemory(memoryLoad);
     }
 
-    public void decreaseDiskIO(long diskIOLoad) {
+    synchronized void decreaseDiskIO(long diskIOLoad) {
         connection.decreaseDiskIO(diskIOLoad);
     }
 
-    public void decreaseNetIO(long netIOLoad) {
+    synchronized void decreaseNetIO(long netIOLoad) {
         connection.decreaseNetIO(netIOLoad);
     }
 }

@@ -8,20 +8,20 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 final class Connection {
 
-    private final AtomicInteger cpuLoad;
+    private final AtomicLong cpuLoad;
     private final AtomicLong memoryLoad;
     private final AtomicLong diskIOLoad;
     private final AtomicLong netIOLoad;
 
 
     Connection() {
-        cpuLoad = new AtomicInteger(0);
+        cpuLoad = new AtomicLong(0L);
         memoryLoad = new AtomicLong(0L);
         diskIOLoad = new AtomicLong(0L);
         netIOLoad = new AtomicLong(0L);
     }
 
-    synchronized int getCpuLoad() {
+    synchronized long getCpuLoad() {
         return cpuLoad.get();
     }
 
@@ -37,67 +37,67 @@ final class Connection {
         return netIOLoad.get();
     }
 
-    synchronized int increaseAndGetCpu(int cpuLoad) {
-        int old = this.cpuLoad.get();
+    synchronized void increaseCpu(long cpuLoad) throws MaximumLoadExceededException {
+        long old = this.cpuLoad.get();
         if (old + cpuLoad > 100) {
-            throw new RuntimeException("Increase of CPU to over 100%");     // TODO checked or unchecked exception
+            throw new MaximumLoadExceededException("Increase of CPU to over 100%");
         }
-        return this.cpuLoad.addAndGet(cpuLoad);
+        this.cpuLoad.addAndGet(cpuLoad);
     }
 
-    synchronized long increaseAndGetMemory(long memoryLoad) {
+    synchronized void increaseMemory(long memoryLoad) throws MaximumLoadExceededException {
         long old = this.memoryLoad.get();
 //        if (old + memoryLoad > 100) {
-//            throw new RuntimeException("Increase of Memory to over 100%");     // TODO checked or unchecked exception
+//            throw new RuntimeException("Increase of Memory to over 100%");
 //        }
-        return this.memoryLoad.addAndGet(memoryLoad);
+        this.memoryLoad.addAndGet(memoryLoad);
     }
 
-    synchronized long increaseAndGetDiskIO(long diskIOLoad) {
+    synchronized void increaseDiskIO(long diskIOLoad) throws MaximumLoadExceededException {
         long old = this.diskIOLoad.get();
 //        if (old + diskIOLoad > 100) {
-//            throw new RuntimeException("Increase of Disk IO to over 100%");     // TODO checked or unchecked exception
+//            throw new RuntimeException("Increase of Disk IO to over 100%");
 //        }
-        return this.diskIOLoad.addAndGet(diskIOLoad);
+        this.diskIOLoad.addAndGet(diskIOLoad);
     }
 
-    synchronized long increaseAndGetNetIO(long netIOLoad) {
+    synchronized void increaseNetIO(long netIOLoad) throws MaximumLoadExceededException {
         long old = this.netIOLoad.get();
 //        if (old + netIOLoad > 100) {
-//            throw new RuntimeException("Increase of Net IO to over 100%");     // TODO checked or unchecked exception
+//            throw new RuntimeException("Increase of Net IO to over 100%");
 //        }
-        return this.netIOLoad.addAndGet(netIOLoad);
+        this.netIOLoad.addAndGet(netIOLoad);
     }
 
-    synchronized int decreaseAndGetCpu(int cpuLoad) {
-        int old = this.cpuLoad.get();
+    synchronized void decreaseCpu(long cpuLoad) {
+        long old = this.cpuLoad.get();
         if (old - cpuLoad < 0) {
             throw new RuntimeException("Decrease of CPU to under 0%");     // TODO checked or unchecked exception
         }
-        return this.cpuLoad.accumulateAndGet(cpuLoad, (a, b) -> a - b);
+        this.cpuLoad.accumulateAndGet(cpuLoad, (a, b) -> a - b);
     }
 
-    synchronized long decreaseAndGetMemory(long memoryLoad) {
+    synchronized void decreaseMemory(long memoryLoad) {
         long old = this.memoryLoad.get();
         if (old - memoryLoad < 0) {
             throw new RuntimeException("Decrease of Memory to under 0%");     // TODO checked or unchecked exception
         }
-        return this.memoryLoad.accumulateAndGet(memoryLoad, (a, b) -> a - b);
+        this.memoryLoad.accumulateAndGet(memoryLoad, (a, b) -> a - b);
     }
 
-    synchronized long decreaseAndGetDiskIO(long diskIOLoad) {
+    synchronized void decreaseDiskIO(long diskIOLoad) {
         long old = this.diskIOLoad.get();
         if (old - diskIOLoad < 0) {
             throw new RuntimeException("Decrease of Disk IO to under 0%");     // TODO checked or unchecked exception
         }
-        return this.diskIOLoad.accumulateAndGet(diskIOLoad, (a, b) -> a - b);
+        this.diskIOLoad.accumulateAndGet(diskIOLoad, (a, b) -> a - b);
     }
 
-    synchronized long decreaseAndGetNetIO(long netIOLoad) {
+    synchronized void decreaseNetIO(long netIOLoad) {
         long old = this.netIOLoad.get();
         if (old - netIOLoad < 0) {
             throw new RuntimeException("Decrease of Net IO to under 0%");     // TODO checked or unchecked exception
         }
-        return this.netIOLoad.accumulateAndGet(netIOLoad, (a, b) -> a - b);
+        this.netIOLoad.accumulateAndGet(netIOLoad, (a, b) -> a - b);
     }
 }
