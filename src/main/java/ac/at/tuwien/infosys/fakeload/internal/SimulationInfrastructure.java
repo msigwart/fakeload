@@ -53,6 +53,7 @@ enum SimulationInfrastructure {
 
     SimulationInfrastructure() {
         this.noOfCores = Runtime.getRuntime().availableProcessors();
+        this.executorService = Executors.newFixedThreadPool(this.noOfCores+2);
 
         List<Callable<Void>> tasks = new ArrayList<>();
 
@@ -79,7 +80,7 @@ enum SimulationInfrastructure {
         log.debug("Starting infrastructure...");
 
         // Create new executor service if null or has been shutdown
-        if (executorService == null || executorService.isShutdown()) {
+        if (executorService.isShutdown()) {
             executorService = Executors.newFixedThreadPool(this.noOfCores + 2);
         }
 
