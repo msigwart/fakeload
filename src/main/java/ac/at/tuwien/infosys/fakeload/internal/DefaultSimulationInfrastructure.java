@@ -13,40 +13,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
- * Represents a simulation infrastructure for the FakeLoad Library.
- *
- * <p>
- * A simulation infrastructure is built up of different tasks. Each task serves a specific simulation purpose.
- * There will be tasks responsible for CPU load simulation, for memory simulation, etc. A {@code DefaultInfrastructure}
- * provides functionality for adjusting system load via increase and decrease methods. Further, it provides methods for
- * starting and stopping the execution of simulator tasks.
- *
- * <p>
- * Further, there exists a task responsible for controlling the simulator tasks, that is, it checks whether the loads
- * created by the infrastructure actually match the desired system load. For further details see {@link ControlTask}.
- *
- * <p>
- * Multiple fake loads being executed simultaneously should produce a system load which is the aggregation of all
- * load instructions contained in these fake loads. If thread A submits a fake load of 20% CPU and thread B submits
- * a fake load of 30% CPU the resulting system load should be 20% + 30% = 50%.
- * The {@code DefaultFakeLoadDispatcher} is responsible for this aggregation as well as reporting any faults concerning
- * any exceeding of load limitations of the system. For example executing a CPU load of more than 100% is not possible,
- * therefore if the simulation infrastructure gets instructions to execute a CPU load of over 100% and error should
- * be thrown.
- *
- * <p> TODO maybe should not be singleton
- * Note: {@code DefaultInfrastructure} is singleton, thus, there only exists one instance per process.
- * The instance can be obtained via {@code DefaultInfrastructure.INSTANCE}.
- *
- * @author Marten Sigwart
- * @since 1.8
- *
+ * Default implementation class of {@link SimulationInfrastructure}.
  */
-public enum DefaultInfrastructure {
+public class DefaultSimulationInfrastructure implements SimulationInfrastructure {
 
-    INSTANCE;
-
-    private static final Logger log = LoggerFactory.getLogger(DefaultInfrastructure.class);
+    private static final Logger log = LoggerFactory.getLogger(SimulationInfrastructure.class);
 
     /** Executor service to run the infrastructure */
     private ExecutorService executorService;
@@ -61,7 +32,7 @@ public enum DefaultInfrastructure {
     private final List<Callable<Void>> simulatorTasks;
 
 
-    DefaultInfrastructure() {
+    public DefaultSimulationInfrastructure() {
         this.noOfCores = Runtime.getRuntime().availableProcessors();
         this.executorService = Executors.newFixedThreadPool(this.noOfCores+2);
 
@@ -87,14 +58,15 @@ public enum DefaultInfrastructure {
 
 
     /**
-     * Starts the simulation infrastructure.
+     * {@inheritDoc}
      *
      * <p>
      * First, it checks whether the thread pool used for execution of simulator tasks
      * has been shutdown. If it has been shutdown in the meantime, it creates a new one.
      * Then, all necessary simulation tasks are started.
      */
-    synchronized void start() {
+    @Override
+    public synchronized void start() {
         log.debug("Starting infrastructure...");
 
         // Create new executor service if null or has been shutdown
@@ -115,47 +87,91 @@ public enum DefaultInfrastructure {
     }
 
     /**
-     * Stops the simulation infrastructure.
+     * {@inheritDoc}
      *
      * <p>
      * In particular, the current thread pool is shutdown.
      */
-    synchronized void stop() {      //TODO What happens if not started yet?
+    @Override
+    public synchronized void stop() {      //TODO What happens if not started yet?
         executorService.shutdownNow();
     }
 
-
-
-
-    synchronized void increaseCpu(long cpuLoad) throws MaximumLoadExceededException {
+    /**
+     * {@inheritDoc}
+     * @param cpuLoad the value by which CPU load is increased.
+     * @throws MaximumLoadExceededException in case an increase of the CPU
+     * load would exceed the maximum load allowed. In case of CPU, this would be an
+     * increase to over a 100%.
+     */
+    @Override
+    public synchronized void increaseCpu(long cpuLoad) throws MaximumLoadExceededException {
         connection.increaseCpu(cpuLoad);
     }
 
-    synchronized void increaseMemory(long memoryLoad) throws MaximumLoadExceededException {
+    /**
+     * {@inheritDoc}
+     * @param memoryLoad the value by which memory load is increased.
+     * @throws MaximumLoadExceededException
+     */
+    @Override
+    public synchronized void increaseMemory(long memoryLoad) throws MaximumLoadExceededException {
         connection.increaseMemory(memoryLoad);
     }
 
-    synchronized void increaseDiskIO(long diskIOLoad) throws MaximumLoadExceededException {
+    /**
+     * {@inheritDoc}
+     * @param diskIOLoad the value by which disk IO load is increased.
+     * @throws MaximumLoadExceededException
+     */
+    @Override
+    public synchronized void increaseDiskIO(long diskIOLoad) throws MaximumLoadExceededException {
         connection.increaseDiskIO(diskIOLoad);
     }
 
-    synchronized void increaseNetIO(long netIOLoad) throws MaximumLoadExceededException {
+    /**
+     * {@inheritDoc}
+     * @param netIOLoad the value by which network IO load is increased.
+     * @throws MaximumLoadExceededException
+     */
+    @Override
+    public synchronized void increaseNetIO(long netIOLoad) throws MaximumLoadExceededException {
         connection.increaseNetIO(netIOLoad);
     }
 
-    synchronized void decreaseCpu(long cpuLoad) {
+    /**
+     * {@inheritDoc}
+     * @param cpuLoad the value by which CPU load is decreased.
+     */
+    @Override
+    public synchronized void decreaseCpu(long cpuLoad) {
         connection.decreaseCpu(cpuLoad);
     }
 
-    synchronized void decreaseMemory(long memoryLoad) {
+    /**
+     * {@inheritDoc}
+     * @param memoryLoad the value by which memory load is decreased.
+     */
+    @Override
+    public synchronized void decreaseMemory(long memoryLoad) {
         connection.decreaseMemory(memoryLoad);
     }
 
-    synchronized void decreaseDiskIO(long diskIOLoad) {
+    /**
+     * {@inheritDoc}
+     * @param diskIOLoad the value by which disk IO load is decreased.
+     */
+    @Override
+    public synchronized void decreaseDiskIO(long diskIOLoad) {
         connection.decreaseDiskIO(diskIOLoad);
     }
 
-    synchronized void decreaseNetIO(long netIOLoad) {
+    /**
+     * {@inheritDoc}
+     * @param netIOLoad the value by which network IO load is decreased.
+     */
+    @Override
+    public synchronized void decreaseNetIO(long netIOLoad) {
         connection.decreaseNetIO(netIOLoad);
     }
 }
