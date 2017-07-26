@@ -54,20 +54,24 @@ public class ConnectionRunnable implements Runnable {
     }
 
     private void increase(Instruction.LoadType type, long increase) {
-        switch (type) {
+        try {
+            switch (type) {
 
-            case CPU:
-                connection.increaseAndGetCpu((int) increase);
-                break;
-            case MEMORY:
-                connection.increaseAndGetMemory(increase);
-                break;
-            case DISKIO:
-                connection.increaseAndGetDiskIO(increase);
-                break;
-            case NETIO:
-                connection.increaseAndGetNetIO(increase);
-                break;
+                case CPU:
+                    connection.increaseCpu(increase);
+                    break;
+                case MEMORY:
+                    connection.increaseMemory(increase);
+                    break;
+                case DISKIO:
+                    connection.increaseDiskIO(increase);
+                    break;
+                case NETIO:
+                    connection.increaseNetIO(increase);
+                    break;
+            }
+        } catch (MaximumLoadExceededException e) {
+            //TODO
         }
     }
 
@@ -76,16 +80,16 @@ public class ConnectionRunnable implements Runnable {
         switch (type) {
 
             case CPU:
-                connection.decreaseAndGetCpu((int) decrease);
+                connection.decreaseCpu(decrease);
                 break;
             case MEMORY:
-                connection.decreaseAndGetMemory(decrease);
+                connection.decreaseMemory(decrease);
                 break;
             case DISKIO:
-                connection.decreaseAndGetDiskIO(decrease);
+                connection.decreaseDiskIO(decrease);
                 break;
             case NETIO:
-                connection.decreaseAndGetNetIO(decrease);
+                connection.decreaseNetIO(decrease);
                 break;
         }
     }
