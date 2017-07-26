@@ -7,13 +7,15 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.*;
 
 /**
- * Interface to represent a fake load dispatcher. A fake load dispatcher is responsible
- * for scheduling and dispatching fake loads to the simulation infrastructure.
+ * Default implementation of the {@link FakeLoadDispatcher} interface. The dispatcher is responsible
+ * for scheduling and dispatching fake loads to an underlying simulation infrastructure.
  *
  * <p>
- * Whenever a {@link FakeLoad}'s {@code execute()} method is called, the fake load gets propagated to
- * the {@code DefaultFakeLoadDispatcher} instance. Then, the system load instructions contained within the FakeLoad object
- * are parsed and scheduled before being dispatched to the simulation infrastructure.
+ * This concrete implementation consists of a {@link DefaultInfrastructure} instance and a scheduler.
+ * The infrastructure is responsible for actually executing load instructions of {@link FakeLoad} objects
+ * submitted via {@link #submitLoad(FakeLoad)}. The scheduler is responsible for scheduling the propagation of load
+ * instructions to the infrastructure at the right time. Further the scheduler is also responsible for reducing the
+ * load again once it has run.
  *
  * <p>
  * Multiple fake loads being executed simultaneously should produce a system load which is the aggregation of all
@@ -31,7 +33,7 @@ import java.util.concurrent.*;
  * For more information on the simulation infrastructure see {@link DefaultInfrastructure}.
  *
  * @see FakeLoad
- * @see DefaultInfrastructure
+ * @see FakeLoadDispatcher
  * @since 1.8
  * @author Marten Sigwart
  */
@@ -58,23 +60,28 @@ public class DefaultFakeLoadDispatcher implements FakeLoadDispatcher {
     /**
      * Constructor
      */
-    DefaultFakeLoadDispatcher(DefaultInfrastructure infrastructure) {
+    public DefaultFakeLoadDispatcher(DefaultInfrastructure infrastructure) {
         this.infrastructure = infrastructure;
         scheduler = new ScheduledThreadPoolExecutor(1);
     }
 
 
-
+    @Override
     public Future<String> submitLoad(FakeLoad load) {
         return scheduleLoad(load);
     }
 
     private Future<String> scheduleLoad(FakeLoad fakeLoad) {
         log.debug("Scheduling load...");
-        infrastructure.increaseCpu(fakeLoad.getCpuLoad());
-        infrastructure.increaseMemory(fakeLoad.getMemoryLoad());
-        infrastructure.increaseDiskIO(fakeLoad.getDiskIOLoad());
-        infrastructure.increaseNetIO(fakeLoad.getNetIOLoad());
+        try {
+            infrastructure.increaseCpu(fakeLoad.getCpuLoad());
+            infrastructure.increaseMemory(fakeLoad.getMemoryLoad());
+            infrastructure.increaseDiskIO(fakeLoad.getDiskIOLoad());
+            infrastructure.increaseNetIO(fakeLoad.getNetIOLoad());
+
+        } catch (MaximumLoadExceededException e) {
+            throw new RuntimeException(e.getMessage());
+        }
 
         Future<String> future = scheduler.schedule(() -> {
 
