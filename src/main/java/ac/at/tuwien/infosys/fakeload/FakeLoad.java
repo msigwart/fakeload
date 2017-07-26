@@ -27,23 +27,6 @@ import java.util.concurrent.TimeUnit;
 public interface FakeLoad {
 
     /**
-     * Executes the fake sytem loads specified by the calling FakeLoad object.
-     *
-     * <p>This means the 'fake' system loads (CPU, memory, other FakeLoad objects, etc.) specified within the instance are
-     * simulated and executed by the system. For example after calling {@code execute()} on a FakeLoad object with a
-     * specified CPU load of 80% and a duration of 10 seconds, the system will generate a CPU load of 80% for the next 10 seconds.
-     *
-     * <p>
-     * Note: This should be a blocking call, meaning within a single thread the method call blocks until the load simulation
-     * has finished. This is due to the fact that a fake load represents some real computation.
-     * A real computation would take all the time it needs (and would therefore block) until it has finished, therefore
-     * the fake computation should do so as well. However, different threads calling {@code execute()} should be able to do so
-     * at the same time.
-     * </p>
-     */
-    void execute();
-
-    /**
      * Returns a {@code FakeLoad} instance containing the specified duration.
      *
      * <p>The method could merely change an existing duration attribute (like a simple setter) in the case of
