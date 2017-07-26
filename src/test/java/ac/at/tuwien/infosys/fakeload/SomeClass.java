@@ -19,11 +19,12 @@ public class SomeClass {
 
         // Execute FakeLoad
 //        FakeLoad fakeLoad = FakeLoads.createLoad(100, "50%", "1024m");
+        FakeLoadExecutor executor = FakeLoadExecutors.newDefaultExecutor();
         FakeLoad fakeLoad = FakeLoads.createLoad().lasting(5, TimeUnit.SECONDS)
                 .withCpuLoad(50)
                 .withMemoryLoad(100, MB);
 
-        fakeLoad.execute();
+        executor.execute(fakeLoad);
 
         // some code
         log.info("Leaving someMethod()...");
@@ -64,11 +65,12 @@ public class SomeClass {
     public void yetAnotherMethod() {
         log.info("Entered yetAnotherMethod()");
 
+        FakeLoadExecutor executor = FakeLoadExecutors.newDefaultExecutor();
         FakeLoad fakeLoad = new MutableFakeLoad()
                 .withCpuLoad(80)
                 .withMemoryLoad(300, MB);
 
-        fakeLoad.execute();
+        executor.execute(fakeLoad);
 
         log.info("Leaving yetAnotherMethod()");
     }
