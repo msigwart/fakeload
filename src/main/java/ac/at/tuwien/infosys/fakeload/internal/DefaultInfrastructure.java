@@ -16,9 +16,10 @@ import java.util.concurrent.Future;
  * Represents a simulation infrastructure for the FakeLoad Library.
  *
  * <p>
- * The simulation infrastructure consists of different tasks. Each task serves a specific simulation purpose.
- * There will be tasks responsible for CPU load simulation, for memory simulation, and more.
- * The {@code DefaultInfrastructure} instance provides methods for starting and stopping the execution of simulator tasks.
+ * A simulation infrastructure is built up of different tasks. Each task serves a specific simulation purpose.
+ * There will be tasks responsible for CPU load simulation, for memory simulation, etc. A {@code DefaultInfrastructure}
+ * provides functionality for adjusting system load via increase and decrease methods. Further, it provides methods for
+ * starting and stopping the execution of simulator tasks.
  *
  * <p>
  * Further, there exists a task responsible for controlling the simulator tasks, that is, it checks whether the loads
@@ -26,11 +27,12 @@ import java.util.concurrent.Future;
  *
  * <p>
  * Multiple fake loads being executed simultaneously should produce a system load which is the aggregation of all
- * load instructions contained in these fake loads. If thread A executes a fake load of 20% CPU and thread B executes
+ * load instructions contained in these fake loads. If thread A submits a fake load of 20% CPU and thread B submits
  * a fake load of 30% CPU the resulting system load should be 20% + 30% = 50%.
  * The {@code DefaultFakeLoadDispatcher} is responsible for this aggregation as well as reporting any faults concerning
- * any passing of load limitations of the system. For example executing a CPU load of more than 100% is not possible,
- * therefore if accumulated CPU load of the FakeLoad instances being executed exceeds that an error should be thrown.
+ * any exceeding of load limitations of the system. For example executing a CPU load of more than 100% is not possible,
+ * therefore if the simulation infrastructure gets instructions to execute a CPU load of over 100% and error should
+ * be thrown.
  *
  * <p> TODO maybe should not be singleton
  * Note: {@code DefaultInfrastructure} is singleton, thus, there only exists one instance per process.
@@ -40,7 +42,7 @@ import java.util.concurrent.Future;
  * @since 1.8
  *
  */
-enum DefaultInfrastructure {
+public enum DefaultInfrastructure {
 
     INSTANCE;
 
@@ -101,10 +103,13 @@ enum DefaultInfrastructure {
         }
 
         // Run simulation tasks
-        Collection<Future<Void>> futures = new ArrayList<>();
+        Collection<Future> futures = new ArrayList<>();
         for (Callable task: simulatorTasks) {
             futures.add(executorService.submit(task));
         }
+
+        //TODO maybe start a periodic isAlive thread to check if all simulator tasks are still running?
+        // Could be useful in case of Memory Simulator task dying due to OutOfMemoryError.
 
         log.debug("Successfully started infrastructure");
     }
