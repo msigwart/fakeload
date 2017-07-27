@@ -1,10 +1,15 @@
 package ac.at.tuwien.infosys.fakeload;
 
+import com.google.common.collect.ImmutableList;
+
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+
+import static com.google.common.base.Preconditions.*;
+
 
 /**
  * Created by martensigwart on 20.07.17.
@@ -18,7 +23,6 @@ public final class ImmutableFakeLoad extends AbstractFakeLoad {
     private final long memoryLoad;
     private final long diskIOLoad;
     private final long netIOLoad;
-
     private final List<FakeLoad> loads;
 
 
@@ -26,14 +30,23 @@ public final class ImmutableFakeLoad extends AbstractFakeLoad {
                               int cpuLoad, long memoryLoad, long diskIOLoad, long netIOLoad,
                               List<FakeLoad> loads) {
 
+        checkArgument(duration >= 0, "Duration must be nonnegative but was %s", duration);
+        checkArgument(repetitions >= 0, "Repetitions must be nonnegative but was %s", repetitions);
+        checkArgument(cpuLoad >= 0, "CPU load must be nonnegative but was %s", cpuLoad);
+        checkArgument(memoryLoad >= 0, "memory load must be nonnegative but was %s", memoryLoad);
+        checkArgument(diskIOLoad >= 0, "Disk IO load must be nonnegative but was %s", diskIOLoad);
+        checkArgument(netIOLoad >= 0, "Net IO load must be nonnegative but was %s", netIOLoad);
+
         this.duration = duration;
-        this.unit = unit;
+        this.unit = checkNotNull(unit);
         this.repetitions = repetitions;
         this.cpuLoad = cpuLoad;
         this.memoryLoad = memoryLoad;
         this.diskIOLoad = diskIOLoad;
         this.netIOLoad = netIOLoad;
-        this.loads = Collections.unmodifiableList(loads);
+//        this.loads = Collections.unmodifiableList(loads);
+        this.loads = ImmutableList.copyOf(loads);
+
     }
 
     ImmutableFakeLoad() {
@@ -79,26 +92,24 @@ public final class ImmutableFakeLoad extends AbstractFakeLoad {
 
     @Override
     public FakeLoad addLoad(FakeLoad load) {
-        // add load
         List<FakeLoad> newLoads;
-        if (this.loads.size() > 0) {
-            newLoads = this.loads.subList(0, this.loads.size()-1);
+
+        if (this.loads.isEmpty()) {
+            newLoads = ImmutableList.of(load);
         } else {
-            newLoads = new ArrayList<>();
+            newLoads = ImmutableList.<FakeLoad>builder().addAll(this.loads).add(load).build();
         }
-        newLoads.add(load);
         return new ImmutableFakeLoad(duration, unit, repetitions, cpuLoad, memoryLoad, diskIOLoad, netIOLoad, newLoads);
     }
 
     @Override
     public FakeLoad addLoads(Collection<FakeLoad> loads) {
         List<FakeLoad> newLoads;
-        if (this.loads.size() > 0) {
-            newLoads = this.loads.subList(0, this.loads.size()-1);
+        if (this.loads.isEmpty()) {
+            newLoads = ImmutableList.copyOf(loads);
         } else {
-            newLoads = new ArrayList<>();
+            newLoads = ImmutableList.<FakeLoad>builder().addAll(this.loads).addAll(loads).build();
         }
-        newLoads.addAll(loads);
         return new ImmutableFakeLoad(duration, unit, repetitions, cpuLoad, memoryLoad, diskIOLoad, netIOLoad, newLoads);
     }
 
@@ -145,12 +156,14 @@ public final class ImmutableFakeLoad extends AbstractFakeLoad {
             return true;
         }
 
-        // check if pattern is contained in child patterns
+        // recursively check if load is contained in child loads
         for (FakeLoad l : this.getLoads()) {
-            return l.contains(load);
+            if (l.contains(load)) {
+                return true;
+            }
         }
 
-        // if not found anywhere return false
+        // load not found anywhere
         return false;
     }
 
@@ -174,15 +187,7 @@ public final class ImmutableFakeLoad extends AbstractFakeLoad {
 
     @Override
     public int hashCode() {
-        int result = (int) (duration ^ (duration >>> 32));
-        result = 31 * result + (unit != null ? unit.hashCode() : 0);
-        result = 31 * result + repetitions;
-        result = 31 * result + cpuLoad;
-        result = 31 * result + (int) (memoryLoad ^ (memoryLoad >>> 32));
-        result = 31 * result + (int) (diskIOLoad ^ (diskIOLoad >>> 32));
-        result = 31 * result + (int) (netIOLoad ^ (netIOLoad >>> 32));
-        result = 31 * result + loads.hashCode();
-        return result;
+        return Objects.hash(duration, repetitions, cpuLoad, memoryLoad, diskIOLoad, netIOLoad, unit, loads);
     }
 
     @Override
