@@ -61,7 +61,7 @@ public interface FakeLoad extends Iterable<FakeLoad> {
      * @param cpuLoad the fake CPU load in percent (0-100%)
      * @return returns the FakeLoad object containing the provided parameters.
      */
-    FakeLoad withCpuLoad(int cpuLoad);
+    FakeLoad withCpuLoad(long cpuLoad);
 
     /**
      * Returns a {@code FakeLoad} instance with the specified memory load.
@@ -88,7 +88,7 @@ public interface FakeLoad extends Iterable<FakeLoad> {
 
     Collection<FakeLoad> getInnerLoads();
 
-    int getCpuLoad();
+    long getCpuLoad();
 
     long getMemoryLoad();
 

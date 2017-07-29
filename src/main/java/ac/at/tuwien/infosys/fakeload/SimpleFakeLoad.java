@@ -16,14 +16,14 @@ public final class SimpleFakeLoad extends AbstractFakeLoad {
 
     private final long duration;
     private final TimeUnit unit;
-    private final int cpuLoad;
+    private final long cpuLoad;
     private final long memoryLoad;
     private final long diskIOLoad;
     private final long netIOLoad;
 
 
     private SimpleFakeLoad(long duration, TimeUnit unit, int repetitions,
-                           int cpuLoad, long memoryLoad, long diskIOLoad, long netIOLoad) {
+                           long cpuLoad, long memoryLoad, long diskIOLoad, long netIOLoad) {
 
         super(repetitions);
 
@@ -64,7 +64,7 @@ public final class SimpleFakeLoad extends AbstractFakeLoad {
     }
 
     @Override
-    public FakeLoad withCpuLoad(int cpuLoad) {
+    public FakeLoad withCpuLoad(long cpuLoad) {
         return new SimpleFakeLoad(duration, unit, getRepetitions(), cpuLoad, memoryLoad, diskIOLoad, netIOLoad);
     }
 
@@ -108,7 +108,7 @@ public final class SimpleFakeLoad extends AbstractFakeLoad {
     }
 
     @Override
-    public int getCpuLoad() {
+    public long getCpuLoad() {
         return cpuLoad;
     }
 
@@ -145,7 +145,23 @@ public final class SimpleFakeLoad extends AbstractFakeLoad {
 
     @Override
     public Iterator<FakeLoad> iterator() {
-        return null;
+        return new Iterator<FakeLoad>() {
+
+            private boolean hasNext = true;
+
+            @Override
+            public boolean hasNext() {
+                return hasNext;
+            }
+
+            @Override
+            public FakeLoad next() {
+                if (hasNext) {
+                    this.hasNext = false;
+                    return SimpleFakeLoad.this;
+                } throw new NoSuchElementException();
+            }
+        };
     }
 
 //    @Override

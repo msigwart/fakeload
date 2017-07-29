@@ -14,7 +14,7 @@ public final class MutableFakeLoad extends AbstractFakeLoad {
     private long duration;
     private TimeUnit unit;
     private int repetitions;
-    private int cpuLoad;
+    private long cpuLoad;
     private long memoryLoad;
     private long diskIOLoad;
     private long netIOLoad;
@@ -47,7 +47,7 @@ public final class MutableFakeLoad extends AbstractFakeLoad {
     }
 
     @Override
-    public FakeLoad withCpuLoad(int cpuLoad) {
+    public FakeLoad withCpuLoad(long cpuLoad) {
         this.cpuLoad = cpuLoad;
         return this;
     }
@@ -93,7 +93,7 @@ public final class MutableFakeLoad extends AbstractFakeLoad {
     }
 
     @Override
-    public int getCpuLoad() {
+    public long getCpuLoad() {
         return 0;
     }
 
