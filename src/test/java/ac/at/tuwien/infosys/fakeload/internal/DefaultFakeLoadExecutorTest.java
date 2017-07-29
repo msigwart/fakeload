@@ -7,10 +7,10 @@ import org.junit.Test;
  * Tests for class {@link DefaultFakeLoadExecutor}
  *
  */
-public class FakeLoadExecutorTest {
+public class DefaultFakeLoadExecutorTest {
 
     @Test
-    public void test1() {
+    public void testSimpleLoadExecution() {
         SimulationInfrastructure infrastructure = new DefaultSimulationInfrastructure();
         FakeLoadExecutor executor = new DefaultFakeLoadExecutor(infrastructure);
     }
