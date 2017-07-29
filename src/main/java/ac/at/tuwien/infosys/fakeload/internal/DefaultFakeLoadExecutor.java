@@ -2,10 +2,13 @@ package ac.at.tuwien.infosys.fakeload.internal;
 
 import ac.at.tuwien.infosys.fakeload.FakeLoad;
 import ac.at.tuwien.infosys.fakeload.FakeLoadExecutor;
+import ac.at.tuwien.infosys.fakeload.SimpleFakeLoad;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.*;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
  * A {@link FakeLoadExecutor} that executes each submitted {@link FakeLoad} by passing passing it on to an underlying
@@ -59,39 +62,55 @@ public final class DefaultFakeLoadExecutor implements FakeLoadExecutor {
     @Override
     public void execute(FakeLoad load) {
         try {
-            Future<String> future = scheduleLoad(load);
+            Future<Void> future = scheduleLoad(load);
             future.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
     }
 
-    private Future<String> scheduleLoad(FakeLoad load) {
+    private Future<Void> scheduleLoad(FakeLoad load) {
         log.debug("Scheduling load...");
-        try {
-            infrastructure.increaseCpu(load.getCpuLoad());
-            infrastructure.increaseMemory(load.getMemoryLoad());
-            infrastructure.increaseDiskIO(load.getDiskIOLoad());
-            infrastructure.increaseNetIO(load.getNetIOLoad());
 
-        } catch (MaximumLoadExceededException e) {
-            throw new RuntimeException(e.getMessage());
+
+        // TODO not correct yet
+        Future<Void> future = null;
+        long offset = 0L;
+        for (FakeLoad f: load) {
+            scheduleIncrease(f, offset);
+            offset += f.getTimeUnit().toMillis(f.getDuration());
+            future = scheduleDecrease(f, offset);
         }
 
-        Future<String> future = scheduler.schedule(() -> {
+        log.debug("Finished scheduling.");
+        return future;
+    }
+
+
+    private Future<Void> scheduleDecrease(FakeLoad load, long offset) {
+        return scheduler.schedule(() -> {
 
             infrastructure.decreaseCpu(load.getCpuLoad());
             infrastructure.decreaseMemory(load.getMemoryLoad());
             infrastructure.decreaseDiskIO(load.getDiskIOLoad());
             infrastructure.decreaseNetIO(load.getNetIOLoad());
 
-            return "";
+            return null;
 
-        }, load.getDuration(), load.getTimeUnit());
+        }, offset, TimeUnit.MILLISECONDS);
+    }
 
+    private Future<Void> scheduleIncrease(FakeLoad load, long offset) {
+        return scheduler.schedule(() -> {
 
-        log.debug("Finished scheduling.");
-        return future;
+            infrastructure.increaseCpu(load.getCpuLoad());
+            infrastructure.increaseMemory(load.getMemoryLoad());
+            infrastructure.increaseDiskIO(load.getDiskIOLoad());
+            infrastructure.increaseNetIO(load.getNetIOLoad());
+
+            return null;
+        }, offset, TimeUnit.MILLISECONDS);
+
     }
 
 
