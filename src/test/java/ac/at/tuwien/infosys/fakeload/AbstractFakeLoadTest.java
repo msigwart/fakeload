@@ -323,7 +323,7 @@ public class AbstractFakeLoadTest {
 
     @Test(expected = NoSuchElementException.class)
     public void testIteratorMethod1() {
-        FakeLoad simple = fakeload.lasting(12, TimeUnit.SECONDS)
+        FakeLoad simple = new SimpleFakeLoad().lasting(12, TimeUnit.SECONDS)
                 .withCpuLoad(80)
                 .withMemoryLoad(300, MemoryUnit.KB);
 
@@ -339,7 +339,7 @@ public class AbstractFakeLoadTest {
 
     @Test(expected = NoSuchElementException.class)
     public void testIteratorMethod2() {
-        FakeLoad simple = fakeload.lasting(1111, TimeUnit.MILLISECONDS)
+        FakeLoad simple = new SimpleFakeLoad().lasting(1111, TimeUnit.MILLISECONDS)
                 .withCpuLoad(99)
                 .withMemoryLoad(9999, MemoryUnit.BYTES);
 
@@ -351,7 +351,7 @@ public class AbstractFakeLoadTest {
         long startMemory = 100;
 
         for (int i=0; i<noOfChildren; i++) {
-            FakeLoad child = fakeload.lasting(startDuration*i, TimeUnit.SECONDS)
+            FakeLoad child = new SimpleFakeLoad().lasting(startDuration*i, TimeUnit.SECONDS)
                     .withCpuLoad(startCPU*i)
                     .withMemoryLoad(startMemory*i, MemoryUnit.KB);
 
@@ -383,7 +383,7 @@ public class AbstractFakeLoadTest {
 
     @Test(expected = NoSuchElementException.class)
     public void testIteratorMethod3() {
-        FakeLoad simple = fakeload.lasting(9999, TimeUnit.MILLISECONDS)
+        FakeLoad simple = new SimpleFakeLoad().lasting(9999, TimeUnit.MILLISECONDS)
                 .withCpuLoad(99)
                 .withMemoryLoad(9999, MemoryUnit.BYTES);
 
@@ -394,26 +394,26 @@ public class AbstractFakeLoadTest {
         List<FakeLoad> grandChildren = new ArrayList<>();
 
         long startDuration = 10;
-        long startCPU = 100;
+        long startCPU = 1;
         long startMemory = 1000;
 
         // create children
         for (int i=0; i<noOfChildren; i++) {
-            FakeLoad child = fakeload.lasting(startDuration*i, TimeUnit.SECONDS)
+            FakeLoad child = new SimpleFakeLoad().lasting(startDuration*i, TimeUnit.SECONDS)
                     .withCpuLoad(startCPU*i)
                     .withMemoryLoad(startMemory*i, MemoryUnit.KB);
+            children.add(i, child);
 
             // create grand children
-            for (int j=1; j<=noOfGrandChildrenPerChild; j++) {
-                FakeLoad grandChild = fakeload.lasting(startDuration*i+j, TimeUnit.SECONDS)
-                        .withCpuLoad(startCPU*i+j)
+            for (int j=0; j<noOfGrandChildrenPerChild; j++) {
+                FakeLoad grandChild = new SimpleFakeLoad().lasting(startDuration*i+j, TimeUnit.SECONDS)
+                        .withCpuLoad(startCPU+j)
                         .withMemoryLoad(startMemory*i+j, MemoryUnit.KB);
 
-                grandChildren.add(grandChild);
+                grandChildren.add(i*noOfGrandChildrenPerChild+j, grandChild);
                 child = child.addLoad(grandChild);
             }
 
-            children.add(child);
             parent = parent.addLoad(child);
 
         }
