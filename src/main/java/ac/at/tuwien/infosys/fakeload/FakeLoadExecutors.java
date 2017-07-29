@@ -1,6 +1,7 @@
 package ac.at.tuwien.infosys.fakeload;
 
 import ac.at.tuwien.infosys.fakeload.internal.DefaultFakeLoadExecutor;
+import ac.at.tuwien.infosys.fakeload.internal.DefaultFakeLoadScheduler;
 import ac.at.tuwien.infosys.fakeload.internal.DefaultSimulationInfrastructure;
 import ac.at.tuwien.infosys.fakeload.internal.SimulationInfrastructure;
 
@@ -15,7 +16,7 @@ public class FakeLoadExecutors {
         if (defaultInfrastructure == null) {
             defaultInfrastructure = new DefaultSimulationInfrastructure();
         }
-        return new DefaultFakeLoadExecutor(defaultInfrastructure);
+        return new DefaultFakeLoadExecutor(new DefaultFakeLoadScheduler(defaultInfrastructure));
     }
 
     // prevent instantiation by suppressing default constructor
