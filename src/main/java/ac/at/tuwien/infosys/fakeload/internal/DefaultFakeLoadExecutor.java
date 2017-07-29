@@ -53,8 +53,11 @@ public final class DefaultFakeLoadExecutor implements FakeLoadExecutor {
     @Override
     public void execute(FakeLoad load) {
         try {
+            log.debug("Starting FakeLoad execution...");
+            log.trace("Executing {}", load);
             Future<Void> future = scheduler.schedule(load);
             future.get();
+            log.debug("Finished FakeLoad execution.");
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }

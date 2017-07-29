@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by martensigwart on 29.07.17.
  */
-public class DefaultFakeLoadScheduler implements FakeLoadScheduler {
+public final class DefaultFakeLoadScheduler implements FakeLoadScheduler {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultFakeLoadScheduler.class);
 

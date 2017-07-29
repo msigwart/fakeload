@@ -15,7 +15,7 @@ import java.util.concurrent.Future;
 /**
  * Default implementation class of {@link SimulationInfrastructure}.
  */
-public class DefaultSimulationInfrastructure implements SimulationInfrastructure {
+public final class DefaultSimulationInfrastructure implements SimulationInfrastructure {
 
     private static final Logger log = LoggerFactory.getLogger(SimulationInfrastructure.class);
 
