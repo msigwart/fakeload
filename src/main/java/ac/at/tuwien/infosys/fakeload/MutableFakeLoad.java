@@ -2,6 +2,7 @@ package ac.at.tuwien.infosys.fakeload;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -22,6 +23,7 @@ public final class MutableFakeLoad extends AbstractFakeLoad {
 
 
     MutableFakeLoad() {
+        super(0);
         this.loads = new ArrayList<>();
     }
 
@@ -86,7 +88,7 @@ public final class MutableFakeLoad extends AbstractFakeLoad {
     }
 
     @Override
-    public Collection<FakeLoad> getLoads() {
+    public Collection<FakeLoad> getInnerLoads() {
         return loads;
     }
 
@@ -120,4 +122,23 @@ public final class MutableFakeLoad extends AbstractFakeLoad {
         return null;
     }
 
+    @Override
+    public boolean contains(FakeLoad load) {
+        if (this == load) {
+            return true;
+        }
+
+        // check if pattern is contained in child patterns
+        for (FakeLoad l : this.getInnerLoads()) {
+            return l.contains(load);
+        }
+
+        // if not found anywhere return false
+        return false;
+    }
+
+    @Override
+    public Iterator<FakeLoad> iterator() {
+        return null;
+    }
 }

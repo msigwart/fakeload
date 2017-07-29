@@ -72,12 +72,12 @@ public class FakeLoadBuilder {
             // TODO: Create FakeLoad from JSON
             if (json != null) {
                 Gson g = new Gson();
-                FakeLoad pattern = g.fromJson(json, ImmutableFakeLoad.class);
-                return new ImmutableFakeLoad();
+                FakeLoad pattern = g.fromJson(json, SimpleFakeLoad.class);
+                return new SimpleFakeLoad();
             }
 
             // TODO: Create LoadPattern from load parameters
-            return new ImmutableFakeLoad();
+            return new SimpleFakeLoad();
         }
 
 }

@@ -1,21 +1,21 @@
 package ac.at.tuwien.infosys.fakeload;
 
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 public abstract class AbstractFakeLoad implements FakeLoad {
 
-    @Override
-    public boolean contains(FakeLoad load) {
-        if (this == load) {
-            return true;
-        }
+    private final int repetitions;
 
-        // check if pattern is contained in child patterns
-        for (FakeLoad l : this.getLoads()) {
-            return l.contains(load);
-        }
 
-        // if not found anywhere return false
-        return false;
+    protected AbstractFakeLoad(int repetitions) {
+        checkArgument(repetitions >= 0, "Repetitions must be nonnegative but was %s", repetitions);
+
+        this.repetitions = repetitions;
     }
 
+    @Override
+    public int getRepetitions() {
+        return repetitions;
+    }
 }

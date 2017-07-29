@@ -1,5 +1,7 @@
 package ac.at.tuwien.infosys.fakeload;
 
+import java.util.List;
+
 /**
  * Factory and utility methods for {@link FakeLoad} classes defined in this package.
  *
@@ -16,7 +18,7 @@ public final class FakeLoads {
      * @return a newly created {@code LoadPattern} instance
      */
     public static FakeLoad createLoad() {
-        return new ImmutableFakeLoad();
+        return new SimpleFakeLoad();
     }
 
 
@@ -37,8 +39,13 @@ public final class FakeLoads {
      */
     public static FakeLoad createLoad(long duration, String... loads) {
         // TODO return FakeLoad with provided parameters
-        return new ImmutableFakeLoad();
+        return new SimpleFakeLoad();
     }
+
+    public static FakeLoad createLoad(List<FakeLoad> newLoads, int repetitions) {
+        return new CompositeFakeLoad(newLoads, repetitions);
+    }
+
 
 
 
@@ -46,4 +53,6 @@ public final class FakeLoads {
     private FakeLoads() {
         throw new AssertionError();
     }
+
+
 }

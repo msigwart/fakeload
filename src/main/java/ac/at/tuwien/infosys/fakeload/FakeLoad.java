@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
  * @Author Marten Sigwart
  * @since 1.8
  */
-public interface FakeLoad {
+public interface FakeLoad extends Iterable<FakeLoad> {
 
     /**
      * Returns a {@code FakeLoad} instance containing the specified duration.
@@ -86,8 +86,7 @@ public interface FakeLoad {
 
     boolean contains(FakeLoad load);
 
-    Collection<FakeLoad> getLoads();
-
+    Collection<FakeLoad> getInnerLoads();
 
     int getCpuLoad();
 
@@ -100,4 +99,6 @@ public interface FakeLoad {
     long getDuration();
 
     TimeUnit getTimeUnit();
+
+    int getRepetitions();
 }
