@@ -2,6 +2,8 @@ package ac.at.tuwien.infosys.fakeload;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterators;
+import sun.jvm.hotspot.utilities.Assert;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,14 +30,14 @@ public final class CompositeFakeLoad extends AbstractFakeLoad {
     /**
      * This object's own load instructions
      */
-    private final FakeLoad ownLoad;
+    private final SimpleFakeLoad ownLoad;
 
     /**
      * This object's inner/children loads
      */
     private final List<FakeLoad> innerLoads;
 
-    CompositeFakeLoad(FakeLoad ownLoad, List<FakeLoad> innerLoads, int repetitions) {
+    CompositeFakeLoad(SimpleFakeLoad ownLoad, List<FakeLoad> innerLoads, int repetitions) {
         super(repetitions);
         this.ownLoad = checkNotNull(ownLoad);
         this.innerLoads = ImmutableList.copyOf(checkNotNull(innerLoads));
@@ -55,7 +57,7 @@ public final class CompositeFakeLoad extends AbstractFakeLoad {
 
     @Override
     public FakeLoad lasting(long duration, TimeUnit unit) {
-        FakeLoad newOwnLoad = ownLoad.lasting(duration, unit);
+        SimpleFakeLoad newOwnLoad = (SimpleFakeLoad) ownLoad.lasting(duration, unit);
         return new CompositeFakeLoad(newOwnLoad, innerLoads, getRepetitions());
     }
 
@@ -66,25 +68,25 @@ public final class CompositeFakeLoad extends AbstractFakeLoad {
 
     @Override
     public FakeLoad withCpuLoad(long cpuLoad) {
-        FakeLoad newOwnLoad = ownLoad.withCpuLoad(cpuLoad);
+        SimpleFakeLoad newOwnLoad = (SimpleFakeLoad) ownLoad.withCpuLoad(cpuLoad);
         return new CompositeFakeLoad(newOwnLoad, innerLoads, getRepetitions());
     }
 
     @Override
     public FakeLoad withMemoryLoad(long amount, MemoryUnit unit) {
-        FakeLoad newOwnLoad = ownLoad.withMemoryLoad(amount, unit);
+        SimpleFakeLoad newOwnLoad = (SimpleFakeLoad) ownLoad.withMemoryLoad(amount, unit);
         return new CompositeFakeLoad(newOwnLoad, innerLoads, getRepetitions());
     }
 
     @Override
     public FakeLoad withDiskIOLoad(long diskIOLoad) {
-        FakeLoad newOwnLoad = ownLoad.withDiskIOLoad(diskIOLoad);
+        SimpleFakeLoad newOwnLoad = (SimpleFakeLoad) ownLoad.withDiskIOLoad(diskIOLoad);
         return new CompositeFakeLoad(newOwnLoad, innerLoads, getRepetitions());
     }
 
     @Override
     public FakeLoad withNetIOLoad(long netIOLoad) {
-        FakeLoad newOwnLoad = ownLoad.withNetIOLoad(netIOLoad);
+        SimpleFakeLoad newOwnLoad = (SimpleFakeLoad) ownLoad.withNetIOLoad(netIOLoad);
         return new CompositeFakeLoad(newOwnLoad, innerLoads, getRepetitions());
     }
 
@@ -168,8 +170,11 @@ public final class CompositeFakeLoad extends AbstractFakeLoad {
 
     @Override
     public Iterator<FakeLoad> iterator() {
-        //TODO
-        return null;
+        Iterator<FakeLoad> iterator = ownLoad.iterator();
+        for (FakeLoad load: innerLoads) {
+            iterator = Iterators.concat(iterator, load.iterator());
+        }
+        return iterator;
     }
 
     @Override
