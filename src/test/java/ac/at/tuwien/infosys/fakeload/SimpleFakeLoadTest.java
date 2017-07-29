@@ -2,11 +2,7 @@ package ac.at.tuwien.infosys.fakeload;
 
 import org.junit.Test;
 
-import java.util.List;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by martensigwart on 22.07.17.
