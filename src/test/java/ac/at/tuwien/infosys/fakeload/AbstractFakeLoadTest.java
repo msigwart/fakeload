@@ -5,7 +5,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
@@ -317,6 +319,141 @@ public class AbstractFakeLoadTest {
         assertTrue(parent.contains(sameAsChild1));
         assertFalse(parent.contains(other));
     }
+
+
+    @Test(expected = NoSuchElementException.class)
+    public void testIteratorMethod1() {
+        FakeLoad simple = fakeload.lasting(12, TimeUnit.SECONDS)
+                .withCpuLoad(80)
+                .withMemoryLoad(300, MemoryUnit.KB);
+
+        Iterator<FakeLoad> iterator = simple.iterator();
+        assertTrue(iterator.hasNext());
+        FakeLoad next = iterator.next();
+        assertEquals(simple, next);
+        assertFalse(iterator.hasNext());
+        // now throws an exception
+        iterator.next();
+    }
+
+
+    @Test(expected = NoSuchElementException.class)
+    public void testIteratorMethod2() {
+        FakeLoad simple = fakeload.lasting(1111, TimeUnit.MILLISECONDS)
+                .withCpuLoad(99)
+                .withMemoryLoad(9999, MemoryUnit.BYTES);
+
+        FakeLoad parent = simple;
+        List<FakeLoad> children = new ArrayList<>();
+        int noOfChildren = 10;
+        long startDuration = 1;
+        long startCPU = 10;
+        long startMemory = 100;
+
+        for (int i=0; i<noOfChildren; i++) {
+            FakeLoad child = fakeload.lasting(startDuration*i, TimeUnit.SECONDS)
+                    .withCpuLoad(startCPU*i)
+                    .withMemoryLoad(startMemory*i, MemoryUnit.KB);
+
+            children.add(child);
+            parent = parent.addLoad(child);
+        }
+        // check that for loop is correct
+        assertEquals(noOfChildren, children.size());
+
+
+        // now test iterator
+        Iterator<FakeLoad> iterator = parent.iterator();
+        assertTrue(iterator.hasNext());
+        FakeLoad next = iterator.next();
+        assertEquals(simple, next);
+
+
+        for (int i=0; i<noOfChildren; i++) {
+            assertTrue(iterator.hasNext());
+            next = iterator.next();
+            assertEquals(children.get(i), next);
+        }
+
+        assertFalse(iterator.hasNext());
+        // now throws an exception
+        iterator.next();
+
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void testIteratorMethod3() {
+        FakeLoad simple = fakeload.lasting(9999, TimeUnit.MILLISECONDS)
+                .withCpuLoad(99)
+                .withMemoryLoad(9999, MemoryUnit.BYTES);
+
+        int noOfChildren = 10;
+        int noOfGrandChildrenPerChild = 9;
+        FakeLoad parent = simple;
+        List<FakeLoad> children = new ArrayList<>();
+        List<FakeLoad> grandChildren = new ArrayList<>();
+
+        long startDuration = 10;
+        long startCPU = 100;
+        long startMemory = 1000;
+
+        // create children
+        for (int i=0; i<noOfChildren; i++) {
+            FakeLoad child = fakeload.lasting(startDuration*i, TimeUnit.SECONDS)
+                    .withCpuLoad(startCPU*i)
+                    .withMemoryLoad(startMemory*i, MemoryUnit.KB);
+
+            // create grand children
+            for (int j=1; j<=noOfGrandChildrenPerChild; j++) {
+                FakeLoad grandChild = fakeload.lasting(startDuration*i+j, TimeUnit.SECONDS)
+                        .withCpuLoad(startCPU*i+j)
+                        .withMemoryLoad(startMemory*i+j, MemoryUnit.KB);
+
+                grandChildren.add(grandChild);
+                child = child.addLoad(grandChild);
+            }
+
+            children.add(child);
+            parent = parent.addLoad(child);
+
+        }
+
+        // Check that for-loops are correct
+        assertEquals(noOfChildren, children.size());
+        assertEquals(noOfGrandChildrenPerChild*noOfChildren, grandChildren.size());
+
+        // Now test iterator
+        Iterator<FakeLoad> iterator = parent.iterator();
+        assertTrue(iterator.hasNext());
+        FakeLoad next = iterator.next();
+        assertEquals(simple, next);
+
+        for (int i=0; i<noOfChildren; i++) {
+            assertTrue(iterator.hasNext());
+            next = iterator.next();
+            assertEquals(children.get(i), next);
+
+            for (int j=0; j<noOfGrandChildrenPerChild; j++) {
+                assertTrue(iterator.hasNext());
+                next = iterator.next();
+                assertEquals(grandChildren.get(i*noOfGrandChildrenPerChild+j), next);
+            }
+        }
+
+        assertFalse(iterator.hasNext());
+        // now throws an exception
+        iterator.next();
+
+    }
+
+
+
+
+
+
+//--------------------------------------------------------------------------------------------------
+//   HELPER METHODS
+//--------------------------------------------------------------------------------------------------
 
 
     void assertDefault(FakeLoad actual) {
