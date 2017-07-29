@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * Tests for class {@link DefaultFakeLoadExecutor}
@@ -19,9 +19,29 @@ public class DefaultFakeLoadExecutorTest {
 
     @Before
     public void setUp() {
-        SimulationInfrastructure infrastructure = new DefaultSimulationInfrastructure();
-        FakeLoadScheduler scheduler = new DefaultFakeLoadScheduler(infrastructure);
-        executor = new DefaultFakeLoadExecutor(scheduler);
+
+        executor = new DefaultFakeLoadExecutor(new FakeLoadScheduler() {
+            @Override
+            public Future<Void> schedule(FakeLoad fakeLoad) {
+
+                ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+                return executorService.submit(new Callable<Void>() {
+                    @Override
+                    public Void call() throws Exception {
+                        for (FakeLoad f: fakeLoad) {
+                            try {
+                                Thread.sleep(f.getTimeUnit().toMillis(f.getDuration()));
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException("Should not happen");
+                            }
+                        }
+                        return null;
+                    }
+                });
+
+            }
+        });
     }
 
     @Test
