@@ -7,7 +7,7 @@ package ac.at.tuwien.infosys.fakeload;
  *
  * <p>
  * Implementations of this interface should take care of scheduling and executing load instructions
- * contained in a FakeLoad as accurate as possible to provide a reliable simulation of system load.
+ * contained in a {@code FakeLoad} as accurate as possible to provide a reliable simulation of system load.
  *
  * <p>
  * Note: In a 'realistic' scenario multiple {@code FakeLoad}s being executed simultaneously should
@@ -36,13 +36,13 @@ public interface FakeLoadExecutor {
      * <p>
      * This means the 'fake' system load instructions (CPU, memory, other FakeLoad objects, etc.)
      * contained withing the provided {@code FakeLoad} instance are simulated and executed by the executor.
-     * For example after calling {@code execute} with a FakeLoad object specifying aCPU load of 80% and
+     * For example after calling {@code execute} with a FakeLoad object specifying a CPU load of 80% and
      * a duration of 10 seconds, the executor will generate a CPU load of 80% for the next 10 seconds.
      *
      * <p>
      * Note: This should be a blocking call, meaning within a single thread the method call blocks until
      * the execution of a fake load has finished. This is due to the fact that a fake load represents
-     * a spaceholder for some real computation. A real computation would take all the time it needs
+     * a space holder for some real computation. A real computation would take all the time it needs
      * (and would therefore block) until it has finished, therefore the fake computation should do so as well.
      * However, different threads calling {@code execute()} should be able to do so at the same time.
      *
