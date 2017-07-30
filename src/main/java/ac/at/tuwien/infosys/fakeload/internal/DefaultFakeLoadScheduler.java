@@ -9,7 +9,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by martensigwart on 29.07.17.
+ * Default implementation of the {@link FakeLoadScheduler} interface.
  */
 public final class DefaultFakeLoadScheduler implements FakeLoadScheduler {
 
@@ -49,6 +49,7 @@ public final class DefaultFakeLoadScheduler implements FakeLoadScheduler {
         Future<Void> future = null;
         long offset = 0L;
         for (FakeLoad f: load) {
+            log.trace("Scheduling: {}", f);
             scheduleIncrease(f, offset);
             offset += f.getTimeUnit().toMillis(f.getDuration());
             future = scheduleDecrease(f, offset);
