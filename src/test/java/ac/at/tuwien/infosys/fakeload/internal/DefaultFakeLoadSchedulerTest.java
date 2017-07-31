@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -120,7 +119,7 @@ public class DefaultFakeLoadSchedulerTest {
 
         try {
             Future<Void> future = scheduler.schedule(fakeLoad);
-            Thread.sleep(100);
+            Thread.sleep(10);
             assertInfrastructureValues(99, 9999, 99, 99, infrastructure);
 
             for (int i=0; i<loadList.size(); i++) {
@@ -135,6 +134,59 @@ public class DefaultFakeLoadSchedulerTest {
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
+    }
+
+
+    @Test
+    public void testScheduleMethod3() {
+        long duration = 2;
+        TimeUnit unit = TimeUnit.SECONDS;
+
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    FakeLoad load = FakeLoads.createLoad().lasting(duration, unit)
+                            .withCpuLoad(50);
+
+                    Future<Void> future = scheduler.schedule(load);
+                    future.get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        Thread t2 = new Thread((new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    FakeLoad load2 = FakeLoads.createLoad().lasting(duration, unit)
+                            .withCpuLoad(60);
+
+                    Thread.sleep(500);
+                    Future<Void> future = scheduler.schedule(load2);
+                    future.get();
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    assertEquals("java.lang.RuntimeException: Increase by 60 would cause a CPU load of over 100%", e.getMessage()); //TODO make message not hardcoded
+                }
+            }
+        }));
+
+        t1.start();
+        t2.start();
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void add(List<long[]> loadList, long cpu, long memory, long diskIO, long netIO) {
@@ -159,10 +211,7 @@ class MockInfrastructure implements SimulationInfrastructure {
 
     private static final Logger log = LoggerFactory.getLogger(MockInfrastructure.class);
 
-    private AtomicLong cpu = new AtomicLong(0L);
-    private AtomicLong memory = new AtomicLong(0L);
-    private AtomicLong diskIO = new AtomicLong(0L);
-    private AtomicLong netIO = new AtomicLong(0L);
+    private final SystemLoad systemLoad = new SystemLoad();
 
     @Override
     public void start() {
@@ -175,72 +224,28 @@ class MockInfrastructure implements SimulationInfrastructure {
     }
 
     @Override
-    public synchronized void increaseCpu(long cpuLoad) throws MaximumLoadExceededException {
-        if (cpu.get()+cpuLoad > 100) throw new MaximumLoadExceededException("CPU Exceeded");
-
-        long newCpu = cpu.accumulateAndGet(cpuLoad, (a,b) -> a+b);
-        log.debug("Increased CPU to {}", newCpu);
+    public void increaseSystemLoadBy(FakeLoad load) throws MaximumLoadExceededException {
+        systemLoad.increaseBy(load);
     }
 
     @Override
-    public synchronized void increaseMemory(long memoryLoad) throws MaximumLoadExceededException {
-        long newMemory = memory.accumulateAndGet(memoryLoad, (a,b) -> a+b);
-        log.debug("Increased memory to {}", newMemory);
-    }
-
-    @Override
-    public synchronized void increaseDiskIO(long diskIOLoad) throws MaximumLoadExceededException {
-        long newDiskIO = diskIO.accumulateAndGet(diskIOLoad, (a,b) -> a+b);
-        log.debug("Increased disk IO to {}", newDiskIO);
-    }
-
-    @Override
-    public synchronized void increaseNetIO(long netIOLoad) throws MaximumLoadExceededException {
-        long newNetIO = netIO.accumulateAndGet(netIOLoad, (a,b) -> a+b);
-        log.debug("Increased net IO to {}", newNetIO);
-    }
-
-    @Override
-    public synchronized void decreaseCpu(long cpuLoad) {
-        if (cpu.get()-cpuLoad < 0) throw new RuntimeException("CPU negative");
-        long newCpu = cpu.accumulateAndGet(cpuLoad, (a,b) -> a-b);
-        log.debug("Decrease CPU to {}", newCpu);
-    }
-
-    @Override
-    public synchronized void decreaseMemory(long memoryLoad) {
-        if (memory.get()-memoryLoad < 0) throw new RuntimeException("Memory negative");
-        long newMemory = memory.accumulateAndGet(memoryLoad, (a,b) -> a-b);
-        log.debug("Decrease memory to {}", newMemory);
-    }
-
-    @Override
-    public synchronized void decreaseDiskIO(long diskIOLoad) {
-        if (diskIO.get()-diskIOLoad < 0) throw new RuntimeException("Disk IO negative");
-        long newDiskIO = diskIO.accumulateAndGet(diskIOLoad, (a,b) -> a-b);
-        log.debug("Decrease disk IO to {}", newDiskIO);
-    }
-
-    @Override
-    public synchronized void decreaseNetIO(long netIOLoad) {
-        if (netIO.get()-netIOLoad < 0) throw new RuntimeException("Net IO negative");
-        long newNetIO = netIO.accumulateAndGet(netIOLoad, (a,b) -> a-b);
-        log.debug("Decrease net IO to {}", newNetIO);
+    public void decreaseSystemLoadBy(FakeLoad load) {
+        systemLoad.decreaseBy(load);
     }
 
     public long getCpu() {
-        return cpu.get();
+        return systemLoad.getCpu();
     }
 
     public long getMemory() {
-        return memory.get();
+        return systemLoad.getMemory();
     }
 
     public long getDiskIO() {
-        return diskIO.get();
+        return systemLoad.getDiskIO();
     }
 
     public long getNetIO() {
-        return netIO.get();
+        return systemLoad.getNetIO();
     }
 }
