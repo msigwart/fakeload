@@ -1,5 +1,7 @@
 package ac.at.tuwien.infosys.fakeload.internal;
 
+import ac.at.tuwien.infosys.fakeload.FakeLoad;
+
 /**
  * Represents a simulation infrastructure for the FakeLoad Library.
  *
@@ -25,63 +27,21 @@ public interface SimulationInfrastructure {
      */
     void stop();
 
-    /**
-     * Increases the CPU load by the specified value.
-     *
-     * @param cpuLoad the value by which CPU load is increased.
-     * @throws MaximumLoadExceededException
-     */
-    void increaseCpu(long cpuLoad) throws MaximumLoadExceededException;
 
     /**
-     * Increases the memory load by the specified value.
-     *
-     * @param memoryLoad the value by which memory load is increased.
-     * @throws MaximumLoadExceededException
+     * Increases the system load simulated by the simulation infrastructure
+     * by the specified {@link FakeLoad} instance
+     * @param load the load by which the overall system load is increased
+     * @throws MaximumLoadExceededException in case the specified increase of the system load
+     * would exceed the allowed maximum load of the system
      */
-    void increaseMemory(long memoryLoad) throws MaximumLoadExceededException;
+    void increaseSystemLoadBy(FakeLoad load) throws MaximumLoadExceededException;
 
     /**
-     * Increases the disk IO load by the specified value.
-     *
-     * @param diskIOLoad the value by which disk IO load is increased.
-     * @throws MaximumLoadExceededException
+     * Decreases the system load simulated by the simulation infrastructure
+     * by the specified {@link FakeLoad}
+     * @param load the load by which the overall system load is decreased
+     * @throws RuntimeException
      */
-    void increaseDiskIO(long diskIOLoad) throws MaximumLoadExceededException;
-
-    /**
-     * Increases the network IO load by the specified value.
-     *
-     * @param netIOLoad the value by which network IO load is increased.
-     * @throws MaximumLoadExceededException
-     */
-    void increaseNetIO(long netIOLoad) throws MaximumLoadExceededException;
-
-    /**
-     * Decreases the CPU load by the specified value.
-     *
-     * @param cpuLoad the value by which CPU load is decreased.
-     */
-    void decreaseCpu(long cpuLoad);
-
-    /**
-     * Decreases the memory load by the specified value.
-     *
-     * @param memoryLoad the value by which memory load is decreased.
-     */
-    void decreaseMemory(long memoryLoad);
-
-    /**
-     * Decreases the disk IO load by the specified value.
-     *
-     * @param diskIOLoad the value by which disk IO load is decreased.
-     */
-    void decreaseDiskIO(long diskIOLoad);
-
-    /**
-     * Decreases the network IO load load by the specified value.
-     *
-     * @param netIOLoad the value by which network IO load is decreased.
-     */
-    void decreaseNetIO(long netIOLoad);
+    void decreaseSystemLoadBy(FakeLoad load);
 }
