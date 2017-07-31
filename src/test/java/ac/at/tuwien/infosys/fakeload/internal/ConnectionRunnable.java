@@ -16,12 +16,12 @@ public class ConnectionRunnable implements Runnable {
     private static AtomicInteger threadId = new AtomicInteger(0);
 
     private final int id;
-    private final Connection connection;
+    private final SystemLoad systemLoad;
     private final List<Instruction> instructions;
 
-    ConnectionRunnable(Connection connection, List<Instruction> instructions) {
+    ConnectionRunnable(SystemLoad systemLoad, List<Instruction> instructions) {
         this.id = threadId.getAndIncrement();
-        this.connection = connection;
+        this.systemLoad = systemLoad;
         this.instructions = instructions;
     }
 
@@ -54,44 +54,44 @@ public class ConnectionRunnable implements Runnable {
     }
 
     private void increase(Instruction.LoadType type, long increase) {
-        try {
-            switch (type) {
-
-                case CPU:
-                    connection.increaseCpu(increase);
-                    break;
-                case MEMORY:
-                    connection.increaseMemory(increase);
-                    break;
-                case DISKIO:
-                    connection.increaseDiskIO(increase);
-                    break;
-                case NETIO:
-                    connection.increaseNetIO(increase);
-                    break;
-            }
-        } catch (MaximumLoadExceededException e) {
-            //TODO
-        }
+//        try {
+//            switch (type) {
+//
+//                case CPU:
+//                    systemLoad.increaseCpu(increase);
+//                    break;
+//                case MEMORY:
+//                    systemLoad.increaseMemory(increase);
+//                    break;
+//                case DISKIO:
+//                    systemLoad.increaseDiskIO(increase);
+//                    break;
+//                case NETIO:
+//                    systemLoad.increaseNetIO(increase);
+//                    break;
+//            }
+//        } catch (MaximumLoadExceededException e) {
+//            //TODO
+//        }
     }
 
 
     private void decrease(Instruction.LoadType type, long decrease) {
-        switch (type) {
-
-            case CPU:
-                connection.decreaseCpu(decrease);
-                break;
-            case MEMORY:
-                connection.decreaseMemory(decrease);
-                break;
-            case DISKIO:
-                connection.decreaseDiskIO(decrease);
-                break;
-            case NETIO:
-                connection.decreaseNetIO(decrease);
-                break;
-        }
+//        switch (type) {
+//
+//            case CPU:
+//                systemLoad.decreaseCpu(decrease);
+//                break;
+//            case MEMORY:
+//                systemLoad.decreaseMemory(decrease);
+//                break;
+//            case DISKIO:
+//                systemLoad.decreaseDiskIO(decrease);
+//                break;
+//            case NETIO:
+//                systemLoad.decreaseNetIO(decrease);
+//                break;
+//        }
     }
 
 

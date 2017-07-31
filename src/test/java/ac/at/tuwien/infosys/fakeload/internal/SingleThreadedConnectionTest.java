@@ -1,10 +1,7 @@
 package ac.at.tuwien.infosys.fakeload.internal;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 /**
- * Unit tests for class {@link Connection}
+ * Unit tests for class {@link SystemLoad}
  */
 public class SingleThreadedConnectionTest {
 
@@ -12,7 +9,7 @@ public class SingleThreadedConnectionTest {
 //    // TEST ADDITION AND SUBTRACTION
 //    @Test
 //    public void testCpu() {
-//        Connection con = new Connection();
+//        SystemLoad con = new SystemLoad();
 //
 //        Assert.assertEquals(10, con.increaseAndGetCpu(10));
 //        Assert.assertEquals(30, con.increaseAndGetCpu(20));
@@ -29,7 +26,7 @@ public class SingleThreadedConnectionTest {
 //            con.decreaseAndGetCpu(10);
 //        } catch (RuntimeException e) {
 //            Assert.assertEquals("Decrease of CPU to under 0%", e.getMessage());
-//            Assert.assertEquals(0, con.getCpuLoad());
+//            Assert.assertEquals(0, con.getCpu());
 //        }
 //
 //        // test value too high
@@ -37,13 +34,13 @@ public class SingleThreadedConnectionTest {
 //            con.increaseAndGetCpu(110);
 //        } catch (RuntimeException e) {
 //            Assert.assertEquals("Increase of CPU to over 100%", e.getMessage());
-//            Assert.assertEquals(0, con.getCpuLoad());
+//            Assert.assertEquals(0, con.getCpu());
 //        }
 //    }
 //
 //    @Test
 //    public void testMemory() {
-//        Connection con = new Connection();
+//        SystemLoad con = new SystemLoad();
 //
 //        Assert.assertEquals(10, con.increaseAndGetMemory(10));
 //        Assert.assertEquals(30, con.increaseAndGetMemory(20));
@@ -60,7 +57,7 @@ public class SingleThreadedConnectionTest {
 //            con.decreaseAndGetMemory(10);
 //        } catch (RuntimeException e) {
 //            Assert.assertEquals("Decrease of Memory to under 0%", e.getMessage());
-//            Assert.assertEquals(0, con.getMemoryLoad());
+//            Assert.assertEquals(0, con.getMemory());
 //        }
 //
 //        // test value too high TODO
@@ -68,14 +65,14 @@ public class SingleThreadedConnectionTest {
 ////            con.increaseAndGetMemory(110);
 ////        } catch (RuntimeException e) {
 ////            Assert.assertEquals("Increase of Memory to over 100%", e.getMessage());
-////            Assert.assertEquals(0, con.getMemoryLoad());
+////            Assert.assertEquals(0, con.getMemory());
 ////        }
 //    }
 //
 //
 //    @Test
 //    public void testDiskIO() {
-//        Connection con = new Connection();
+//        SystemLoad con = new SystemLoad();
 //
 //        Assert.assertEquals(10, con.increaseAndGetDiskIO(10));
 //        Assert.assertEquals(30, con.increaseAndGetDiskIO(20));
@@ -92,7 +89,7 @@ public class SingleThreadedConnectionTest {
 //            con.decreaseAndGetDiskIO(10);
 //        } catch (RuntimeException e) {
 //            Assert.assertEquals("Decrease of Disk IO to under 0%", e.getMessage());
-//            Assert.assertEquals(0, con.getDiskIOLoad());
+//            Assert.assertEquals(0, con.getDiskIO());
 //        }
 //
 //        // test value too high TODO
@@ -100,13 +97,13 @@ public class SingleThreadedConnectionTest {
 ////            con.increaseAndGetDiskIO(110);
 ////        } catch (RuntimeException e) {
 ////            Assert.assertEquals("Increase of DiskIO to over 100%", e.getMessage());
-////            Assert.assertEquals(0, con.getDiskIOLoad());
+////            Assert.assertEquals(0, con.getDiskIO());
 ////        }
 //    }
 //
 //    @Test
 //    public void testNetIO() {
-//        Connection con = new Connection();
+//        SystemLoad con = new SystemLoad();
 //
 //        Assert.assertEquals(10, con.increaseAndGetNetIO(10));
 //        Assert.assertEquals(30, con.increaseAndGetNetIO(20));
@@ -123,7 +120,7 @@ public class SingleThreadedConnectionTest {
 //            con.decreaseAndGetNetIO(10);
 //        } catch (RuntimeException e) {
 //            Assert.assertEquals("Decrease of Net IO to under 0%", e.getMessage());
-//            Assert.assertEquals(0, con.getNetIOLoad());
+//            Assert.assertEquals(0, con.getNetIO());
 //        }
 //
 //        // test value too high TODO
@@ -131,7 +128,7 @@ public class SingleThreadedConnectionTest {
 ////            con.increaseAndGetNetIO(110);
 ////        } catch (RuntimeException e) {
 ////            Assert.assertEquals("Increase of NetIO to over 100%", e.getMessage());
-////            Assert.assertEquals(0, con.getNetIOLoad());
+////            Assert.assertEquals(0, con.getNetIO());
 ////        }
 //    }
 
