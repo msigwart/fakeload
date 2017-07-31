@@ -4,6 +4,7 @@ import ac.at.tuwien.infosys.fakeload.FakeLoad;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -41,32 +42,48 @@ public final class DefaultFakeLoadScheduler implements FakeLoadScheduler {
 
 
 
-    private Future<Void> scheduleLoad(FakeLoad load) {
+    private Future<Void> scheduleLoad(FakeLoad fakeLoad) {
         log.debug("Scheduling load...");
 
+        CompletableFuture<Void> completableFuture = CompletableFuture.completedFuture(null);
 
-        // TODO not correct yet
-        Future<Void> future = null;
-        long offset = 0L;
-        for (FakeLoad f: load) {
-            log.trace("Scheduling: {}", f);
-            scheduleIncrease(f, offset);
-            offset += f.getTimeUnit().toMillis(f.getDuration());
-            future = scheduleDecrease(f, offset);
+        for (FakeLoad load: fakeLoad) {
+            completableFuture = completableFuture.thenApply(foo -> {
+                try {
+                    log.debug("Increasing system load by {}", load);
+                    infrastructure.increaseSystemLoadBy(load);
+
+                } catch (MaximumLoadExceededException e) {
+                    log.debug(e.getMessage());
+                    throw new RuntimeException(e.getMessage());
+                }
+                return null;
+            });
+
+            completableFuture = completableFuture.thenApply(foo -> {
+                try {
+                    Thread.sleep(load.getTimeUnit().toMillis(load.getDuration()));
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
+                log.debug("Decreasing system load by {}", load);
+                infrastructure.decreaseSystemLoadBy(load);
+
+                return null;
+            });
         }
 
+
         log.debug("Finished scheduling.");
-        return future;
+        return completableFuture;
     }
 
 
     private Future<Void> scheduleDecrease(FakeLoad load, long offset) {
         return scheduler.schedule(() -> {
 
-            infrastructure.decreaseCpu(load.getCpuLoad());
-            infrastructure.decreaseMemory(load.getMemoryLoad());
-            infrastructure.decreaseDiskIO(load.getDiskIOLoad());
-            infrastructure.decreaseNetIO(load.getNetIOLoad());
+            infrastructure.decreaseSystemLoadBy(load);
 
             return null;
 
@@ -76,10 +93,7 @@ public final class DefaultFakeLoadScheduler implements FakeLoadScheduler {
     private Future<Void> scheduleIncrease(FakeLoad load, long offset) {
         return scheduler.schedule(() -> {
 
-            infrastructure.increaseCpu(load.getCpuLoad());
-            infrastructure.increaseMemory(load.getMemoryLoad());
-            infrastructure.increaseDiskIO(load.getDiskIOLoad());
-            infrastructure.increaseNetIO(load.getNetIOLoad());
+            infrastructure.increaseSystemLoadBy(load);
 
             return null;
         }, offset, TimeUnit.MILLISECONDS);
