@@ -1,5 +1,6 @@
 package ac.at.tuwien.infosys.fakeload.internal;
 
+import ac.at.tuwien.infosys.fakeload.FakeLoad;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,8 +23,8 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
     /** Executor service to run the infrastructure */
     private ExecutorService executorService;
 
-    /** Represents the connection to the infrastructure */
-    private final Connection connection = new Connection();
+    /** Represents the systemLoad to the infrastructure */
+    private final SystemLoad systemLoad = new SystemLoad();
 
     /** Number of CPU cores */
     private final int noOfCores;
@@ -39,7 +40,7 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
         List<Callable<Void>> tasks = new ArrayList<>();
 
         // Create control thread for simulation
-        ControlTask simulationControl = new ControlTask(connection);
+        ControlTask simulationControl = new ControlTask(systemLoad);
         tasks.add(simulationControl);
 
         // Create CPU simulation threads
@@ -97,81 +98,15 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
         executorService.shutdownNow();
     }
 
-    /**
-     * {@inheritDoc}
-     * @param cpuLoad the value by which CPU load is increased.
-     * @throws MaximumLoadExceededException in case an increase of the CPU
-     * load would exceed the maximum load allowed. In case of CPU, this would be an
-     * increase to over a 100%.
-     */
     @Override
-    public synchronized void increaseCpu(long cpuLoad) throws MaximumLoadExceededException {
-        connection.increaseCpu(cpuLoad);
+    public void increaseSystemLoadBy(FakeLoad load) throws MaximumLoadExceededException {
+        systemLoad.increaseBy(load);
     }
 
-    /**
-     * {@inheritDoc}
-     * @param memoryLoad the value by which memory load is increased.
-     * @throws MaximumLoadExceededException
-     */
     @Override
-    public synchronized void increaseMemory(long memoryLoad) throws MaximumLoadExceededException {
-        connection.increaseMemory(memoryLoad);
+    public void decreaseSystemLoadBy(FakeLoad load) {
+        systemLoad.decreaseBy(load);
     }
 
-    /**
-     * {@inheritDoc}
-     * @param diskIOLoad the value by which disk IO load is increased.
-     * @throws MaximumLoadExceededException
-     */
-    @Override
-    public synchronized void increaseDiskIO(long diskIOLoad) throws MaximumLoadExceededException {
-        connection.increaseDiskIO(diskIOLoad);
-    }
 
-    /**
-     * {@inheritDoc}
-     * @param netIOLoad the value by which network IO load is increased.
-     * @throws MaximumLoadExceededException
-     */
-    @Override
-    public synchronized void increaseNetIO(long netIOLoad) throws MaximumLoadExceededException {
-        connection.increaseNetIO(netIOLoad);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param cpuLoad the value by which CPU load is decreased.
-     */
-    @Override
-    public synchronized void decreaseCpu(long cpuLoad) {
-        connection.decreaseCpu(cpuLoad);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param memoryLoad the value by which memory load is decreased.
-     */
-    @Override
-    public synchronized void decreaseMemory(long memoryLoad) {
-        connection.decreaseMemory(memoryLoad);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param diskIOLoad the value by which disk IO load is decreased.
-     */
-    @Override
-    public synchronized void decreaseDiskIO(long diskIOLoad) {
-        connection.decreaseDiskIO(diskIOLoad);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param netIOLoad the value by which network IO load is decreased.
-     */
-    @Override
-    public synchronized void decreaseNetIO(long netIOLoad) {
-        connection.decreaseNetIO(netIOLoad);
-    }
 }

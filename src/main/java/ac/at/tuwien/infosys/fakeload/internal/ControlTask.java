@@ -14,7 +14,7 @@ import java.util.concurrent.Callable;
  * simulation actually reaches the desired level.
  *
  * Further this class retrieves all load requests from the {@link DefaultFakeLoadExecutor} via a shared instance of type
- * {@link Connection}. The requests are then propagated to the respective simulator threads.
+ * {@link SystemLoad}. The requests are then propagated to the respective simulator threads.
  *
  * @author Marten Sigwart
  * @since 1.8
@@ -24,12 +24,12 @@ public final class ControlTask implements Callable<Void> {
     private static final Logger log = LoggerFactory.getLogger(ControlTask.class);
 
 
-    private final Connection connection;
+    private final SystemLoad systemLoad;
     private final LoadControl cpuControl;
     private final LoadControl memoryControl;
 
-    ControlTask(Connection connection) {
-        this.connection = connection;
+    ControlTask(SystemLoad systemLoad) {
+        this.systemLoad = systemLoad;
         this.cpuControl = new LoadControl();
         this.memoryControl = new LoadControl();
     }
