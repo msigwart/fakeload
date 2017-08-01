@@ -10,6 +10,10 @@ package ac.at.tuwien.infosys.fakeload;
  * contained in a {@code FakeLoad} as accurate as possible to provide a reliable simulation of system load.
  *
  * <p>
+ * A {@code FakeLoadExecutor} can be shut down, which will cause it to reject new submitted {@code FakeLoad}s.
+ * An unused {@code FakeLoadExecutor} should be shut down to allow reclamation of its resources.
+ *
+ * <p>
  * Note: In a 'realistic' scenario multiple {@code FakeLoad}s being executed simultaneously should
  * produce a system load which is an aggregation of all load instructions contained in the
  * {@code FakeLoad} objects. If thread A submits a FakeLoad of 20% CPU and thread B submits a
@@ -47,9 +51,20 @@ public interface FakeLoadExecutor {
      * However, different threads calling {@code execute()} should be able to do so at the same time.
      *
      * @param load the FakeLoad to be executed
-     * @since 1.8
+     * @throws NullPointerException if the load is null
+     * @throws RuntimeException //TODO exception for illegal loads
      */
     void execute(FakeLoad load);
+
+    /**
+     * Initiates the shutdown of the {@code FakeLoadExecutor}.
+     *
+     * When no {@code FakeLoad} is currently being executed, this method initiates the shut down of
+     * the underlying simulation infrastructure used for load execution.
+     *
+     * In this method all resources that were allocated for load simulation should be released
+     */
+    void shutdown();
 
 
 }

@@ -15,7 +15,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">
-      <module name="dummyproject" target="1.5" />
+      <module name="dummyproject" target="1.8" />
       <module name="fakeload-api" target="1.8" />
       <module name="loadsimulator" target="1.5" />
       <module name="loadsimulator (1) (at.tuwien.infosys.visp)" target="1.8" />

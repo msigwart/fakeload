@@ -63,6 +63,10 @@ public final class DefaultFakeLoadExecutor implements FakeLoadExecutor {
         }
     }
 
+    @Override
+    public void shutdown() {
+        scheduler.shutdown();
+    }
 
 
 }
