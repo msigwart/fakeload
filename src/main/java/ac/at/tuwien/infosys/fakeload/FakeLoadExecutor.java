@@ -56,15 +56,5 @@ public interface FakeLoadExecutor {
      */
     void execute(FakeLoad load);
 
-    /**
-     * Initiates the shutdown of the {@code FakeLoadExecutor}.
-     *
-     * When no {@code FakeLoad} is currently being executed, this method initiates the shut down of
-     * the underlying simulation infrastructure used for load execution.
-     *
-     * In this method all resources that were allocated for load simulation should be released
-     */
-    void shutdown();
-
 
 }
