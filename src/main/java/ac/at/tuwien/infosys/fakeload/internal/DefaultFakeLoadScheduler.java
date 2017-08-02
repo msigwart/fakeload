@@ -20,6 +20,7 @@ public final class DefaultFakeLoadScheduler implements FakeLoadScheduler {
      */
     private final SimulationInfrastructure infrastructure;
 
+
     public DefaultFakeLoadScheduler(SimulationInfrastructure infrastructure) {
         this.infrastructure = infrastructure;
 
@@ -31,10 +32,6 @@ public final class DefaultFakeLoadScheduler implements FakeLoadScheduler {
         return scheduleLoad(fakeLoad);
     }
 
-    @Override
-    public void shutdown() {
-//        this.infrastructure.shutdown();
-    }
 
 
     private Future<Void> scheduleLoad(FakeLoad fakeLoad) {

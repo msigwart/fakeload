@@ -33,10 +33,4 @@ public interface FakeLoadScheduler {
      */
     Future<Void> schedule(FakeLoad fakeLoad);
 
-    /**
-     * Initiates the shut down of the {@code FakeLoadScheduler}.
-     *
-     * Any resources allocated by this should be released.
-     */
-    void shutdown();
 }
