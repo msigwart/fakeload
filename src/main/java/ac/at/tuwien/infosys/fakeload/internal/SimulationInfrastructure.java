@@ -7,7 +7,7 @@ import ac.at.tuwien.infosys.fakeload.FakeLoad;
  *
  * <p>
  * A simulation infrastructure is built up of different tasks. Each task serves a specific simulation purpose.
- * There will be tasks responsible for CPU load simulation, for memory simulation, etc. A {@code SimulationInfrastructure}
+ * There should be tasks responsible for CPU load simulation, for memory simulation, etc. A {@code SimulationInfrastructure}
  * provides functionality for adjusting system loads via increase and decrease methods. Further, it provides methods for
  * starting and stopping the execution of simulator tasks in the infrastructure.
  *
@@ -16,16 +16,6 @@ import ac.at.tuwien.infosys.fakeload.FakeLoad;
  *
  */
 public interface SimulationInfrastructure {
-
-    /**
-     * Starts the simulation infrastructure.
-     */
-    void start();
-
-    /**
-     * Stops the simulation infrastructure.
-     */
-    void stop();
 
 
     /**

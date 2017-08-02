@@ -41,7 +41,7 @@ final class SystemLoad {
         return netIO;
     }
 
-    // TODO is synchronized enough synchronization
+
     synchronized void increaseBy(FakeLoad load) throws MaximumLoadExceededException {
         checkMaximumLoadNotExceeded(load);
 
@@ -52,7 +52,6 @@ final class SystemLoad {
 
     }
 
-    // TODO is synchronized enough synchronization
     synchronized void decreaseBy(FakeLoad load) {
         checkNotBelowMinimumLoad(load);
 

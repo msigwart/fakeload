@@ -213,15 +213,6 @@ class MockInfrastructure implements SimulationInfrastructure {
 
     private final SystemLoad systemLoad = new SystemLoad();
 
-    @Override
-    public void start() {
-        // ignore
-    }
-
-    @Override
-    public void stop() {
-        // ignore
-    }
 
     @Override
     public void increaseSystemLoadBy(FakeLoad load) throws MaximumLoadExceededException {
