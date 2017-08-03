@@ -14,10 +14,6 @@ public class FibonacciCpuSimulator extends AbstractCpuSimulator {
     private long fib0 = 0;
     private long fib1 = 1;
 
-    FibonacciCpuSimulator(LoadControl load) {
-        super(load);
-    }
-
     @Override
     public void simulateCpu() {
         long fib2 = fib0 + fib1;

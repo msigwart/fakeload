@@ -6,6 +6,7 @@ import java.util.concurrent.Callable;
 /**
  * Created by martensigwart on 17.05.17.
  */
-interface CpuSimulator extends Runnable {
+interface CpuSimulator extends LoadSimulator {
     void simulateCpu();
+
 }

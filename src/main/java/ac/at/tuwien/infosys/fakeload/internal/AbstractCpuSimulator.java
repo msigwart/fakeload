@@ -15,13 +15,11 @@ public abstract class AbstractCpuSimulator implements CpuSimulator {
     private static AtomicLong cpuSimId = new AtomicLong(0L);
 
     private final long id;
-    private LoadControl loadControl;
     private long load;
 
-    AbstractCpuSimulator(LoadControl load) {
+    AbstractCpuSimulator() {
         this.id = cpuSimId.getAndIncrement();
-        this.loadControl = load;
-        this.load = load.getLoadAdjustment();
+        this.load = 0L;
 
     }
 
@@ -31,27 +29,11 @@ public abstract class AbstractCpuSimulator implements CpuSimulator {
 
             while (true) {
 
-                // adjust current cpu load
-                long adjustment = loadControl.getLoadAdjustment();
-
-                if (adjustment > 0) {
-                    // Increase load
-                    long oldLoad = load;
-                    load = ((load + adjustment) > 100) ? 100L : (load += adjustment);
-                    log.debug("<{}> - Increased loadControl from {} to {}%", id, oldLoad, load);
-
-                } else if (adjustment < 0) {
-                    // Decrease load
-                    long oldLoad = load;
-                    load = ((load + adjustment) < 0) ? 0L : (load += adjustment);
-                    log.debug("<{}> - Decreased loadControl from {} to {}%", id, oldLoad, load);
-                }
-
-                long time = System.currentTimeMillis() + load;
+                long time = System.currentTimeMillis() + getLoad();
                 while (System.currentTimeMillis() < time) {
                     simulateCpu();
                 }
-                Thread.sleep(100 - load);
+                Thread.sleep(100 - getLoad());
             }
 
         } catch (InterruptedException e) {
@@ -59,9 +41,27 @@ public abstract class AbstractCpuSimulator implements CpuSimulator {
         }
     }
 
-
-    public static void resetIdCounter() {
-        cpuSimId.set(0L);
+    public synchronized long getLoad() {
+        return load;
     }
 
+    public synchronized void setLoad(long desiredLoad) {
+        // TODO better throw exception?
+        this.load = (desiredLoad < 0) ? 0L : (desiredLoad > 100) ? 100L : desiredLoad;
+        log.trace("<{}> - Set load to {}", id, desiredLoad);
+    }
+
+    @Override
+    public synchronized void increaseLoad(long delta) {
+        long oldLoad = load;
+        load = (load + delta > 100) ? 100 : load + delta;
+        log.trace("<{}> - Increased load from {} to {}%", id, oldLoad, load);
+    }
+
+    @Override
+    public synchronized void decreaseLoad(long delta) {
+        long oldLoad = load;
+        load = (load - delta < 0) ? 0 : load - delta;
+        log.trace("<{}> - Decreased load from {} to {}%", id, oldLoad, load);
+    }
 }
