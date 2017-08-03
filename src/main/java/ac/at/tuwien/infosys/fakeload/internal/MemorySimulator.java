@@ -8,7 +8,7 @@ import java.util.concurrent.Callable;
 /**
  * Created by martensigwart on 17.05.17.
  */
-public class MemorySimulator implements Callable<Void> {
+public class MemorySimulator implements Runnable {
 
     private static final Logger log = LoggerFactory.getLogger(MemorySimulator.class);
 
@@ -32,7 +32,7 @@ public class MemorySimulator implements Callable<Void> {
 
 
     @Override
-    public Void call() throws Exception {
+    public void run() {
 
         long freeMemory = Runtime.getRuntime().freeMemory();
         long totalMemory = Runtime.getRuntime().totalMemory();
@@ -52,7 +52,6 @@ public class MemorySimulator implements Callable<Void> {
 
         if (desiredMemory >= maxMemory - OUT_OF_MEMORY_SAFETYNET) {
             log.warn("Not enough memory for memory simulation of {} bytes (max: {})", mb(desiredMemory), mb(maxMemory));
-            return null;
             // do something, maybe throw exception? Or simply return?
         }
 
@@ -101,7 +100,6 @@ public class MemorySimulator implements Callable<Void> {
             }
         }
 
-        return null;
     }
 
 

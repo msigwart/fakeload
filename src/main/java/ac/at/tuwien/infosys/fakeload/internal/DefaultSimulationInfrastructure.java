@@ -46,7 +46,7 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
         List<Callable<Void>> tasks = new ArrayList<>();
 
         // Create control thread for simulation
-        ControlTask simulationControl = new ControlTask(systemLoad);
+        SimulationControl simulationControl = new SimulationControl(systemLoad);
         tasks.add(simulationControl);
 
         // Create CPU simulation threads

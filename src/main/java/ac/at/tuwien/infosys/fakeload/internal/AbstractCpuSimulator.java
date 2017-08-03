@@ -26,7 +26,7 @@ public abstract class AbstractCpuSimulator implements CpuSimulator {
     }
 
     @Override
-    public Void call() {
+    public void run() {
         try {
 
             while (true) {
@@ -57,8 +57,6 @@ public abstract class AbstractCpuSimulator implements CpuSimulator {
         } catch (InterruptedException e) {
             log.debug("<{}> - Interrupted", id);
         }
-
-        return null;
     }
 
 

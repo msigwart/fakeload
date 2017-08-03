@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Instances of this class are used as shared objects between a {@link ControlTask} instance and one or more
+ * Instances of this class are used as shared objects between a {@link SimulationControl} instance and one or more
  * simulation threads.
  *
  * <p>
