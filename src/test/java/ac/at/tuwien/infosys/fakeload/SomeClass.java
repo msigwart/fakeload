@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
-import static ac.at.tuwien.infosys.fakeload.MemoryUnit.MB;
+import static ac.at.tuwien.infosys.fakeload.MemoryUnit.*;
 
 /**
  * Created by martensigwart on 30.06.17.
@@ -20,9 +20,9 @@ public class SomeClass {
         // Execute FakeLoad
 //        FakeLoad fakeLoad = FakeLoads.createLoad(100, "50%", "1024m");
         FakeLoadExecutor executor = FakeLoadExecutors.newDefaultExecutor();
-        FakeLoad fakeLoad = FakeLoads.createLoad().lasting(5, TimeUnit.SECONDS)
+        FakeLoad fakeLoad = FakeLoads.createLoad().lasting(10, TimeUnit.SECONDS)
                 .withCpuLoad(50)
-                .withMemoryLoad(100, MB);
+                .withMemoryLoad(2, GB);
 
         executor.execute(fakeLoad);
 
