@@ -104,6 +104,10 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
 
             //TODO use CompletableFuture
             // Could be useful in case of Memory Simulator task dying due to OutOfMemoryError.
+            // Using CompletableFuture.exceptionally the Memory Simulator could be restarted immediately.
+
+            // TODO save returned Future references
+            // Could be used to cancel simulator tasks in time of inactivity.
 
             log.debug("Successfully started infrastructure");
         }
