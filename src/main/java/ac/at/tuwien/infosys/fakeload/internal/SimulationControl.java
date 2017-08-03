@@ -19,7 +19,7 @@ import java.util.concurrent.Callable;
  * @author Marten Sigwart
  * @since 1.8
  */
-public final class ControlTask implements Callable<Void> {
+public final class ControlTask implements Runnable {
 
     private static final Logger log = LoggerFactory.getLogger(ControlTask.class);
 
@@ -36,7 +36,7 @@ public final class ControlTask implements Callable<Void> {
 
 
     @Override
-    public Void call() throws Exception {
+    public void run() {
         log.debug("Started");
 
         while(true) {
@@ -47,7 +47,6 @@ public final class ControlTask implements Callable<Void> {
                 break;
             }
         }
-        return null;
     }
 
 
