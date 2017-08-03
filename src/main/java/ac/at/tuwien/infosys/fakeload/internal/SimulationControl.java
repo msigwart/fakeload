@@ -1,7 +1,11 @@
 package ac.at.tuwien.infosys.fakeload.internal;
 
+import ac.at.tuwien.infosys.fakeload.FakeLoad;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * This class acts as the controlling entity of the simulation infrastructure.
@@ -23,36 +27,50 @@ public final class SimulationControl implements Runnable {
 
 
     private final SystemLoad systemLoad;
-    private final LoadControl cpuControl;
-    private final LoadControl memoryControl;
 
-    SimulationControl(SystemLoad systemLoad) {
-        this.systemLoad = systemLoad;
-        this.cpuControl = new LoadControl();
-        this.memoryControl = new LoadControl();
+    private final List<CpuSimulator> cpuSimulators;
+    private final MemorySimulator memorySimulator;
+
+    SimulationControl(List<CpuSimulator> cpuSimulators, MemorySimulator memorySimulator) {
+        this.systemLoad = new SystemLoad();
+        this.cpuSimulators = Collections.unmodifiableList(cpuSimulators);
+        this.memorySimulator = memorySimulator;
     }
 
 
     @Override
     public void run() {
-        log.debug("Started");
+        log.trace("Started");
 
         while(true) {
             try {
                 Thread.sleep(10000);
             } catch (InterruptedException e) {
-                log.warn("SimulationControl was interrupted", e);
+                log.warn("SimulationControl was interrupted");
                 break;
             }
         }
     }
 
 
-    public LoadControl getCpuControl() {
-        return cpuControl;
+    public void increaseSystemLoadBy(FakeLoad load) throws MaximumLoadExceededException {
+        systemLoad.increaseBy(load);
+
+        for (CpuSimulator cpuSim: cpuSimulators) {
+            cpuSim.setLoad(systemLoad.getCpu());
+        }
+
+        memorySimulator.setLoad(systemLoad.getMemory());
+        //TODO propagate changes to simulators
     }
 
-    public LoadControl getMemoryControl() {
-        return memoryControl;
+    public void decreaseSystemLoadBy(FakeLoad load) {
+        systemLoad.decreaseBy(load);
+
+        for (CpuSimulator cpuSim: cpuSimulators) {
+            cpuSim.setLoad(systemLoad.getCpu());
+        }
+        memorySimulator.setLoad(systemLoad.getMemory());
+        // TODO propagate changes to simulators
     }
 }

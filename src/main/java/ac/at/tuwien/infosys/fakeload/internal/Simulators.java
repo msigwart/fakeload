@@ -12,8 +12,8 @@ import java.util.concurrent.Callable;
  */
 public final class Simulators {
 
-    public static CpuSimulator createCpuSimulator(LoadControl cpuControl) {
-        return new FibonacciCpuSimulator(cpuControl);
+    public static CpuSimulator newCpuSimulator() {
+        return new FibonacciCpuSimulator();
     }
 
     // Suppress default constructor for non-instantiability
@@ -21,7 +21,7 @@ public final class Simulators {
         throw new AssertionError();
     }
 
-    public static Callable<Void> createMemorySimulator(LoadControl memoryControl) {
-        return new MemorySimulator(memoryControl);
+    public static MemorySimulator newMemorySimulator() {
+        return new MemorySimulator();
     }
 }

@@ -26,42 +26,32 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
      */
     private final ExecutorService executorService;
 
-    /**
-     * Represents the systemLoad to the infrastructure
-     */
-    private final SystemLoad systemLoad = new SystemLoad();
-
-    /**
-     * List containing all threads needed for the simulating system load
-     */
-    private final List<Callable<Void>> simulatorTasks;
+    private final SimulationControl simulationControl;
+    private final List<CpuSimulator> cpuSimulators;
+    private final MemorySimulator memorySimulator;
 
 
     @GuardedBy("this") private boolean started;
 
 
     public DefaultSimulationInfrastructure() {
-
         int noOfCores = Runtime.getRuntime().availableProcessors();
-        List<Callable<Void>> tasks = new ArrayList<>();
 
-        // Create control thread for simulation
-        SimulationControl simulationControl = new SimulationControl(systemLoad);
-        tasks.add(simulationControl);
-
-        // Create CPU simulation threads
+        List<CpuSimulator> cpuSimulators = new ArrayList<>();
         for (int i = 0; i< noOfCores; i++) {
-            LoadControl cpuControl = simulationControl.getCpuControl();
-            tasks.add(Simulators.createCpuSimulator(cpuControl));
+            cpuSimulators.add(Simulators.newCpuSimulator());
         }
+        this.cpuSimulators = Collections.unmodifiableList(cpuSimulators);
 
-        // Create memory simulation thread
-//        LoadControl memoryControl = simulationControl.getMemoryControl();
-//        tasks.add(Simulators.createMemorySimulator(memoryControl));
+
+        this.memorySimulator = Simulators.newMemorySimulator();
+
+
+        this.simulationControl = new SimulationControl(this.cpuSimulators, this.memorySimulator);
+
 
         this.started            = false;
-        this.simulatorTasks     = Collections.unmodifiableList(tasks);
-        this.executorService    = Executors.newFixedThreadPool(simulatorTasks.size(),
+        this.executorService    = Executors.newFixedThreadPool(noOfCores + 2,
                                             new ThreadFactoryBuilder().setDaemon(true).build());
 
         // Shutdown hook to end daemon threads gracefully
@@ -73,12 +63,12 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
     @Override
     public void increaseSystemLoadBy(FakeLoad load) throws MaximumLoadExceededException {
         start();
-        systemLoad.increaseBy(load);
+        simulationControl.increaseSystemLoadBy(load);
     }
 
     @Override
     public void decreaseSystemLoadBy(FakeLoad load) {
-        systemLoad.decreaseBy(load);
+        simulationControl.decreaseSystemLoadBy(load);
         // TODO check if system load is now zero, if yes start timer to cancel simulator tasks.
     }
 
@@ -94,23 +84,46 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
         if (!started) {
             log.debug("Starting infrastructure...");
 
-            // Run simulation tasks
-            Collection<Future> futures = new ArrayList<>();
-            for (Callable task : simulatorTasks) {
-                futures.add(executorService.submit(task));
-            }
+            // Start simulators
+            startSimulationControl();
+            startCpuSimulators();
+            startMemorySimulator();
 
             started = true;
-
-            //TODO use CompletableFuture
-            // Could be useful in case of Memory Simulator task dying due to OutOfMemoryError.
-            // Using CompletableFuture.exceptionally the Memory Simulator could be restarted immediately.
 
             // TODO save returned Future references
             // Could be used to cancel simulator tasks in time of inactivity.
 
             log.debug("Successfully started infrastructure");
         }
+    }
+
+    private void startSimulationControl() {
+        CompletableFuture.runAsync(simulationControl, executorService);
+        log.debug("Started Simulation Control");
+    }
+
+
+    private void startCpuSimulators() {
+        for (Runnable thread: cpuSimulators) {
+            CompletableFuture.runAsync(thread, executorService);
+        }
+        log.debug("Started {} CPU Simulators", cpuSimulators.size());
+    }
+
+    private void startMemorySimulator() {
+
+        // Could be useful in case of Memory Simulator task dying due to OutOfMemoryError.
+        // Using CompletableFuture.exceptionally the Memory Simulator is restarted immediately.
+
+        memorySimulator.setLoad(0);
+        CompletableFuture<Void> future = CompletableFuture.runAsync(memorySimulator, executorService);
+        future.exceptionally(e -> {
+            log.warn("Memory Simulator died: {}, starting new one...", e.getMessage());
+            startMemorySimulator();
+            return null;
+        });
+        log.debug("Started Memory Simulator");
     }
 
     /**
