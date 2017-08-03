@@ -173,7 +173,7 @@ public class DefaultFakeLoadSchedulerTest {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
-                    assertEquals("java.lang.RuntimeException: Increase by 60 would cause a CPU load of over 100%", e.getMessage()); //TODO make message not hardcoded
+                    assertEquals("java.lang.RuntimeException: Increase of 60 would exceed the maximum CPU load limit of 100 %", e.getMessage()); //TODO make message not hardcoded
                 }
             }
         }));

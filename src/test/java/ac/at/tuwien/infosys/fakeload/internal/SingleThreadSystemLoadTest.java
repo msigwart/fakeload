@@ -11,9 +11,9 @@ import static org.junit.Assert.*;
 /**
  * Unit tests for class {@link SystemLoad}
  */
-public class SingleThreadedConnectionTest {
+public class SingleThreadSystemLoadTest {
 
-    SystemLoad systemLoad;
+    private SystemLoad systemLoad;
 
     @Before
     public void setUp() {
@@ -43,17 +43,10 @@ public class SingleThreadedConnectionTest {
         try {
             decreaseAndGetCpu(10);
         } catch (RuntimeException e) {
-            assertEquals("Decrease of CPU to under 0%", e.getMessage());
+            assertEquals("Decrease of 10 would cause a negative CPU load", e.getMessage());
             assertEquals(0, systemLoad.getCpu());
         }
 
-        // test value too high
-        try {
-            increaseAndGetCpu(110);
-        } catch (MaximumLoadExceededException e) {
-            assertEquals("Increase of CPU to over 100%", e.getMessage());
-            assertEquals(0, systemLoad.getCpu());
-        }
     }
 
 
@@ -77,7 +70,7 @@ public class SingleThreadedConnectionTest {
         try {
             decreaseAndGetMemory(10);
         } catch (RuntimeException e) {
-            assertEquals("Decrease of Memory to under 0%", e.getMessage());
+            assertEquals("Decrease of 10 would cause a negative memory load", e.getMessage());
             assertEquals(0, systemLoad.getMemory());
         }
 
@@ -110,7 +103,7 @@ public class SingleThreadedConnectionTest {
         try {
             decreaseAndGetDiskIO(10);
         } catch (RuntimeException e) {
-            assertEquals("Decrease of Disk IO to under 0%", e.getMessage());
+            assertEquals("Decrease of 10 would cause a negative disk IO load", e.getMessage());
             assertEquals(0, systemLoad.getDiskIO());
         }
 
@@ -142,7 +135,7 @@ public class SingleThreadedConnectionTest {
         try {
             decreaseAndGetNetIO(10);
         } catch (RuntimeException e) {
-            assertEquals("Decrease of Net IO to under 0%", e.getMessage());
+            assertEquals("Decrease of 10 would cause a negative net IO load", e.getMessage());
             assertEquals(0, systemLoad.getNetIO());
         }
 
