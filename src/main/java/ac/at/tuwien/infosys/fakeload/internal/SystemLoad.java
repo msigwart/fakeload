@@ -65,26 +65,26 @@ final class SystemLoad {
 
     private synchronized void checkMaximumLoadNotExceeded(FakeLoad load) throws MaximumLoadExceededException {
         if (this.cpu + load.getCpuLoad() > 100)
-            throw new MaximumLoadExceededException(String.format("Increase by %d would cause a CPU load of over 100%%", load.getCpuLoad()));
+            throw new MaximumLoadExceededException(load.getCpuLoad(), 100, SimulationType.CPU);
 
         // check other load limits
     }
 
     private synchronized void checkNotBelowMinimumLoad(FakeLoad load) {
         if (this.cpu - load.getCpuLoad() < 0) {
-            throw new RuntimeException(String.format("Decrease by %d would cause a negative CPU load", load.getCpuLoad()));
+            throw new RuntimeException(String.format("Decrease of %d would cause a negative CPU load", load.getCpuLoad()));
         }
 
         if (this.memory - load.getMemoryLoad() < 0) {
-            throw new RuntimeException(String.format("Decrease by %d would cause a negative memory load", load.getMemoryLoad()));
+            throw new RuntimeException(String.format("Decrease of %d would cause a negative memory load", load.getMemoryLoad()));
         }
 
         if (this.diskIO - load.getDiskIOLoad() < 0) {
-            throw new RuntimeException(String.format("Decrease by %d would cause a negative disk IO load", load.getDiskIOLoad()));
+            throw new RuntimeException(String.format("Decrease of %d would cause a negative disk IO load", load.getDiskIOLoad()));
         }
 
         if (this.netIO - load.getNetIOLoad() < 0) {
-            throw new RuntimeException(String.format("Decrease by %d would cause a negative net IO load", load.getNetIOLoad()));
+            throw new RuntimeException(String.format("Decrease of %d would cause a negative net IO load", load.getNetIOLoad()));
         }
     }
 
