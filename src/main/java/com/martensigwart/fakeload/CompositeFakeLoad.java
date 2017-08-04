@@ -189,4 +189,6 @@ public final class CompositeFakeLoad extends AbstractFakeLoad {
     public int hashCode() {
         return Objects.hashCode(ownLoad, innerLoads);
     }
+
+    //TODO toString method
 }
