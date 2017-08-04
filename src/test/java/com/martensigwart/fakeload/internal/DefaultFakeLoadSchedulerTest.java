@@ -118,7 +118,7 @@ public class DefaultFakeLoadSchedulerTest {
 
         try {
             Future<Void> future = scheduler.schedule(fakeLoad);
-            Thread.sleep(10);
+            Thread.sleep(50);
             assertInfrastructureValues(99, 9999, 99, 99, infrastructure);
 
             for (int i=0; i<loadList.size(); i++) {
