@@ -1,8 +1,70 @@
-# General
-**/.idea/workspace.xml
-**/.idea/tasks.xml
-**/.idea/dictionaries/
-**/*.iml
-**/.idea/libraries/
-**/target/
+*.log.*
 
+#=================
+#eclipse-project
+#=================
+*.project
+*.classpath
+*.settings
+*bin
+*.springBeans
+*.checkstyle
+.checkstyleCheckerConfig
+*.local.properties
+*.log
+
+#=================
+#intellij-project
+#=================
+*.iml
+*.ipr
+*.iws
+*classes
+*.idea
+
+#=================
+#netbeans-project
+#=================
+core/workflow/data
+nb-configuration.xml
+nbactions.xml
+
+#=================
+#maven-files
+#=================
+*target
+
+
+#================
+#Mac OS X hidden files/folders
+#================
+.DS_Store
+
+#================
+#WinXP hidden files/folders
+#================
+*Thumbs.db
+
+#================
+#Documentation artifacts
+#================
+*.dia~
+
+#================
+#Assembly artifacts
+#================
+*.zip
+
+
+#================
+#pver ignores
+#================
+pconf.pyc
+
+
+
+#================
+#vi tmp files
+#================
+*.swp
+*~
