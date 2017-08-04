@@ -1,11 +1,11 @@
-package com.martensigwart.fakeload.internal;
+package com.martensigwart.fakeload;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import com.martensigwart.fakeload.internal.util.Decrease;
-import com.martensigwart.fakeload.internal.util.Increase;
-import com.martensigwart.fakeload.internal.util.Instruction;
+import com.martensigwart.fakeload.util.Decrease;
+import com.martensigwart.fakeload.util.Increase;
+import com.martensigwart.fakeload.util.Instruction;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -1,6 +1,6 @@
 package com.martensigwart.fakeload;
 
-import com.martensigwart.fakeload.internal.util.MoreAsserts;
+import com.martensigwart.fakeload.util.MoreAsserts;
 import org.junit.Before;
 import org.junit.Test;
 

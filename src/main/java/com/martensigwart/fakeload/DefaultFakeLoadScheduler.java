@@ -1,6 +1,5 @@
-package com.martensigwart.fakeload.internal;
+package com.martensigwart.fakeload;
 
-import com.martensigwart.fakeload.FakeLoad;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

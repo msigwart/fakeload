@@ -1,4 +1,4 @@
-package com.martensigwart.fakeload.internal;
+package com.martensigwart.fakeload;
 
 /**
  * Created by martensigwart on 25.07.17.

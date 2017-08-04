@@ -1,4 +1,4 @@
-package com.martensigwart.fakeload.internal;
+package com.martensigwart.fakeload;
 
 /**
  * Factory and utility methods for simulator classes defined in this package.

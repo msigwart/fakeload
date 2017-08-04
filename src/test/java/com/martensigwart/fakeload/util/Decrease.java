@@ -1,4 +1,4 @@
-package com.martensigwart.fakeload.internal.util;
+package com.martensigwart.fakeload.util;
 
 public final class Decrease extends Instruction {
 

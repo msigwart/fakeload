@@ -1,6 +1,4 @@
-package com.martensigwart.fakeload.internal;
-
-import com.martensigwart.fakeload.FakeLoad;
+package com.martensigwart.fakeload;
 
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;

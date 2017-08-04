@@ -1,11 +1,8 @@
-package com.martensigwart.fakeload.internal;
+package com.martensigwart.fakeload;
 
-import com.martensigwart.fakeload.FakeLoad;
-import com.martensigwart.fakeload.FakeLoads;
-import com.martensigwart.fakeload.MemoryUnit;
-import com.martensigwart.fakeload.internal.util.Decrease;
-import com.martensigwart.fakeload.internal.util.Increase;
-import com.martensigwart.fakeload.internal.util.Instruction;
+import com.martensigwart.fakeload.util.Decrease;
+import com.martensigwart.fakeload.util.Increase;
+import com.martensigwart.fakeload.util.Instruction;
 
 import java.util.List;
 import java.util.ListIterator;

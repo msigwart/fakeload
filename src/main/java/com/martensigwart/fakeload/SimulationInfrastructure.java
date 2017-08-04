@@ -1,6 +1,4 @@
-package com.martensigwart.fakeload.internal;
-
-import com.martensigwart.fakeload.FakeLoad;
+package com.martensigwart.fakeload;
 
 /**
  * Represents a simulation infrastructure for the FakeLoad Library.

@@ -1,9 +1,6 @@
-package com.martensigwart.fakeload.internal;
+package com.martensigwart.fakeload;
 
-import com.martensigwart.fakeload.FakeLoad;
-import com.martensigwart.fakeload.FakeLoadExecutor;
-import com.martensigwart.fakeload.FakeLoads;
-import com.martensigwart.fakeload.MemoryUnit;
+import com.martensigwart.fakeload.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

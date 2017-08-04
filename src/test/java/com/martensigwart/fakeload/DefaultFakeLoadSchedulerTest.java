@@ -1,8 +1,5 @@
-package com.martensigwart.fakeload.internal;
+package com.martensigwart.fakeload;
 
-import com.martensigwart.fakeload.FakeLoad;
-import com.martensigwart.fakeload.FakeLoads;
-import com.martensigwart.fakeload.MemoryUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;

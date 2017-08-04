@@ -1,4 +1,4 @@
-package com.martensigwart.fakeload.internal;
+package com.martensigwart.fakeload;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Created by martensigwart on 19.05.17.
+ * Skeleton implementation of the CPU Simulator interface.
+ *
+ * 
  */
 public abstract class AbstractCpuSimulator implements CpuSimulator {
 
