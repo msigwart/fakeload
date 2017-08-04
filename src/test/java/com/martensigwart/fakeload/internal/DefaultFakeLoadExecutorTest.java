@@ -1,6 +1,5 @@
 package com.martensigwart.fakeload.internal;
 
-import ac.at.tuwien.infosys.fakeload.*;
 import com.martensigwart.fakeload.FakeLoad;
 import com.martensigwart.fakeload.FakeLoadExecutor;
 import com.martensigwart.fakeload.FakeLoads;
