@@ -1,5 +1,8 @@
 package com.martensigwart.fakeload.internal;
 
+import com.martensigwart.fakeload.FakeLoad;
+import com.martensigwart.fakeload.FakeLoads;
+import com.martensigwart.fakeload.MemoryUnit;
 import com.martensigwart.fakeload.internal.util.Decrease;
 import com.martensigwart.fakeload.internal.util.Increase;
 import com.martensigwart.fakeload.internal.util.Instruction;
@@ -54,44 +57,39 @@ public class ConnectionRunnable implements Runnable {
     }
 
     private void increase(Instruction.LoadType type, long increase) {
-//        try {
-//            switch (type) {
-//
-//                case CPU:
-//                    systemLoad.increaseCpu(increase);
-//                    break;
-//                case MEMORY:
-//                    systemLoad.increaseMemory(increase);
-//                    break;
-//                case DISKIO:
-//                    systemLoad.increaseDiskIO(increase);
-//                    break;
-//                case NETIO:
-//                    systemLoad.increaseNetIO(increase);
-//                    break;
-//            }
-//        } catch (MaximumLoadExceededException e) {
-//            //TODO
-//        }
+        FakeLoad fakeLoad = initFakeLoad(type, increase);
+
+        try {
+            systemLoad.increaseBy(fakeLoad);
+
+        } catch (MaximumLoadExceededException e) {
+            e.printStackTrace();
+        }
     }
 
-
     private void decrease(Instruction.LoadType type, long decrease) {
-//        switch (type) {
-//
-//            case CPU:
-//                systemLoad.decreaseCpu(decrease);
-//                break;
-//            case MEMORY:
-//                systemLoad.decreaseMemory(decrease);
-//                break;
-//            case DISKIO:
-//                systemLoad.decreaseDiskIO(decrease);
-//                break;
-//            case NETIO:
-//                systemLoad.decreaseNetIO(decrease);
-//                break;
-//        }
+        FakeLoad fakeLoad = initFakeLoad(type, decrease);
+
+        systemLoad.decreaseBy(fakeLoad);
+    }
+
+    private FakeLoad initFakeLoad(Instruction.LoadType type, long increase) {
+        FakeLoad fakeLoad = FakeLoads.createLoad();
+        switch (type) {
+            case CPU:
+                fakeLoad = fakeLoad.withCpuLoad(increase);
+                break;
+            case MEMORY:
+                fakeLoad = fakeLoad.withMemoryLoad(increase, MemoryUnit.BYTES);
+                break;
+            case DISKIO:
+                fakeLoad = fakeLoad.withDiskIOLoad(increase);
+                break;
+            case NETIO:
+                fakeLoad = fakeLoad.withNetIOLoad(increase);
+                break;
+        }
+        return fakeLoad;
     }
 
 
