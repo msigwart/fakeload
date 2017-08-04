@@ -12,16 +12,14 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by martensigwart on 28.07.17.
- */
-public class AbstractFakeLoadTest {
 
-    final Class<? extends FakeLoad> classUnderTest;
-    FakeLoad fakeload = null;
+public abstract class AbstractFakeLoadTest {
+
+    private final Class<? extends FakeLoad> classUnderTest;
+    private FakeLoad fakeload = null;
 
 
-    public AbstractFakeLoadTest(Class<? extends FakeLoad> classUnderTest) {
+    AbstractFakeLoadTest(Class<? extends FakeLoad> classUnderTest) {
         this.classUnderTest = classUnderTest;
     }
 
@@ -29,9 +27,7 @@ public class AbstractFakeLoadTest {
     public void setup() {
         try {
             fakeload = classUnderTest.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }
