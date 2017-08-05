@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * Skeleton implementation of the CPU Simulator interface.
  *
- * 
+ *
  */
 public abstract class AbstractCpuSimulator implements CpuSimulator {
 
