@@ -6,16 +6,16 @@ package com.martensigwart.fakeload;
 public enum MemoryUnit {
     BYTES, KB, MB, GB;
 
-    public long toBytes() {
+    public long toBytes(long amount) {
         switch (this) {
             case BYTES:
-                return 1;
+                return amount*1;
             case KB:
-                return 1024;
+                return amount*1024;
             case MB:
-                return 1024*1024;
+                return amount*1024*1024;
             case GB:
-                return 1024*1024*1024;
+                return amount*1024*1024*1024;
             default:
                 return 0;
         }
