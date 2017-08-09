@@ -26,7 +26,6 @@ public final class SimulationControl implements Runnable {
 
 
     private final SystemLoad systemLoad;
-
     private final List<CpuSimulator> cpuSimulators;
     private final MemorySimulator memorySimulator;
 
