@@ -2,16 +2,35 @@ package com.martensigwart.fakeload;
 
 import com.google.common.collect.ImmutableList;
 
+import javax.annotation.concurrent.Immutable;
 import java.util.*;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.*;
 
-
 /**
- * Created by martensigwart on 20.07.17.
+ * A simple representation of a {@link FakeLoad}, which contains only simple
+ * load parameters like CPU, memory, etc.
+ *
+ * <p>
+ * This class cannot contain other {@code FakeLoad} objects, any call to
+ * {@link #addLoad(FakeLoad)} or {@link #addLoads(Collection)} will return
+ * a new {@link CompositeFakeLoad} instance.
+ *
+ * <p>
+ * This class is immutable and therefore threadsafe.
+ * The setter methods for load parameters provided as a fluent interface each
+ * return a new {@code FakeLoad} object containing the newly specified parameter.
+ *
+ * <p>
+ * Classes {@link FakeLoads} and {@link FakeLoadBuilder} provide convenience methods
+ * for simpler and more efficient instantiation.
+ *
+ * @since 1.8
+ * @author Marten Sigwart
  */
+@Immutable
 public final class SimpleFakeLoad extends AbstractFakeLoad {
 
     private final long duration;
@@ -22,7 +41,7 @@ public final class SimpleFakeLoad extends AbstractFakeLoad {
     private final long netIOLoad;
 
 
-    private SimpleFakeLoad(long duration, TimeUnit unit, int repetitions,
+    SimpleFakeLoad(long duration, TimeUnit unit, int repetitions,
                            long cpuLoad, long memoryLoad, long diskIOLoad, long netIOLoad) {
 
         super(repetitions);
@@ -70,7 +89,7 @@ public final class SimpleFakeLoad extends AbstractFakeLoad {
 
     @Override
     public FakeLoad withMemoryLoad(long amount, MemoryUnit unit) {
-        long memoryLoad = amount * unit.toBytes();
+        long memoryLoad = unit.toBytes(amount);
         return new SimpleFakeLoad(duration, this.unit, getRepetitions(), cpuLoad, memoryLoad, diskIOLoad, netIOLoad);
     }
 
@@ -164,22 +183,6 @@ public final class SimpleFakeLoad extends AbstractFakeLoad {
         };
     }
 
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//
-//        SimpleFakeLoad that = (SimpleFakeLoad) o;
-//
-//        if (duration != that.duration) return false;
-//        if (getRepetitions() != that.getRepetitions()) return false;
-//        if (cpuLoad != that.cpuLoad) return false;
-//        if (memoryLoad != that.memoryLoad) return false;
-//        if (diskIOLoad != that.diskIOLoad) return false;
-//        if (netIOLoad != that.netIOLoad) return false;
-//        if (unit != that.unit) return false;
-//        return loads.equals(that.loads);
-//    }
 
 
     @Override
@@ -210,8 +213,8 @@ public final class SimpleFakeLoad extends AbstractFakeLoad {
                 ", unit=" + unit +
                 ", cpuLoad=" + cpuLoad +
                 ", memoryLoad=" + memoryLoad +
-                ", diskIOLoad=" + diskIOLoad +
-                ", netIOLoad=" + netIOLoad +
+                ", diskIO=" + diskIOLoad +
+                ", netIO=" + netIOLoad +
                 ", repetitions=" + getRepetitions() +
                 '}';
     }
