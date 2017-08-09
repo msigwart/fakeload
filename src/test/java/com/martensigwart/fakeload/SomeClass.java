@@ -41,7 +41,7 @@ public class SomeClass {
 //        fakeLoad.execute();
 //
 //        pattern = new FakeLoadBuilder(10, TimeUnit.SECONDS)
-//                .cpuLoad(50).memoryLoad(600).build();
+//                .withCpuLoad(50).withMemoryLoad(600).build();
 //
 //        fakeLoad.setLoad(pattern);
 //        fakeLoad.execute();
@@ -64,7 +64,7 @@ public class SomeClass {
         log.info("Entered yetAnotherMethod()");
 
         FakeLoadExecutor executor = FakeLoadExecutors.newDefaultExecutor();
-        FakeLoad fakeLoad = new MutableFakeLoad()
+        FakeLoad fakeLoad = FakeLoads.createLoad()
                 .withCpuLoad(80)
                 .withMemoryLoad(300, MemoryUnit.MB);
 
