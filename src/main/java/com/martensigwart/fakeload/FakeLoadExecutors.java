@@ -1,7 +1,10 @@
 package com.martensigwart.fakeload;
 
 /**
- * Created by martensigwart on 26.07.17.
+ * Factory methods that create {@link FakeLoadExecutor} instances.
+ *
+ * @since 1.8
+ * @author Marten Sigwart
  */
 public class FakeLoadExecutors {
 
