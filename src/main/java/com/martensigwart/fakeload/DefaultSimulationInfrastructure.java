@@ -40,10 +40,7 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
             cpuSimulators.add(Simulators.newCpuSimulator());
         }
         this.cpuSimulators = Collections.unmodifiableList(cpuSimulators);
-
-
         this.memorySimulator = Simulators.newMemorySimulator();
-
 
         this.simulationControl = new SimulationControl(this.cpuSimulators, this.memorySimulator);
 
@@ -56,6 +53,8 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
 
     }
+
+    //TODO create constructor passing LoadSimulator objects as parameter
 
 
     @Override
