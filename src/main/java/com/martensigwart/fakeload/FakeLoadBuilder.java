@@ -45,6 +45,11 @@ public class FakeLoadBuilder {
             // empty
         }
 
+        public FakeLoadBuilder lasting(long duration, TimeUnit unit) {
+            this.duration = duration;
+            this.unit = unit;
+            return this;
+        }
 
         public FakeLoadBuilder repeat(int repetitions) {
             this.repetitions = repetitions;
