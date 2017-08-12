@@ -1,8 +1,10 @@
 package com.martensigwart.fakeload;
 
+import com.sun.management.OperatingSystemMXBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.management.ManagementFactory;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,16 +25,20 @@ import java.util.List;
 public final class SimulationControl implements Runnable {
 
     private static final Logger log = LoggerFactory.getLogger(SimulationControl.class);
+    private static final OperatingSystemMXBean operatingSystem = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+    private static final int SLEEP_PERIOD = 2000;
 
 
     private final SystemLoad systemLoad;
     private final List<CpuSimulator> cpuSimulators;
     private final MemorySimulator memorySimulator;
+    private final Object lock;
 
     SimulationControl(List<CpuSimulator> cpuSimulators, MemorySimulator memorySimulator) {
         this.systemLoad = new SystemLoad();
         this.cpuSimulators = Collections.unmodifiableList(cpuSimulators);
         this.memorySimulator = memorySimulator;
+        this.lock = new Object();
     }
 
 
@@ -40,12 +46,28 @@ public final class SimulationControl implements Runnable {
     public void run() {
         log.trace("Started");
 
-        while(true) {
+        boolean running = true;
+        long lastCpu = 0L;
+        while(running) {
             try {
-                Thread.sleep(10000);
+                synchronized (lock) {
+                    while (systemLoad.getCpu() == 0) {
+                        log.trace("SimulationControl - Waiting...");
+                        lock.wait();
+                        log.trace("SimulationControl - Woke Up");
+                    }
+                }
+
+                long actualCpu = (long)(operatingSystem.getProcessCpuLoad() * 100);
+                if (Math.abs(lastCpu-actualCpu) > 5) {
+                    lastCpu = actualCpu;
+                } else {
+                    //TODO increase or decrease CPU accordingly
+                }
+                Thread.sleep(SLEEP_PERIOD);
             } catch (InterruptedException e) {
                 log.warn("SimulationControl was interrupted");
-                break;
+                running = false;
             }
         }
     }
@@ -56,6 +78,10 @@ public final class SimulationControl implements Runnable {
 
         for (CpuSimulator cpuSim: cpuSimulators) {
             cpuSim.setLoad(systemLoad.getCpu());
+        }
+
+        synchronized (lock) {
+            lock.notify();
         }
 
         memorySimulator.setLoad(systemLoad.getMemory());
