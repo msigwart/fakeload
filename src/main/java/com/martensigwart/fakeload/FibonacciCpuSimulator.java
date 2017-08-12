@@ -4,10 +4,8 @@ package com.martensigwart.fakeload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Created by martensigwart on 17.05.17.
- */
-public class FibonacciCpuSimulator extends AbstractCpuSimulator {
+
+public class FibonacciCpuSimulator extends CpuSimulator {
 
     private static final Logger log = LoggerFactory.getLogger(FibonacciCpuSimulator.class);
 

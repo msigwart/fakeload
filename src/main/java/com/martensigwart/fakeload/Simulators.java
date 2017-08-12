@@ -14,12 +14,12 @@ public final class Simulators {
         return new FibonacciCpuSimulator();
     }
 
+    public static MemorySimulator newMemorySimulator() {
+        return new MemorySimulator();
+    }
+
     // Suppress default constructor for non-instantiability
     private Simulators() {
         throw new AssertionError();
-    }
-
-    public static MemorySimulator newMemorySimulator() {
-        return new MemorySimulator();
     }
 }
