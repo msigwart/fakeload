@@ -27,17 +27,22 @@ public final class SimulationControl implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(SimulationControl.class);
     private static final OperatingSystemMXBean operatingSystem = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
     private static final int SLEEP_PERIOD = 2000;
+    private static final int CPU_CONTROL_THRESHOLD = 1;
 
 
     private final SystemLoad systemLoad;
     private final List<CpuSimulator> cpuSimulators;
     private final MemorySimulator memorySimulator;
+    private final double stepSize;
     private final Object lock;
 
+    private long lastCpu = 0L;
+
     SimulationControl(List<CpuSimulator> cpuSimulators, MemorySimulator memorySimulator) {
-        this.systemLoad = new SystemLoad();
+        this.systemLoad = new SystemLoad(); //TODO pass as constructor parameter
         this.cpuSimulators = Collections.unmodifiableList(cpuSimulators);
         this.memorySimulator = memorySimulator;
+        this.stepSize = 1.0 / Runtime.getRuntime().availableProcessors();
         this.lock = new Object();
     }
 
@@ -47,7 +52,6 @@ public final class SimulationControl implements Runnable {
         log.trace("SimulationControl - Started");
 
         boolean running = true;
-        long lastCpu = 0L;
         while(running) {
             try {
                 synchronized (lock) {
@@ -58,12 +62,9 @@ public final class SimulationControl implements Runnable {
                     }
                 }
 
-                long actualCpu = (long)(operatingSystem.getProcessCpuLoad() * 100);
-                if (Math.abs(lastCpu-actualCpu) > 5) {
-                    lastCpu = actualCpu;
-                } else {
-                    //TODO increase or decrease CPU accordingly
-                }
+                controlCpuLoad();
+
+
                 Thread.sleep(SLEEP_PERIOD);
             } catch (InterruptedException e) {
                 log.warn("SimulationControl - Interrupted");
@@ -71,6 +72,7 @@ public final class SimulationControl implements Runnable {
             }
         }
     }
+
 
 
     public void increaseSystemLoadBy(FakeLoad load) throws MaximumLoadExceededException {
@@ -97,4 +99,40 @@ public final class SimulationControl implements Runnable {
         memorySimulator.setLoad(systemLoad.getMemory());
         // TODO propagate changes to simulators
     }
+
+
+
+    private void controlCpuLoad() {
+        long actualCpu = (long)(operatingSystem.getProcessCpuLoad() * 100);
+
+        long difference = actualCpu - systemLoad.getCpu();
+
+        if (    Math.abs(difference) > CPU_CONTROL_THRESHOLD &&
+                Math.abs(lastCpu - actualCpu) <= CPU_CONTROL_THRESHOLD) {
+
+            int noOfSteps = (int)(difference / stepSize);
+            if (difference < 0) {   // actual load smaller than desired load
+                increaseCpuSimulatorLoads(1, noOfSteps);
+            } else {
+                decreaseCpuSimulatorLoads(1, noOfSteps);
+            }
+
+            lastCpu = actualCpu;
+        }
+    }
+
+
+    private void increaseCpuSimulatorLoads(int delta, int noOfSteps) {
+        for (int i=0; i<noOfSteps; i++) {
+            cpuSimulators.get(i % cpuSimulators.size()).increaseLoad(delta);
+        }
+    }
+
+    private void decreaseCpuSimulatorLoads(int delta, int noOfSteps) {
+        for (int i=0; i<noOfSteps; i++) {
+            cpuSimulators.get(i % cpuSimulators.size()).decreaseLoad(delta);
+        }
+    }
+
+
 }
