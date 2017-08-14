@@ -40,12 +40,16 @@ public class SomeClass {
         // Execute FakeLoad
         executor.execute(fakeload);
 
-        fakeload = new FakeLoadBuilder(10, TimeUnit.SECONDS)
-                .withCpuLoad(10).withMemoryLoad(100, MemoryUnit.KB)
-                .addLoad(new FakeLoadBuilder(10, TimeUnit.SECONDS)
-                    .withCpuLoad(20).withMemoryLoad(200, MemoryUnit.KB).build())
-                .addLoad(new FakeLoadBuilder(10, TimeUnit.SECONDS)
-                    .withCpuLoad(30).withMemoryLoad(300, MemoryUnit.KB).build())
+        fakeload = new FakeLoadBuilder(20, TimeUnit.SECONDS)
+                .withCpuLoad(20).withMemoryLoad(100, MemoryUnit.KB)
+                .addLoad(new FakeLoadBuilder(20, TimeUnit.SECONDS)
+                    .withCpuLoad(40).withMemoryLoad(200, MemoryUnit.KB).build())
+                .addLoad(new FakeLoadBuilder(20, TimeUnit.SECONDS)
+                    .withCpuLoad(60).withMemoryLoad(300, MemoryUnit.KB).build())
+                .addLoad(new FakeLoadBuilder(20, TimeUnit.SECONDS)
+                    .withCpuLoad(80).withMemoryLoad(400, MemoryUnit.KB).build())
+                .addLoad(new FakeLoadBuilder(20, TimeUnit.SECONDS)
+                    .withCpuLoad(100).withMemoryLoad(500, MemoryUnit.KB).build())
                 .build();
 
         executor.execute(fakeload);
