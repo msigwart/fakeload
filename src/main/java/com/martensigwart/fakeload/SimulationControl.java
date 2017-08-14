@@ -44,7 +44,7 @@ public final class SimulationControl implements Runnable {
 
     @Override
     public void run() {
-        log.trace("Started");
+        log.trace("SimulationControl - Started");
 
         boolean running = true;
         long lastCpu = 0L;
@@ -66,7 +66,7 @@ public final class SimulationControl implements Runnable {
                 }
                 Thread.sleep(SLEEP_PERIOD);
             } catch (InterruptedException e) {
-                log.warn("SimulationControl was interrupted");
+                log.warn("SimulationControl - Interrupted");
                 running = false;
             }
         }
