@@ -4,7 +4,7 @@ import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * Created by martensigwart on 04.07.17.
+ * Class representing system load.
  */
 @ThreadSafe
 final class SystemLoad {
