@@ -8,8 +8,8 @@ public abstract class AbstractFakeLoad implements FakeLoad {
     private final int repetitions;
 
 
-    protected AbstractFakeLoad(int repetitions) {
-        checkArgument(repetitions >= 0, "Repetitions must be nonnegative but was %s", repetitions);
+    AbstractFakeLoad(int repetitions) {
+        checkArgument(repetitions >= 0, "Repetitions must be non-negative but was %s", repetitions);
 
         this.repetitions = repetitions;
     }
