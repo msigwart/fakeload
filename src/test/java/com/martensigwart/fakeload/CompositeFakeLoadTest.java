@@ -39,8 +39,8 @@ public class CompositeFakeLoadTest extends AbstractFakeLoadTest {
         assertInnerLoadsSize(children.size(), f1);
 
         // test with two children
-        FakeLoad child1 = new SimpleFakeLoad().lasting(10, TimeUnit.SECONDS).withCpuLoad(50);
-        FakeLoad child2 = new SimpleFakeLoad().lasting(10, TimeUnit.SECONDS).withCpuLoad(50);
+        FakeLoad child1 = new SimpleFakeLoad().lasting(10, TimeUnit.SECONDS).withCpu(50);
+        FakeLoad child2 = new SimpleFakeLoad().lasting(10, TimeUnit.SECONDS).withCpu(50);
         children.add(child1);
         children.add(child2);
 
@@ -66,9 +66,9 @@ public class CompositeFakeLoadTest extends AbstractFakeLoadTest {
         assertRepetitions(2, f1);
 
         // test with two children
-        FakeLoad child1 = new SimpleFakeLoad().lasting(10, TimeUnit.SECONDS).withCpuLoad(50);
-        FakeLoad child2 = new SimpleFakeLoad().lasting(10, TimeUnit.SECONDS).withCpuLoad(50);
-        FakeLoad child3 = new SimpleFakeLoad().lasting(10, TimeUnit.SECONDS).withCpuLoad(50);
+        FakeLoad child1 = new SimpleFakeLoad().lasting(10, TimeUnit.SECONDS).withCpu(50);
+        FakeLoad child2 = new SimpleFakeLoad().lasting(10, TimeUnit.SECONDS).withCpu(50);
+        FakeLoad child3 = new SimpleFakeLoad().lasting(10, TimeUnit.SECONDS).withCpu(50);
         children.add(child1);
         children.add(child2);
         children.add(child3);

@@ -83,23 +83,23 @@ public final class SimpleFakeLoad extends AbstractFakeLoad {
     }
 
     @Override
-    public FakeLoad withCpuLoad(long cpuLoad) {
+    public FakeLoad withCpu(long cpuLoad) {
         return new SimpleFakeLoad(duration, unit, getRepetitions(), cpuLoad, memoryLoad, diskIOLoad, netIOLoad);
     }
 
     @Override
-    public FakeLoad withMemoryLoad(long amount, MemoryUnit unit) {
+    public FakeLoad withMemory(long amount, MemoryUnit unit) {
         long memoryLoad = unit.toBytes(amount);
         return new SimpleFakeLoad(duration, this.unit, getRepetitions(), cpuLoad, memoryLoad, diskIOLoad, netIOLoad);
     }
 
     @Override
-    public FakeLoad withDiskIOLoad(long diskIOLoad) {
+    public FakeLoad withDiskIO(long diskIOLoad) {
         return new SimpleFakeLoad(duration, this.unit, getRepetitions(), cpuLoad, memoryLoad, diskIOLoad, netIOLoad);
     }
 
     @Override
-    public FakeLoad withNetIOLoad(long netIOLoad) {
+    public FakeLoad withNetIO(long netIOLoad) {
         return new SimpleFakeLoad(duration, this.unit, getRepetitions(), cpuLoad, memoryLoad, diskIOLoad, netIOLoad);
     }
 

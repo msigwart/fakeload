@@ -37,7 +37,7 @@ public interface FakeLoad extends Iterable<FakeLoad> {
      * @param unit the time unit of the duration
      * @return returns the FakeLoad object containing the provided parameters.
      */
-    FakeLoad lasting(long duration, TimeUnit unit);        // name alternative: for(10, TimeUnit.SECONDS)
+    FakeLoad lasting(long duration, TimeUnit unit);
 
     /**
      * Returns a {@code FakeLoad} instance with the number of specified repetitions set.
@@ -61,7 +61,7 @@ public interface FakeLoad extends Iterable<FakeLoad> {
      * @param cpuLoad the fake CPU load in percent (0-100%)
      * @return returns the FakeLoad object containing the provided parameters.
      */
-    FakeLoad withCpuLoad(long cpuLoad);
+    FakeLoad withCpu(long cpuLoad);
 
     /**
      * Returns a {@code FakeLoad} instance with the specified memory load.
@@ -74,11 +74,11 @@ public interface FakeLoad extends Iterable<FakeLoad> {
      * @param unit the memory unit for the specified amount
      * @return returns the FakeLoad object containing the provided parameters.
      */
-    FakeLoad withMemoryLoad(long amount, MemoryUnit unit);
+    FakeLoad withMemory(long amount, MemoryUnit unit);
 
-    FakeLoad withDiskIOLoad(long diskIOLoad);
+    FakeLoad withDiskIO(long diskIOLoad);
 
-    FakeLoad withNetIOLoad(long netIOLoad);
+    FakeLoad withNetIO(long netIOLoad);
 
     FakeLoad addLoad(FakeLoad load);
 

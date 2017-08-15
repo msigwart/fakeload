@@ -63,55 +63,55 @@ public abstract class AbstractFakeLoadTest {
 
     @Test
     public void testCpuLoadMethod1() {
-        fakeload = fakeload.withCpuLoad(20);
+        fakeload = fakeload.withCpu(20);
         assertCpuLoad(20, fakeload);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCpuLoadMethod2() {
-        fakeload = fakeload.withCpuLoad(-20);
+        fakeload = fakeload.withCpu(-20);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCpuLoadMethod3() {
-        fakeload = fakeload.withCpuLoad(120);
+        fakeload = fakeload.withCpu(120);
     }
 
     @Test
     public void testMemoryLoadMethod1() {
         // Bytes
-        fakeload = fakeload.withMemoryLoad(1024, MemoryUnit.BYTES);
+        fakeload = fakeload.withMemory(1024, MemoryUnit.BYTES);
         assertMemoryLoad(1024L, fakeload);
 
         //kB
-        fakeload = fakeload.withMemoryLoad(300, MemoryUnit.KB);
+        fakeload = fakeload.withMemory(300, MemoryUnit.KB);
         assertMemoryLoad(300L*1024, fakeload);
 
         //MB
-        fakeload = fakeload.withMemoryLoad(300, MemoryUnit.MB);
+        fakeload = fakeload.withMemory(300, MemoryUnit.MB);
         assertMemoryLoad(300L*1024*1024, fakeload);
 
         //GB
-        fakeload = fakeload.withMemoryLoad(2, MemoryUnit.GB);
+        fakeload = fakeload.withMemory(2, MemoryUnit.GB);
         assertMemoryLoad(2L*1024*1024*1024, fakeload);
 
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testMemoryLoadMethod2() {
-        fakeload = fakeload.withMemoryLoad(-20, MemoryUnit.MB);
+        fakeload = fakeload.withMemory(-20, MemoryUnit.MB);
     }
 
     @Test(expected = NullPointerException.class)
     public void testMemoryLoadMethod3() {
-        fakeload = fakeload.withMemoryLoad(20, null);
+        fakeload = fakeload.withMemory(20, null);
     }
 
 
     @Test
     public void testAddLoadMethod() {
-        FakeLoad child1 = fakeload.lasting(100, TimeUnit.MILLISECONDS).withCpuLoad(20);
-        FakeLoad child2 = fakeload.lasting(10, TimeUnit.SECONDS).withMemoryLoad(100, MemoryUnit.MB);
+        FakeLoad child1 = fakeload.lasting(100, TimeUnit.MILLISECONDS).withCpu(20);
+        FakeLoad child2 = fakeload.lasting(10, TimeUnit.SECONDS).withMemory(100, MemoryUnit.MB);
 
         assertEquals(0, fakeload.getInnerLoads().size());
         fakeload = fakeload.addLoad(child1)
@@ -121,9 +121,9 @@ public abstract class AbstractFakeLoadTest {
 
     @Test
     public void testAddLoadsMethod() {
-        FakeLoad child1 = fakeload.lasting(100, TimeUnit.MILLISECONDS).withCpuLoad(20);
-        FakeLoad child2 = fakeload.lasting(10, TimeUnit.SECONDS).withMemoryLoad(100, MemoryUnit.MB);
-        FakeLoad child3 = fakeload.lasting(10, TimeUnit.SECONDS).withMemoryLoad(300, MemoryUnit.MB);
+        FakeLoad child1 = fakeload.lasting(100, TimeUnit.MILLISECONDS).withCpu(20);
+        FakeLoad child2 = fakeload.lasting(10, TimeUnit.SECONDS).withMemory(100, MemoryUnit.MB);
+        FakeLoad child3 = fakeload.lasting(10, TimeUnit.SECONDS).withMemory(300, MemoryUnit.MB);
         List<FakeLoad> children = new ArrayList<>();
         children.add(child2);
         children.add(child3);
@@ -151,19 +151,19 @@ public abstract class AbstractFakeLoadTest {
 
 
         fakeload = fakeload.lasting(300, TimeUnit.MILLISECONDS).repeat(3)
-                .withCpuLoad(50)
-                .withMemoryLoad(300, MemoryUnit.MB)
-                .withNetIOLoad(2000)
-                .withDiskIOLoad(5000);
+                .withCpu(50)
+                .withMemory(300, MemoryUnit.MB)
+                .withNetIO(2000)
+                .withDiskIO(5000);
         assertEqualsReflexivity(fakeload);
 
 
 
         fakeload = fakeload.lasting(30, TimeUnit.SECONDS).repeat(6)
-                .withCpuLoad(80)
-                .withMemoryLoad(300, MemoryUnit.KB)
-                .withNetIOLoad(20)
-                .withDiskIOLoad(51200)
+                .withCpu(80)
+                .withMemory(300, MemoryUnit.KB)
+                .withNetIO(20)
+                .withDiskIO(51200)
                 .addLoad(child1).addLoad(child2).addLoad(child3);
         assertEqualsReflexivity(fakeload);
 
@@ -180,10 +180,10 @@ public abstract class AbstractFakeLoadTest {
         FakeLoad child2Copy = new SimpleFakeLoad(500, TimeUnit.MILLISECONDS);
 
         // parent load identical, children identical
-        parent1 = fakeload.lasting(20, TimeUnit.SECONDS).withCpuLoad(30)
+        parent1 = fakeload.lasting(20, TimeUnit.SECONDS).withCpu(30)
                 .addLoad(child1)
                 .addLoad(child2);
-        parent2 = fakeload.lasting(20, TimeUnit.SECONDS).withCpuLoad(30)
+        parent2 = fakeload.lasting(20, TimeUnit.SECONDS).withCpu(30)
                 .addLoad(child1)
                 .addLoad(child2);
 
@@ -192,7 +192,7 @@ public abstract class AbstractFakeLoadTest {
 
 
         // parent load identical, children logically equal
-        parent2 = fakeload.lasting(20, TimeUnit.SECONDS).withCpuLoad(30)
+        parent2 = fakeload.lasting(20, TimeUnit.SECONDS).withCpu(30)
                 .addLoad(child1Copy)
                 .addLoad(child2Copy);
 
@@ -201,7 +201,7 @@ public abstract class AbstractFakeLoadTest {
 
 
         // parent load identical, children different
-        parent2 = new SimpleFakeLoad().lasting(20, TimeUnit.SECONDS).withCpuLoad(30)
+        parent2 = new SimpleFakeLoad().lasting(20, TimeUnit.SECONDS).withCpu(30)
                 .addLoad(child1).addLoad(child3);
 
         assertNotEquals(parent1, parent2);
@@ -210,11 +210,11 @@ public abstract class AbstractFakeLoadTest {
 
 
         // parent load different, children identical
-        parent1 = fakeload.lasting(10, TimeUnit.SECONDS).withCpuLoad(20)
+        parent1 = fakeload.lasting(10, TimeUnit.SECONDS).withCpu(20)
                 .addLoad(child1)
                 .addLoad(child2);
 
-        parent2 = fakeload.lasting(20, TimeUnit.SECONDS).withCpuLoad(30)
+        parent2 = fakeload.lasting(20, TimeUnit.SECONDS).withCpu(30)
                 .addLoad(child1)
                 .addLoad(child2);
 
@@ -222,11 +222,11 @@ public abstract class AbstractFakeLoadTest {
         assertEqualsSymmetry(parent1, parent2);
 
         // parent load different, children logically equal
-        parent1 = fakeload.lasting(10, TimeUnit.SECONDS).withCpuLoad(20)
+        parent1 = fakeload.lasting(10, TimeUnit.SECONDS).withCpu(20)
                 .addLoad(child1)
                 .addLoad(child2);
 
-        parent2 = fakeload.lasting(20, TimeUnit.SECONDS).withCpuLoad(30)
+        parent2 = fakeload.lasting(20, TimeUnit.SECONDS).withCpu(30)
                 .addLoad(child1Copy)
                 .addLoad(child2Copy);
 
@@ -234,11 +234,11 @@ public abstract class AbstractFakeLoadTest {
         assertEqualsSymmetry(parent1, parent2);
 
         // parent load different, children different
-        parent1 = fakeload.lasting(10, TimeUnit.SECONDS).withCpuLoad(20)
+        parent1 = fakeload.lasting(10, TimeUnit.SECONDS).withCpu(20)
                 .addLoad(child1)
                 .addLoad(child2);
 
-        parent2 = fakeload.lasting(20, TimeUnit.SECONDS).withCpuLoad(30)
+        parent2 = fakeload.lasting(20, TimeUnit.SECONDS).withCpu(30)
                 .addLoad(child1)
                 .addLoad(child3);
 
@@ -320,8 +320,8 @@ public abstract class AbstractFakeLoadTest {
     @Test(expected = NoSuchElementException.class)
     public void testIteratorMethod1() {
         FakeLoad simple = new SimpleFakeLoad().lasting(12, TimeUnit.SECONDS)
-                .withCpuLoad(80)
-                .withMemoryLoad(300, MemoryUnit.KB);
+                .withCpu(80)
+                .withMemory(300, MemoryUnit.KB);
 
         Iterator<FakeLoad> iterator = simple.iterator();
         assertTrue(iterator.hasNext());
@@ -336,8 +336,8 @@ public abstract class AbstractFakeLoadTest {
     @Test(expected = NoSuchElementException.class)
     public void testIteratorMethod2() {
         FakeLoad simple = new SimpleFakeLoad().lasting(1111, TimeUnit.MILLISECONDS)
-                .withCpuLoad(99)
-                .withMemoryLoad(9999, MemoryUnit.BYTES);
+                .withCpu(99)
+                .withMemory(9999, MemoryUnit.BYTES);
 
         FakeLoad parent = simple;
         List<FakeLoad> children = new ArrayList<>();
@@ -348,8 +348,8 @@ public abstract class AbstractFakeLoadTest {
 
         for (int i=0; i<noOfChildren; i++) {
             FakeLoad child = new SimpleFakeLoad().lasting(startDuration*i, TimeUnit.SECONDS)
-                    .withCpuLoad(startCPU*i)
-                    .withMemoryLoad(startMemory*i, MemoryUnit.KB);
+                    .withCpu(startCPU*i)
+                    .withMemory(startMemory*i, MemoryUnit.KB);
 
             children.add(child);
             parent = parent.addLoad(child);
@@ -380,8 +380,8 @@ public abstract class AbstractFakeLoadTest {
     @Test(expected = NoSuchElementException.class)
     public void testIteratorMethod3() {
         FakeLoad simple = new SimpleFakeLoad().lasting(9999, TimeUnit.MILLISECONDS)
-                .withCpuLoad(99)
-                .withMemoryLoad(9999, MemoryUnit.BYTES);
+                .withCpu(99)
+                .withMemory(9999, MemoryUnit.BYTES);
 
         int noOfChildren = 10;
         int noOfGrandChildrenPerChild = 9;
@@ -396,15 +396,15 @@ public abstract class AbstractFakeLoadTest {
         // create children
         for (int i=0; i<noOfChildren; i++) {
             FakeLoad child = new SimpleFakeLoad().lasting(startDuration*i, TimeUnit.SECONDS)
-                    .withCpuLoad(startCPU*i)
-                    .withMemoryLoad(startMemory*i, MemoryUnit.KB);
+                    .withCpu(startCPU*i)
+                    .withMemory(startMemory*i, MemoryUnit.KB);
             children.add(i, child);
 
             // create grand children
             for (int j=0; j<noOfGrandChildrenPerChild; j++) {
                 FakeLoad grandChild = new SimpleFakeLoad().lasting(startDuration*i+j, TimeUnit.SECONDS)
-                        .withCpuLoad(startCPU+j)
-                        .withMemoryLoad(startMemory*i+j, MemoryUnit.KB);
+                        .withCpu(startCPU+j)
+                        .withMemory(startMemory*i+j, MemoryUnit.KB);
 
                 grandChildren.add(i*noOfGrandChildrenPerChild+j, grandChild);
                 child = child.addLoad(grandChild);

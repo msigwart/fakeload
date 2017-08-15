@@ -20,8 +20,8 @@ public class SomeClass {
         // Execute FakeLoad
 //        FakeLoad fakeLoad = FakeLoads.createLoad(100, "50%", "1024m");
         FakeLoad fakeLoad = FakeLoads.createLoad().lasting(60, TimeUnit.SECONDS)
-                .withCpuLoad(50)
-                .withMemoryLoad(2, MemoryUnit.GB);
+                .withCpu(50)
+                .withMemory(2, MemoryUnit.GB);
 
         executor.execute(fakeLoad);
         // some code
@@ -34,22 +34,22 @@ public class SomeClass {
         // Create FakeLoad with Builder pattern
         FakeLoad fakeload = new FakeLoadBuilder()
                 .lasting(60, TimeUnit.SECONDS)
-                .withCpuLoad(30)
-                .withMemoryLoad(1024, MemoryUnit.MB).build();
+                .withCpu(30)
+                .withMemory(1024, MemoryUnit.MB).build();
 
         // Execute FakeLoad
         executor.execute(fakeload);
 
         fakeload = new FakeLoadBuilder(20, TimeUnit.SECONDS)
-                .withCpuLoad(20).withMemoryLoad(100, MemoryUnit.KB)
+                .withCpu(20).withMemory(100, MemoryUnit.KB)
                 .addLoad(new FakeLoadBuilder(20, TimeUnit.SECONDS)
-                    .withCpuLoad(40).withMemoryLoad(200, MemoryUnit.KB).build())
+                    .withCpu(40).withMemory(200, MemoryUnit.KB).build())
                 .addLoad(new FakeLoadBuilder(20, TimeUnit.SECONDS)
-                    .withCpuLoad(60).withMemoryLoad(300, MemoryUnit.KB).build())
+                    .withCpu(60).withMemory(300, MemoryUnit.KB).build())
                 .addLoad(new FakeLoadBuilder(20, TimeUnit.SECONDS)
-                    .withCpuLoad(80).withMemoryLoad(400, MemoryUnit.KB).build())
+                    .withCpu(80).withMemory(400, MemoryUnit.KB).build())
                 .addLoad(new FakeLoadBuilder(20, TimeUnit.SECONDS)
-                    .withCpuLoad(100).withMemoryLoad(500, MemoryUnit.KB).build())
+                    .withCpu(100).withMemory(500, MemoryUnit.KB).build())
                 .build();
 
         executor.execute(fakeload);
@@ -73,8 +73,8 @@ public class SomeClass {
 
         FakeLoad fakeLoad = FakeLoads.createLoad()
                 .lasting(30, TimeUnit.SECONDS)
-                .withCpuLoad(80)
-                .withMemoryLoad(300, MemoryUnit.MB);
+                .withCpu(80)
+                .withMemory(300, MemoryUnit.MB);
 
         executor.execute(fakeLoad);
 

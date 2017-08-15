@@ -74,16 +74,16 @@ public class ConnectionRunnable implements Runnable {
         FakeLoad fakeLoad = FakeLoads.createLoad();
         switch (type) {
             case CPU:
-                fakeLoad = fakeLoad.withCpuLoad(increase);
+                fakeLoad = fakeLoad.withCpu(increase);
                 break;
             case MEMORY:
-                fakeLoad = fakeLoad.withMemoryLoad(increase, MemoryUnit.BYTES);
+                fakeLoad = fakeLoad.withMemory(increase, MemoryUnit.BYTES);
                 break;
             case DISKIO:
-                fakeLoad = fakeLoad.withDiskIOLoad(increase);
+                fakeLoad = fakeLoad.withDiskIO(increase);
                 break;
             case NETIO:
-                fakeLoad = fakeLoad.withNetIOLoad(increase);
+                fakeLoad = fakeLoad.withNetIO(increase);
                 break;
         }
         return fakeLoad;

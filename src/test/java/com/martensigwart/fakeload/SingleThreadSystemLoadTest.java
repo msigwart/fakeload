@@ -1,6 +1,5 @@
 package com.martensigwart.fakeload;
 
-import com.martensigwart.fakeload.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -149,50 +148,50 @@ public class SingleThreadSystemLoadTest {
 
 
     private long increaseAndGetCpu(int cpu) throws MaximumLoadExceededException {
-        FakeLoad fakeLoad = FakeLoads.createLoad().withCpuLoad(cpu);
+        FakeLoad fakeLoad = FakeLoads.createLoad().withCpu(cpu);
         systemLoad.increaseBy(fakeLoad);
         return systemLoad.getCpu();
     }
 
     private long decreaseAndGetCpu(int cpu) {
-        FakeLoad fakeLoad = FakeLoads.createLoad().withCpuLoad(cpu);
+        FakeLoad fakeLoad = FakeLoads.createLoad().withCpu(cpu);
         systemLoad.decreaseBy(fakeLoad);
         return systemLoad.getCpu();
     }
 
     private long increaseAndGetMemory(long memory) throws MaximumLoadExceededException {
-        FakeLoad fakeLoad = FakeLoads.createLoad().withMemoryLoad(memory, MemoryUnit.BYTES);
+        FakeLoad fakeLoad = FakeLoads.createLoad().withMemory(memory, MemoryUnit.BYTES);
         systemLoad.increaseBy(fakeLoad);
         return systemLoad.getMemory();
     }
 
     private long decreaseAndGetMemory(long memory) {
-        FakeLoad fakeLoad = FakeLoads.createLoad().withMemoryLoad(memory, MemoryUnit.BYTES);
+        FakeLoad fakeLoad = FakeLoads.createLoad().withMemory(memory, MemoryUnit.BYTES);
         systemLoad.decreaseBy(fakeLoad);
         return systemLoad.getMemory();
     }
 
 
     private long increaseAndGetDiskIO(long diskIO) throws MaximumLoadExceededException {
-        FakeLoad fakeLoad = FakeLoads.createLoad().withDiskIOLoad(diskIO);
+        FakeLoad fakeLoad = FakeLoads.createLoad().withDiskIO(diskIO);
         systemLoad.increaseBy(fakeLoad);
         return systemLoad.getDiskIO();
     }
 
     private long decreaseAndGetDiskIO(long diskIO) {
-        FakeLoad fakeLoad = FakeLoads.createLoad().withDiskIOLoad(diskIO);
+        FakeLoad fakeLoad = FakeLoads.createLoad().withDiskIO(diskIO);
         systemLoad.decreaseBy(fakeLoad);
         return systemLoad.getDiskIO();
     }
 
     private long increaseAndGetNetIO(long netIO) throws MaximumLoadExceededException {
-        FakeLoad fakeLoad = FakeLoads.createLoad().withNetIOLoad(netIO);
+        FakeLoad fakeLoad = FakeLoads.createLoad().withNetIO(netIO);
         systemLoad.increaseBy(fakeLoad);
         return systemLoad.getNetIO();
     }
 
     private long decreaseAndGetNetIO(long netIO) {
-        FakeLoad fakeLoad = FakeLoads.createLoad().withNetIOLoad(netIO);
+        FakeLoad fakeLoad = FakeLoads.createLoad().withNetIO(netIO);
         systemLoad.decreaseBy(fakeLoad);
         return systemLoad.getNetIO();
     }

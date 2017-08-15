@@ -42,10 +42,10 @@ public class DefaultFakeLoadSchedulerTest {
         long netIO = 50;
 
         FakeLoad fakeLoad = FakeLoads.createLoad().lasting(duration, unit)
-                .withCpuLoad(cpu)
-                .withMemoryLoad(memory, MemoryUnit.BYTES)
-                .withDiskIOLoad(diskIO)
-                .withNetIOLoad(netIO);
+                .withCpu(cpu)
+                .withMemory(memory, MemoryUnit.BYTES)
+                .withDiskIO(diskIO)
+                .withNetIO(netIO);
 
         assertInfrastructureValues(0, 0, 0, 0, infrastructure);
 
@@ -68,10 +68,10 @@ public class DefaultFakeLoadSchedulerTest {
         TimeUnit unit = TimeUnit.SECONDS;
 
         FakeLoad fakeLoad = FakeLoads.createLoad().lasting(duration, unit)
-                .withCpuLoad(99)
-                .withMemoryLoad(9999, MemoryUnit.BYTES)
-                .withDiskIOLoad(99)
-                .withNetIOLoad(99);
+                .withCpu(99)
+                .withMemory(9999, MemoryUnit.BYTES)
+                .withDiskIO(99)
+                .withNetIO(99);
 
         int noOfChildren = 10;
         int noOfGrandChildrenPerChild = 9;
@@ -88,10 +88,10 @@ public class DefaultFakeLoadSchedulerTest {
             add(loadList, startCPU, startMemory, startDiskIO, startNetIO);
 
             FakeLoad child = FakeLoads.createLoad().lasting(duration, unit)
-                    .withCpuLoad(startCPU++)
-                    .withMemoryLoad(startMemory++, MemoryUnit.BYTES)
-                    .withDiskIOLoad(startDiskIO++)
-                    .withNetIOLoad(startNetIO++);
+                    .withCpu(startCPU++)
+                    .withMemory(startMemory++, MemoryUnit.BYTES)
+                    .withDiskIO(startDiskIO++)
+                    .withNetIO(startNetIO++);
 
 
             // create grand children
@@ -99,10 +99,10 @@ public class DefaultFakeLoadSchedulerTest {
                 add(loadList, startCPU, startMemory, startDiskIO, startNetIO);
 
                 FakeLoad grandChild = FakeLoads.createLoad().lasting(duration, unit)
-                        .withCpuLoad(startCPU++)
-                        .withMemoryLoad(startMemory++, MemoryUnit.BYTES)
-                        .withDiskIOLoad(startDiskIO++)
-                        .withNetIOLoad(startNetIO++);
+                        .withCpu(startCPU++)
+                        .withMemory(startMemory++, MemoryUnit.BYTES)
+                        .withDiskIO(startDiskIO++)
+                        .withNetIO(startNetIO++);
 
                 child = child.addLoad(grandChild);
             }
@@ -143,7 +143,7 @@ public class DefaultFakeLoadSchedulerTest {
             public void run() {
                 try {
                     FakeLoad load = FakeLoads.createLoad().lasting(duration, unit)
-                            .withCpuLoad(50);
+                            .withCpu(50);
 
                     Future<Void> future = scheduler.schedule(load);
                     future.get();
@@ -160,7 +160,7 @@ public class DefaultFakeLoadSchedulerTest {
             public void run() {
                 try {
                     FakeLoad load2 = FakeLoads.createLoad().lasting(duration, unit)
-                            .withCpuLoad(60);
+                            .withCpu(60);
 
                     Thread.sleep(500);
                     Future<Void> future = scheduler.schedule(load2);

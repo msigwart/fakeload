@@ -10,8 +10,8 @@ import java.util.concurrent.TimeUnit;
  * Can be used as convenient tool to create FakeLoad instances more efficiently.
  * <p>
  * Both implementations of the {@link FakeLoad} interface, {@link SimpleFakeLoad} and {@link CompositeFakeLoad}
- * are immutable classes. Therfore using the provided fluent interface to set load parameters
- * a new instance is created on every call. Using the builder especially bigger {@code FakeLoad}
+ * are immutable classes. Therefore using the provided fluent interface to set load parameters
+ * a new instance is created on every call. Using the builder, especially bigger {@code FakeLoad}
  * instances can be created more efficiently.
  *
  * @since 1.8
@@ -56,12 +56,12 @@ public class FakeLoadBuilder {
             return this;
         }
 
-        public FakeLoadBuilder withCpuLoad(int cpuLoad) {
+        public FakeLoadBuilder withCpu(int cpuLoad) {
             this.cpuLoad = cpuLoad;
             return this;
         }
 
-        public FakeLoadBuilder withMemoryLoad(long memoryLoad, MemoryUnit unit) {
+        public FakeLoadBuilder withMemory(long memoryLoad, MemoryUnit unit) {
             this.memoryLoad = unit.toBytes(memoryLoad);
             return this;
         }

@@ -1,6 +1,5 @@
 package com.martensigwart.fakeload;
 
-import com.martensigwart.fakeload.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +45,7 @@ public class DefaultFakeLoadExecutorTest {
     public void testSimpleLoadExecution() {
         long duration = 10;
         TimeUnit unit = TimeUnit.SECONDS;
-        FakeLoad fakeLoad = FakeLoads.createLoad().lasting(duration, unit).withCpuLoad(20);
+        FakeLoad fakeLoad = FakeLoads.createLoad().lasting(duration, unit).withCpu(20);
         assertFakeLoadExecution(duration, unit, fakeLoad);
     }
 
@@ -57,8 +56,8 @@ public class DefaultFakeLoadExecutorTest {
         long duration = 100;
         TimeUnit unit = TimeUnit.MILLISECONDS;
         FakeLoad parent = FakeLoads.createLoad().lasting(duration, unit)
-                .withCpuLoad(99)
-                .withMemoryLoad(9999, MemoryUnit.BYTES);
+                .withCpu(99)
+                .withMemory(9999, MemoryUnit.BYTES);
 
         int noOfChildren = 10;
         int noOfGrandChildrenPerChild = 9;
@@ -69,14 +68,14 @@ public class DefaultFakeLoadExecutorTest {
         // create children
         for (int i=0; i<noOfChildren; i++) {
             FakeLoad child = FakeLoads.createLoad().lasting(duration, unit)
-                    .withCpuLoad(startCPU*i)
-                    .withMemoryLoad(startMemory*i, MemoryUnit.KB);
+                    .withCpu(startCPU*i)
+                    .withMemory(startMemory*i, MemoryUnit.KB);
 
             // create grand children
             for (int j=0; j<noOfGrandChildrenPerChild; j++) {
                 FakeLoad grandChild = FakeLoads.createLoad().lasting(duration, unit)
-                        .withCpuLoad(startCPU+j)
-                        .withMemoryLoad(startMemory*i+j, MemoryUnit.KB);
+                        .withCpu(startCPU+j)
+                        .withMemory(startMemory*i+j, MemoryUnit.KB);
 
                 child = child.addLoad(grandChild);
             }

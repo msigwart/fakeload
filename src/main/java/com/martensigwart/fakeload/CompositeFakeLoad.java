@@ -66,26 +66,26 @@ public final class CompositeFakeLoad extends AbstractFakeLoad {
     }
 
     @Override
-    public FakeLoad withCpuLoad(long cpuLoad) {
-        SimpleFakeLoad newOwnLoad = (SimpleFakeLoad) ownLoad.withCpuLoad(cpuLoad);
+    public FakeLoad withCpu(long cpuLoad) {
+        SimpleFakeLoad newOwnLoad = (SimpleFakeLoad) ownLoad.withCpu(cpuLoad);
         return new CompositeFakeLoad(newOwnLoad, innerLoads, getRepetitions());
     }
 
     @Override
-    public FakeLoad withMemoryLoad(long amount, MemoryUnit unit) {
-        SimpleFakeLoad newOwnLoad = (SimpleFakeLoad) ownLoad.withMemoryLoad(amount, unit);
+    public FakeLoad withMemory(long amount, MemoryUnit unit) {
+        SimpleFakeLoad newOwnLoad = (SimpleFakeLoad) ownLoad.withMemory(amount, unit);
         return new CompositeFakeLoad(newOwnLoad, innerLoads, getRepetitions());
     }
 
     @Override
-    public FakeLoad withDiskIOLoad(long diskIOLoad) {
-        SimpleFakeLoad newOwnLoad = (SimpleFakeLoad) ownLoad.withDiskIOLoad(diskIOLoad);
+    public FakeLoad withDiskIO(long diskIOLoad) {
+        SimpleFakeLoad newOwnLoad = (SimpleFakeLoad) ownLoad.withDiskIO(diskIOLoad);
         return new CompositeFakeLoad(newOwnLoad, innerLoads, getRepetitions());
     }
 
     @Override
-    public FakeLoad withNetIOLoad(long netIOLoad) {
-        SimpleFakeLoad newOwnLoad = (SimpleFakeLoad) ownLoad.withNetIOLoad(netIOLoad);
+    public FakeLoad withNetIO(long netIOLoad) {
+        SimpleFakeLoad newOwnLoad = (SimpleFakeLoad) ownLoad.withNetIO(netIOLoad);
         return new CompositeFakeLoad(newOwnLoad, innerLoads, getRepetitions());
     }
 
