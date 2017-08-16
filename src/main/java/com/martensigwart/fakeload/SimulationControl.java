@@ -25,7 +25,7 @@ import java.util.List;
 public final class SimulationControl implements Runnable {
 
     private static final Logger log = LoggerFactory.getLogger(SimulationControl.class);
-    private static final OperatingSystemMXBean operatingSystem = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+    private static final OperatingSystemMXBean operatingSystem = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
     private static final int SLEEP_PERIOD = 2000;
     private static final int CPU_CONTROL_THRESHOLD = 1;
 
@@ -52,6 +52,7 @@ public final class SimulationControl implements Runnable {
         log.trace("SimulationControl - Started");
 
         boolean running = true;
+        operatingSystem.getProcessCpuLoad();    // the first value reported is always zero
         while(running) {
             try {
                 synchronized (lock) {
@@ -61,11 +62,10 @@ public final class SimulationControl implements Runnable {
                         log.trace("SimulationControl - Woke Up");
                     }
                 }
-
+                Thread.sleep(SLEEP_PERIOD);
                 controlCpuLoad();
 
 
-                Thread.sleep(SLEEP_PERIOD);
             } catch (InterruptedException e) {
                 log.warn("SimulationControl - Interrupted");
                 running = false;
@@ -104,21 +104,29 @@ public final class SimulationControl implements Runnable {
 
     private void controlCpuLoad() {
         long actualCpu = (long)(operatingSystem.getProcessCpuLoad() * 100);
+        long desiredCpu = systemLoad.getCpu();
 
-        long difference = actualCpu - systemLoad.getCpu();
+        log.trace("Desired CPU: {}, Actual CPU: {}, Last CPU: {}", desiredCpu, actualCpu, lastCpu);
+
+        long difference = actualCpu - desiredCpu;
 
         if (    Math.abs(difference) > CPU_CONTROL_THRESHOLD &&
                 Math.abs(lastCpu - actualCpu) <= CPU_CONTROL_THRESHOLD) {
 
-            int noOfSteps = (int)(difference / stepSize);
+            int noOfSteps = (int)(Math.abs(difference) / stepSize);
+            log.trace("{}",noOfSteps);
             if (difference < 0) {   // actual load smaller than desired load
+                log.trace("Increasing CPU load, difference {}", difference);
                 increaseCpuSimulatorLoads(1, noOfSteps);
             } else {
+                log.trace("Decreasing CPU load, difference {}", difference);
                 decreaseCpuSimulatorLoads(1, noOfSteps);
             }
 
-            lastCpu = actualCpu;
         }
+
+        lastCpu = actualCpu;
+
     }
 
 

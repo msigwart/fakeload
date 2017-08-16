@@ -30,11 +30,12 @@ public abstract class CpuSimulator extends AbstractLoadSimulator {
     @Override
     void simulateLoad() throws InterruptedException {
 
-        long time = System.currentTimeMillis() + getLoad();
+        long load = getLoad();
+        long time = System.currentTimeMillis() + load;
         while (System.currentTimeMillis() < time) {
             simulateCpu();
         }
-        Thread.sleep(100 - getLoad());
+        Thread.sleep(100 - load);
     }
 
     @Override
