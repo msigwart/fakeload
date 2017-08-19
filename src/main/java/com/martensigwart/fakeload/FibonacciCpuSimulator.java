@@ -1,13 +1,12 @@
 package com.martensigwart.fakeload;
 
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
-public class FibonacciCpuSimulator extends CpuSimulator {
-
-    private static final Logger log = LoggerFactory.getLogger(FibonacciCpuSimulator.class);
+/**
+ * A {@link CpuSimulator} that simulates CPU by calculating Fibonacci sequences.
+ *
+ * @since 1.8
+ * @author Marten Sigwart
+ */
+public final class FibonacciCpuSimulator extends CpuSimulator {
 
     private long fib0 = 0;
     private long fib1 = 1;
