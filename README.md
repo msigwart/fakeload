@@ -3,13 +3,13 @@
 # FakeLoad
 FakeLoad is an open-source Java library which provides a simple way of producing “fake" system loads in applications or tests.
 
-Producing "FakeLoads" is as simple as this:
+Producing system load using FakeLoad is as simple as this:
 ```java
 // Creation
 FakeLoad fakeload = FakeLoads.create()
- .lasting(10, TimeUnit.SECONDS)
- .withCpu(80)
-	.withMemory(300, MemoryUnit.MB);
+    .lasting(10, TimeUnit.SECONDS)
+    .withCpu(80)
+    .withMemory(300, MemoryUnit.MB);
  
 // Execution
 FakeLoadExecutor executor = FakeLoadExecutors.newDefaultExecutor(); 
