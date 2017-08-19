@@ -15,6 +15,7 @@ FakeLoad fakeload = FakeLoads.create()
 FakeLoadExecutor executor = FakeLoadExecutors.newDefaultExecutor(); 
 executor.execute(fakeload);
 ```
+The above snippet would simulate a CPU load of 80% and a memory load of 300 MB for ten seconds.
 ## Motivation
 ## Getting Started
 ### Installation
