@@ -13,14 +13,12 @@ final class SystemLoad {
     @GuardedBy("this") private long cpu;
     @GuardedBy("this") private long memory;
     @GuardedBy("this") private long diskIO;
-    @GuardedBy("this") private long netIO;
 
 
     SystemLoad() {
         cpu     = 0L;
         memory  = 0L;
         diskIO  = 0L;
-        netIO   = 0L;
     }
 
     synchronized long getCpu() {
@@ -35,9 +33,6 @@ final class SystemLoad {
         return diskIO;
     }
 
-    synchronized long getNetIO() {
-        return netIO;
-    }
 
 
     synchronized void increaseBy(FakeLoad load) throws MaximumLoadExceededException {
@@ -46,7 +41,6 @@ final class SystemLoad {
         this.cpu    += load.getCpuLoad();
         this.memory += load.getMemoryLoad();
         this.diskIO += load.getDiskIOLoad();
-        this.netIO  += load.getNetIOLoad();
 
     }
 
@@ -56,7 +50,6 @@ final class SystemLoad {
         this.cpu -= load.getCpuLoad();
         this.memory -= load.getMemoryLoad();
         this.diskIO -= load.getDiskIOLoad();
-        this.netIO -= load.getNetIOLoad();
 
     }
 
@@ -81,9 +74,6 @@ final class SystemLoad {
             throw new RuntimeException(String.format("Decrease of %d would cause a negative disk IO load", load.getDiskIOLoad()));
         }
 
-        if (this.netIO - load.getNetIOLoad() < 0) {
-            throw new RuntimeException(String.format("Decrease of %d would cause a negative net IO load", load.getNetIOLoad()));
-        }
     }
 
 

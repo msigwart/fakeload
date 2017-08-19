@@ -113,39 +113,6 @@ public class SingleThreadSystemLoadTest {
 //        }
     }
 
-    @Test
-    public void testNetIO() {
-        try {
-            assertEquals(10, increaseAndGetNetIO(10));
-            assertEquals(30, increaseAndGetNetIO(20));
-            assertEquals(60, increaseAndGetNetIO(30));
-            assertEquals(100, increaseAndGetNetIO(40));
-
-            assertEquals(90, decreaseAndGetNetIO(10));
-            assertEquals(70, decreaseAndGetNetIO(20));
-            assertEquals(40, decreaseAndGetNetIO(30));
-            assertEquals(0, decreaseAndGetNetIO(40));
-        } catch (MaximumLoadExceededException e) {
-            throw new AssertionError("Shouldn't happen");
-        }
-        // test negative value
-        try {
-            decreaseAndGetNetIO(10);
-        } catch (RuntimeException e) {
-            assertEquals("Decrease of 10 would cause a negative net IO load", e.getMessage());
-            assertEquals(0, systemLoad.getNetIO());
-        }
-
-        // test value too high TODO
-//        try {
-//            increaseAndGetNetIO(110);
-//        } catch (RuntimeException e) {
-//            Assert.assertEquals("Increase of NetIO to over 100%", e.getMessage());
-//            Assert.assertEquals(0, systemLoad.getNetIO());
-//        }
-    }
-
-
 
     private long increaseAndGetCpu(int cpu) throws MaximumLoadExceededException {
         FakeLoad fakeLoad = FakeLoads.createLoad().withCpu(cpu);
@@ -184,17 +151,7 @@ public class SingleThreadSystemLoadTest {
         return systemLoad.getDiskIO();
     }
 
-    private long increaseAndGetNetIO(long netIO) throws MaximumLoadExceededException {
-        FakeLoad fakeLoad = FakeLoads.createLoad().withNetIO(netIO);
-        systemLoad.increaseBy(fakeLoad);
-        return systemLoad.getNetIO();
-    }
 
-    private long decreaseAndGetNetIO(long netIO) {
-        FakeLoad fakeLoad = FakeLoads.createLoad().withNetIO(netIO);
-        systemLoad.decreaseBy(fakeLoad);
-        return systemLoad.getNetIO();
-    }
 
 
 }

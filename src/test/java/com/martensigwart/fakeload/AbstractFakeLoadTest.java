@@ -153,7 +153,6 @@ public abstract class AbstractFakeLoadTest {
         fakeload = fakeload.lasting(300, TimeUnit.MILLISECONDS).repeat(3)
                 .withCpu(50)
                 .withMemory(300, MemoryUnit.MB)
-                .withNetIO(2000)
                 .withDiskIO(5000);
         assertEqualsReflexivity(fakeload);
 
@@ -162,7 +161,6 @@ public abstract class AbstractFakeLoadTest {
         fakeload = fakeload.lasting(30, TimeUnit.SECONDS).repeat(6)
                 .withCpu(80)
                 .withMemory(300, MemoryUnit.KB)
-                .withNetIO(20)
                 .withDiskIO(51200)
                 .addLoad(child1).addLoad(child2).addLoad(child3);
         assertEqualsReflexivity(fakeload);
@@ -459,7 +457,6 @@ public abstract class AbstractFakeLoadTest {
         assertEquals(0, actual.getCpuLoad());
         assertEquals(0L, actual.getMemoryLoad());
         assertEquals(0L, actual.getDiskIOLoad());
-        assertEquals(0L, actual.getNetIOLoad());
         assertEquals(0, actual.getInnerLoads().size());
     }
     
@@ -470,7 +467,6 @@ public abstract class AbstractFakeLoadTest {
         assertEquals(0, actual.getCpuLoad());
         assertEquals(0L, actual.getMemoryLoad());
         assertEquals(0L, actual.getDiskIOLoad());
-        assertEquals(0L, actual.getNetIOLoad());
         assertEquals(0, actual.getInnerLoads().size());
     }
 
@@ -481,7 +477,6 @@ public abstract class AbstractFakeLoadTest {
         assertEquals(0, actual.getCpuLoad());
         assertEquals(0L, actual.getMemoryLoad());
         assertEquals(0L, actual.getDiskIOLoad());
-        assertEquals(0L, actual.getNetIOLoad());
         assertEquals(expectedSize, actual.getInnerLoads().size());
     }
     
@@ -492,7 +487,6 @@ public abstract class AbstractFakeLoadTest {
         assertEquals(0, actual.getCpuLoad());
         assertEquals(0L, actual.getMemoryLoad());
         assertEquals(0L, actual.getDiskIOLoad());
-        assertEquals(0L, actual.getNetIOLoad());
         assertEquals(0, actual.getInnerLoads().size());
     }
     
@@ -503,7 +497,6 @@ public abstract class AbstractFakeLoadTest {
         assertEquals(expectedCpu, actual.getCpuLoad());
         assertEquals(0L, actual.getMemoryLoad());
         assertEquals(0L, actual.getDiskIOLoad());
-        assertEquals(0L, actual.getNetIOLoad());
         assertEquals(0, actual.getInnerLoads().size());
     }
     
@@ -514,7 +507,6 @@ public abstract class AbstractFakeLoadTest {
         assertEquals(0, actual.getCpuLoad());
         assertEquals(expectedMemory, actual.getMemoryLoad());
         assertEquals(0L, actual.getDiskIOLoad());
-        assertEquals(0L, actual.getNetIOLoad());
         assertEquals(0, actual.getInnerLoads().size());
     }
 
@@ -522,10 +514,7 @@ public abstract class AbstractFakeLoadTest {
     private void assertDiskIOLoad(long expectedDiskIO, FakeLoad actual) {
         // TODO
     }
-    
-    private void assertNetIOLoad(long expectedNetIO, FakeLoad actual) {
-        // TODO
-    }
+
 
 
 

@@ -82,9 +82,7 @@ public class ConnectionRunnable implements Runnable {
             case DISKIO:
                 fakeLoad = fakeLoad.withDiskIO(increase);
                 break;
-            case NETIO:
-                fakeLoad = fakeLoad.withNetIO(increase);
-                break;
+
         }
         return fakeLoad;
     }

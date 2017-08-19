@@ -89,10 +89,10 @@ public class FakeLoadBuilder {
 
         public FakeLoad build() {
             if (innerLoads.isEmpty()) {
-                return new SimpleFakeLoad(duration, unit, repetitions, cpuLoad, memoryLoad, diskIOLoad, netIOLoad);
+                return new SimpleFakeLoad(duration, unit, repetitions, cpuLoad, memoryLoad, diskIOLoad);
             } else {
                 return new CompositeFakeLoad(
-                        new SimpleFakeLoad(duration, unit, 0, cpuLoad, memoryLoad, diskIOLoad, netIOLoad),
+                        new SimpleFakeLoad(duration, unit, 0, cpuLoad, memoryLoad, diskIOLoad),
                         innerLoads, repetitions);
             }
         }

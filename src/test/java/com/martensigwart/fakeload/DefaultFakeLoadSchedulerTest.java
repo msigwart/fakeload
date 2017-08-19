@@ -190,7 +190,6 @@ public class DefaultFakeLoadSchedulerTest {
         assertEquals(expectedCpu, actual.getCpu());
         assertEquals(expectedMemory, actual.getMemory());
         assertEquals(expectedDiskIO, actual.getDiskIO());
-        assertEquals(expectedNetIO, actual.getNetIO());
 
     }
 
@@ -225,7 +224,4 @@ class DummyInfrastructure implements SimulationInfrastructure {
         return systemLoad.getDiskIO();
     }
 
-    public long getNetIO() {
-        return systemLoad.getNetIO();
-    }
 }

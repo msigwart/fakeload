@@ -81,7 +81,6 @@ public class CompositeFakeLoadTest extends AbstractFakeLoadTest {
         assertEquals(0, f1.getCpuLoad());
         assertEquals(0L, f1.getMemoryLoad());
         assertEquals(0L, f1.getDiskIOLoad());
-        assertEquals(0L, f1.getNetIOLoad());
         assertEquals(3, f1.getInnerLoads().size());
     }
 
