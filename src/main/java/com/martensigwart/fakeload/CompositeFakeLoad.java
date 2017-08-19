@@ -83,11 +83,6 @@ public final class CompositeFakeLoad extends AbstractFakeLoad {
         return new CompositeFakeLoad(newOwnLoad, innerLoads, getRepetitions());
     }
 
-    @Override
-    public FakeLoad withNetIO(long netIOLoad) {
-        SimpleFakeLoad newOwnLoad = (SimpleFakeLoad) ownLoad.withNetIO(netIOLoad);
-        return new CompositeFakeLoad(newOwnLoad, innerLoads, getRepetitions());
-    }
 
     @Override
     public FakeLoad addLoad(FakeLoad load) {
@@ -153,11 +148,6 @@ public final class CompositeFakeLoad extends AbstractFakeLoad {
     }
 
     @Override
-    public long getNetIOLoad() {
-        return ownLoad.getNetIOLoad();
-    }
-
-    @Override
     public long getDuration() {
         return ownLoad.getDuration();
     }
@@ -190,5 +180,11 @@ public final class CompositeFakeLoad extends AbstractFakeLoad {
         return Objects.hashCode(ownLoad, innerLoads);
     }
 
-    //TODO toString method
+    @Override
+    public String toString() {
+        return "CompositeFakeLoad{" +
+                "ownLoad=" + ownLoad +
+                ", innerLoads=" + innerLoads +
+                '}';
+    }
 }

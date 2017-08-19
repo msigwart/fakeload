@@ -38,11 +38,10 @@ public final class SimpleFakeLoad extends AbstractFakeLoad {
     private final long cpuLoad;
     private final long memoryLoad;
     private final long diskIOLoad;
-    private final long netIOLoad;
 
 
     SimpleFakeLoad(long duration, TimeUnit unit, int repetitions,
-                           long cpuLoad, long memoryLoad, long diskIOLoad, long netIOLoad) {
+                           long cpuLoad, long memoryLoad, long diskIOLoad) {
 
         super(repetitions);
 
@@ -51,56 +50,49 @@ public final class SimpleFakeLoad extends AbstractFakeLoad {
         checkArgument(cpuLoad <= 100, "CPU load must be less than 100 percent but was %s", cpuLoad);
         checkArgument(memoryLoad >= 0, "memory load must be nonnegative but was %s", memoryLoad);
         checkArgument(diskIOLoad >= 0, "Disk IO load must be nonnegative but was %s", diskIOLoad);
-        checkArgument(netIOLoad >= 0, "Net IO load must be nonnegative but was %s", netIOLoad);
 
         this.duration = duration;
         this.unit = checkNotNull(unit);
         this.cpuLoad = cpuLoad;
         this.memoryLoad = memoryLoad;
         this.diskIOLoad = diskIOLoad;
-        this.netIOLoad = netIOLoad;
 
     }
 
     SimpleFakeLoad() {
         this(0L, TimeUnit.MILLISECONDS, 0,
-                0, 0L, 0L, 0L);
+                0, 0L, 0L);
     }
 
     SimpleFakeLoad(long duration, TimeUnit unit) {
         this(duration, unit, 0,
-                0, 0L, 0L, 0L);
+                0, 0L, 0L);
     }
 
     @Override
     public FakeLoad lasting(long duration, TimeUnit unit) {
-        return new SimpleFakeLoad(duration, unit, getRepetitions(), cpuLoad, memoryLoad, diskIOLoad, netIOLoad);
+        return new SimpleFakeLoad(duration, unit, getRepetitions(), cpuLoad, memoryLoad, diskIOLoad);
     }
 
     @Override
     public FakeLoad repeat(int repetitions) {
-        return new SimpleFakeLoad(duration, unit, repetitions, cpuLoad, memoryLoad, diskIOLoad, netIOLoad);
+        return new SimpleFakeLoad(duration, unit, repetitions, cpuLoad, memoryLoad, diskIOLoad);
     }
 
     @Override
     public FakeLoad withCpu(long cpuLoad) {
-        return new SimpleFakeLoad(duration, unit, getRepetitions(), cpuLoad, memoryLoad, diskIOLoad, netIOLoad);
+        return new SimpleFakeLoad(duration, unit, getRepetitions(), cpuLoad, memoryLoad, diskIOLoad);
     }
 
     @Override
     public FakeLoad withMemory(long amount, MemoryUnit unit) {
         long memoryLoad = unit.toBytes(amount);
-        return new SimpleFakeLoad(duration, this.unit, getRepetitions(), cpuLoad, memoryLoad, diskIOLoad, netIOLoad);
+        return new SimpleFakeLoad(duration, this.unit, getRepetitions(), cpuLoad, memoryLoad, diskIOLoad);
     }
 
     @Override
     public FakeLoad withDiskIO(long diskIOLoad) {
-        return new SimpleFakeLoad(duration, this.unit, getRepetitions(), cpuLoad, memoryLoad, diskIOLoad, netIOLoad);
-    }
-
-    @Override
-    public FakeLoad withNetIO(long netIOLoad) {
-        return new SimpleFakeLoad(duration, this.unit, getRepetitions(), cpuLoad, memoryLoad, diskIOLoad, netIOLoad);
+        return new SimpleFakeLoad(duration, this.unit, getRepetitions(), cpuLoad, memoryLoad, diskIOLoad);
     }
 
     @Override
@@ -139,11 +131,6 @@ public final class SimpleFakeLoad extends AbstractFakeLoad {
     @Override
     public long getDiskIOLoad() {
         return diskIOLoad;
-    }
-
-    @Override
-    public long getNetIOLoad() {
-        return netIOLoad;
     }
 
     @Override
@@ -196,14 +183,13 @@ public final class SimpleFakeLoad extends AbstractFakeLoad {
         if (cpuLoad != fakeLoad.cpuLoad) return false;
         if (memoryLoad != fakeLoad.memoryLoad) return false;
         if (diskIOLoad != fakeLoad.diskIOLoad) return false;
-        if (netIOLoad != fakeLoad.netIOLoad) return false;
         if (getRepetitions() != fakeLoad.getRepetitions()) return false;
         return unit == fakeLoad.unit;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(duration, getRepetitions(), cpuLoad, memoryLoad, diskIOLoad, netIOLoad, unit);
+        return Objects.hash(duration, getRepetitions(), cpuLoad, memoryLoad, diskIOLoad, unit);
     }
 
     @Override
@@ -214,7 +200,6 @@ public final class SimpleFakeLoad extends AbstractFakeLoad {
                 ", cpuLoad=" + cpuLoad +
                 ", memoryLoad=" + memoryLoad +
                 ", diskIO=" + diskIOLoad +
-                ", netIO=" + netIOLoad +
                 ", repetitions=" + getRepetitions() +
                 '}';
     }

@@ -78,8 +78,6 @@ public interface FakeLoad extends Iterable<FakeLoad> {
 
     FakeLoad withDiskIO(long diskIOLoad);
 
-    FakeLoad withNetIO(long netIOLoad);
-
     FakeLoad addLoad(FakeLoad load);
 
     FakeLoad addLoads(Collection<FakeLoad> loads);
@@ -93,8 +91,6 @@ public interface FakeLoad extends Iterable<FakeLoad> {
     long getMemoryLoad();
 
     long getDiskIOLoad();
-
-    long getNetIOLoad();
 
     long getDuration();
 
