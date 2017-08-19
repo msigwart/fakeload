@@ -39,6 +39,7 @@ public final class DefaultFakeLoadScheduler implements FakeLoadScheduler {
         CompletableFuture<Void> completableFuture = new CompletableFuture<>();
         completableFuture.complete(null);       // Complete with null value as CompletableFuture is of type Void
 
+        //TODO implement repetitions
         for (FakeLoad load: fakeLoad) {
 
             // schedule increase

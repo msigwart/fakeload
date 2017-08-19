@@ -31,7 +31,7 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
 
     @GuardedBy("this") private boolean started;
 
-
+    //TODO pass simulation threads as parameters (maybe as class type)
     public DefaultSimulationInfrastructure() {
         int noOfCores = Runtime.getRuntime().availableProcessors();
 
@@ -53,8 +53,6 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
 
     }
-
-    //TODO create constructor passing LoadSimulator objects as parameter
 
 
     @Override
@@ -89,7 +87,7 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
             started = true;
 
             // TODO save returned Future references
-            // Could be used to cancel simulator tasks in time of inactivity.
+            // --> Could be useful for cancelling simulator tasks in time of inactivity.
 
             log.debug("Successfully started infrastructure");
         }
