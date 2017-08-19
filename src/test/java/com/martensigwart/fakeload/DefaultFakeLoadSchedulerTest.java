@@ -5,11 +5,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
@@ -23,14 +19,15 @@ public class DefaultFakeLoadSchedulerTest {
     private static final Logger log = LoggerFactory.getLogger(DefaultFakeLoadSchedulerTest.class);
 
     private DefaultFakeLoadScheduler scheduler;
-    private MockInfrastructure infrastructure;
+    private DummyInfrastructure infrastructure;
 
     @Before
     public void setUp() {
-        infrastructure = new MockInfrastructure();
+        infrastructure = new DummyInfrastructure();
         scheduler = new DefaultFakeLoadScheduler(infrastructure);
     }
 
+    //TODO test with a mocking framework
 
     @Test
     public void testScheduleMethod() {
@@ -188,7 +185,7 @@ public class DefaultFakeLoadSchedulerTest {
 
     private void assertInfrastructureValues(long expectedCpu, long expectedMemory,
                                             long expectedDiskIO, long expectedNetIO,
-                                            MockInfrastructure actual) {
+                                            DummyInfrastructure actual) {
 
         assertEquals(expectedCpu, actual.getCpu());
         assertEquals(expectedMemory, actual.getMemory());
@@ -199,9 +196,9 @@ public class DefaultFakeLoadSchedulerTest {
 
 }
 
-class MockInfrastructure implements SimulationInfrastructure {
+class DummyInfrastructure implements SimulationInfrastructure {
 
-    private static final Logger log = LoggerFactory.getLogger(MockInfrastructure.class);
+    private static final Logger log = LoggerFactory.getLogger(DummyInfrastructure.class);
 
     private final SystemLoad systemLoad = new SystemLoad();
 
