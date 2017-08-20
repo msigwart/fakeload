@@ -12,7 +12,12 @@ public class FakeLoadExecutors {
 
     public static synchronized FakeLoadExecutor newDefaultExecutor() {
         if (defaultInfrastructure == null) {
-            defaultInfrastructure = new DefaultSimulationInfrastructure();
+            try {
+                defaultInfrastructure = new DefaultSimulationInfrastructure();
+                
+            } catch (InstantiationException | IllegalAccessException e) {
+                throw new AssertionError(e.getMessage());
+            }
         }
         return new DefaultFakeLoadExecutor(new DefaultFakeLoadScheduler(defaultInfrastructure));
     }
