@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.*;
@@ -20,34 +19,57 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
     private static final Logger log = LoggerFactory.getLogger(SimulationInfrastructure.class);
 
     /**
-     * Executor service to run the infrastructure
+     * Executor service which executes the simulator threads
      */
     private final ExecutorService executorService;
-
-    private final SimulationControl simulationControl;
+    private final LoadController loadController;
     private final List<CpuSimulator> cpuSimulators;
     private final MemorySimulator memorySimulator;
 
 
     @GuardedBy("this") private boolean started;
 
-    //TODO pass simulation threads as parameters (maybe as class type)
-    public DefaultSimulationInfrastructure() {
-        int noOfCores = Runtime.getRuntime().availableProcessors();
+    /**
+     *
+     * @param executorService
+     * @param cpuSimulators
+     */
+    public DefaultSimulationInfrastructure(ExecutorService executorService,
+                                           List<CpuSimulator> cpuSimulators) {
 
-        List<CpuSimulator> cpuSimulators = new ArrayList<>();
-        for (int i = 0; i< noOfCores; i++) {
-            cpuSimulators.add(Simulators.newCpuSimulator());
-        }
+        this.executorService = executorService;
         this.cpuSimulators = Collections.unmodifiableList(cpuSimulators);
-        this.memorySimulator = Simulators.newMemorySimulator();
+        this.memorySimulator = new MemorySimulator();
+        this.loadController = new LoadController(this.cpuSimulators, this.memorySimulator);
+        this.started = false;
 
-        this.simulationControl = new SimulationControl(this.cpuSimulators, this.memorySimulator);
+    }
 
+    /**
+     *
+     * @param executorService
+     * @param cpuSimulatorType
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     */
+    public DefaultSimulationInfrastructure(ExecutorService executorService, Class<? extends CpuSimulator> cpuSimulatorType)
+            throws IllegalAccessException, InstantiationException {
 
-        this.started            = false;
-        this.executorService    = Executors.newFixedThreadPool(noOfCores + 2,
-                                            new ThreadFactoryBuilder().setDaemon(true).build());
+        this(executorService, Simulators.createCpuSimulators(Runtime.getRuntime().availableProcessors(), cpuSimulatorType));
+
+    }
+
+    /**
+     *
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
+    public DefaultSimulationInfrastructure() throws InstantiationException, IllegalAccessException {
+
+        this(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() + 2,
+                new ThreadFactoryBuilder().setDaemon(true).build()),
+             Simulators.createCpuSimulators(Runtime.getRuntime().availableProcessors(), FibonacciCpuSimulator.class));
+
 
         // Shutdown hook to end daemon threads gracefully
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
@@ -58,12 +80,12 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
     @Override
     public void increaseSystemLoadBy(FakeLoad load) throws MaximumLoadExceededException {
         start();
-        simulationControl.increaseSystemLoadBy(load);
+        loadController.increaseSystemLoadBy(load);
     }
 
     @Override
     public void decreaseSystemLoadBy(FakeLoad load) {
-        simulationControl.decreaseSystemLoadBy(load);
+        loadController.decreaseSystemLoadBy(load);
         // TODO check if system load is now zero, if yes start timer to cancel simulator tasks.
     }
 
@@ -80,7 +102,7 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
             log.debug("Starting infrastructure...");
 
             // Start simulators
-            startSimulationControl();
+            startLoadController();
             startCpuSimulators();
             startMemorySimulator();
 
@@ -93,8 +115,8 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
         }
     }
 
-    private void startSimulationControl() {
-        CompletableFuture.runAsync(simulationControl, executorService);
+    private void startLoadController() {
+        CompletableFuture.runAsync(loadController, executorService);
         log.debug("Started Simulation Control");
     }
 
