@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public final class MemorySimulator extends AbstractLoadSimulator {
+final class MemorySimulator extends AbstractLoadSimulator {
 
     private static final Logger log = LoggerFactory.getLogger(MemorySimulator.class);
 
