@@ -5,33 +5,37 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Represents the main API for the FakeLoad Library.
- * With instances of this type clients can create and execute 'fake' system load.
+ * With instances of this type clients decide what kinds of system loads they want to generate and for how long.
  *
  * <p>
- * The client can specify what kind of load (e.g. CPU, RAM, …), how much of it (e.g. 80%, 1024MB, …)
+ * Clients can specify what kind of load (e.g. CPU, RAM, …), how much of it (e.g. 80%, 1024MB, …)
  * and for how long a specific load (e.g. 10 s, 100 ms, …) is being simulated.
+ * Also, a fake load can itself consist of other {@code FakeLoad} instances thus
+ * giving the client the possibility to create complex patterns of system load instructions.
  * </p>
  *
  * <p>
- * Further, a fake load can itself consist of other {@code FakeLoad} instances thus giving the client the possibility to
- * create complex patterns of system load instructions.
- * </p>
+ * Note: All setter methods return a {@code FakeLoad} instance themselves, thus allowing a kind
+ * of fluent interface like this:
+ * <pre>
+ * {@code FakeLoad fakeload = FakeLoads.createLoad()
+ *      .lasting(10, TimeUnit.SECONDS)
+ *      .withCpu(30)
+ *      .withMemory(300, MemoryUnit.MB)
+ *      .withDiskInput(10, MemoryUnit.KB);
+ * }</pre>
+ * Depending on whether the underlying {@code FakeLoad} implementation is mutable or immutable
+ * these methods can either merely set specific load parameters or return a completely new
+ * {@code FakeLoad} instance containing the new parameters, respectively.
  *
- * TODO How to use
- * they should instantiate a FakeLoad object with the desired system load
- * instructions and then, subsequently, call that object's execute method, which simulates the specified system loads.
  *
- * @Author Marten Sigwart
+ * @author Marten Sigwart
  * @since 1.8
  */
 public interface FakeLoad extends Iterable<FakeLoad> {
 
     /**
      * Returns a {@code FakeLoad} instance containing the specified duration.
-     *
-     * <p>The method could merely change an existing duration attribute (like a simple setter) in the case of
-     * a mutable {@code FakeLoad} implementation or return a completely new {@code FakeLoad} instance if
-     * the underlying implementation class is immutable.
      *
      * @param duration the duration of the returned FakeLoad
      * @param unit the time unit of the duration
@@ -42,10 +46,6 @@ public interface FakeLoad extends Iterable<FakeLoad> {
     /**
      * Returns a {@code FakeLoad} instance with the number of specified repetitions set.
      *
-     * <p>The method could merely change an existing repetitions attribute (like a simple setter) in the case of
-     * a mutable {@code FakeLoad} implementation or return a completely new {@code FakeLoad} instance if
-     * the underlying implementation class is immutable.
-     *
      * @param noOfRepetitions number of repetitions of the returned FakeLoad
      * @return returns the FakeLoad object containing the provided parameters.
      */
@@ -53,10 +53,6 @@ public interface FakeLoad extends Iterable<FakeLoad> {
 
     /**
      * Returns a {@code FakeLoad} instance with the specified CPU load.
-     *
-     * <p>The method could merely change an existing CPU load attribute (like a simple setter) in the case of
-     * a mutable {@code FakeLoad} implementation or return a completely new {@code FakeLoad} instance if
-     * the underlying implementation class is immutable.
      *
      * @param cpuLoad the fake CPU load in percent (0-100%)
      * @return returns the FakeLoad object containing the provided parameters.
@@ -66,17 +62,20 @@ public interface FakeLoad extends Iterable<FakeLoad> {
     /**
      * Returns a {@code FakeLoad} instance with the specified memory load.
      *
-     * <p>The method could merely change an existing memory load attribute (like a simple setter) in the case of
-     * a mutable {@code FakeLoad} implementation or return a completely new {@code FakeLoad} instance if
-     * the underlying implementation class is immutable.
-     *
      * @param amount the amount of memory to be simulated
      * @param unit the memory unit for the specified amount
      * @return returns the FakeLoad object containing the provided parameters.
      */
     FakeLoad withMemory(long amount, MemoryUnit unit);
 
-    FakeLoad withDiskIO(long diskIOLoad);
+    /**
+     * Returns a {@code FakeLoad} instance with the specified disk input load as bytes/seconds.
+     *
+     * @param load the amount of disk inpput to be simulated
+     * @param unit the memory unit for the specified amount
+     * @return returns the FakeLoad object containing the provided parameters.
+     */
+    FakeLoad withDiskInput(long load, MemoryUnit unit);
 
     FakeLoad addLoad(FakeLoad load);
 
