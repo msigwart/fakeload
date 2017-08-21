@@ -101,7 +101,7 @@ public class SingleThreadSystemLoadTest {
             decreaseAndGetDiskIO(10);
         } catch (RuntimeException e) {
             assertEquals("Decrease of 10 would cause a negative disk IO load", e.getMessage());
-            assertEquals(0, systemLoad.getDiskIO());
+            assertEquals(0, systemLoad.getDiskInput());
         }
 
         // test value too high TODO
@@ -142,13 +142,13 @@ public class SingleThreadSystemLoadTest {
     private long increaseAndGetDiskIO(long diskIO) throws MaximumLoadExceededException {
         FakeLoad fakeLoad = FakeLoads.createLoad().withDiskInput(diskIO);
         systemLoad.increaseBy(fakeLoad);
-        return systemLoad.getDiskIO();
+        return systemLoad.getDiskInput();
     }
 
     private long decreaseAndGetDiskIO(long diskIO) {
         FakeLoad fakeLoad = FakeLoads.createLoad().withDiskInput(diskIO);
         systemLoad.decreaseBy(fakeLoad);
-        return systemLoad.getDiskIO();
+        return systemLoad.getDiskInput();
     }
 
 

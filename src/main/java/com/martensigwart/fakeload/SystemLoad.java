@@ -12,13 +12,13 @@ final class SystemLoad {
 
     @GuardedBy("this") private long cpu;
     @GuardedBy("this") private long memory;
-    @GuardedBy("this") private long diskIO;
+    @GuardedBy("this") private long diskInput;
 
 
     SystemLoad() {
         cpu     = 0L;
         memory  = 0L;
-        diskIO  = 0L;
+        diskInput = 0L;
     }
 
     synchronized long getCpu() {
@@ -29,8 +29,8 @@ final class SystemLoad {
         return memory;
     }
 
-    synchronized long getDiskIO() {
-        return diskIO;
+    synchronized long getDiskInput() {
+        return diskInput;
     }
 
 
@@ -40,7 +40,7 @@ final class SystemLoad {
 
         this.cpu    += load.getCpuLoad();
         this.memory += load.getMemoryLoad();
-        this.diskIO += load.getDiskInputLoad();
+        this.diskInput += load.getDiskInputLoad();
 
     }
 
@@ -49,7 +49,7 @@ final class SystemLoad {
 
         this.cpu -= load.getCpuLoad();
         this.memory -= load.getMemoryLoad();
-        this.diskIO -= load.getDiskInputLoad();
+        this.diskInput -= load.getDiskInputLoad();
 
     }
 
@@ -70,7 +70,7 @@ final class SystemLoad {
             throw new RuntimeException(String.format("Decrease of %d would cause a negative memory load", load.getMemoryLoad()));
         }
 
-        if (this.diskIO - load.getDiskInputLoad() < 0) {
+        if (this.diskInput - load.getDiskInputLoad() < 0) {
             throw new RuntimeException(String.format("Decrease of %d would cause a negative disk IO load", load.getDiskInputLoad()));
         }
 
