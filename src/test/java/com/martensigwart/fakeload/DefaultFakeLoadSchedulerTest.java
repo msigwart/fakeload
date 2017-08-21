@@ -50,7 +50,7 @@ public class DefaultFakeLoadSchedulerTest {
         FakeLoad fakeLoad = FakeLoads.createLoad().lasting(duration, unit)
                 .withCpu(cpu)
                 .withMemory(memory, MemoryUnit.BYTES)
-                .withDiskIO(diskIO);
+                .withDiskInput(diskIO);
 
         try {
             Future<Void> future = scheduler.schedule(fakeLoad);
@@ -80,7 +80,7 @@ public class DefaultFakeLoadSchedulerTest {
         FakeLoad fakeLoad = FakeLoads.createLoad().lasting(duration, unit)
                 .withCpu(99)
                 .withMemory(9999, MemoryUnit.BYTES)
-                .withDiskIO(99);
+                .withDiskInput(99);
 
         loadList.add(fakeLoad);
 
@@ -98,7 +98,7 @@ public class DefaultFakeLoadSchedulerTest {
             FakeLoad child = FakeLoads.createLoad().lasting(duration, unit)
                     .withCpu(startCPU++)
                     .withMemory(startMemory++, MemoryUnit.BYTES)
-                    .withDiskIO(startDiskIO++);
+                    .withDiskInput(startDiskIO++);
 
             loadList.add(child);
 
@@ -108,7 +108,7 @@ public class DefaultFakeLoadSchedulerTest {
                 FakeLoad grandChild = FakeLoads.createLoad().lasting(duration, unit)
                         .withCpu(startCPU++)
                         .withMemory(startMemory++, MemoryUnit.BYTES)
-                        .withDiskIO(startDiskIO++);
+                        .withDiskInput(startDiskIO++);
 
                 loadList.add(grandChild);
 

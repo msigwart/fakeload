@@ -14,7 +14,7 @@ import java.util.concurrent.ThreadFactory;
  * @since 1.8
  * @author Marten Sigwart
  */
-public class FakeLoadExecutors {
+public final class FakeLoadExecutors {
 
     private static SimulationInfrastructure defaultInfrastructure;
 

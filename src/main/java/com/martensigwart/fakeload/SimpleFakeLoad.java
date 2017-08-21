@@ -91,7 +91,7 @@ public final class SimpleFakeLoad extends AbstractFakeLoad {
     }
 
     @Override
-    public FakeLoad withDiskIO(long diskIOLoad) {
+    public FakeLoad withDiskInput(long diskIOLoad) {
         return new SimpleFakeLoad(duration, this.unit, getRepetitions(), cpuLoad, memoryLoad, diskIOLoad);
     }
 

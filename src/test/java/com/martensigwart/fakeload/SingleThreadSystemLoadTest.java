@@ -140,13 +140,13 @@ public class SingleThreadSystemLoadTest {
 
 
     private long increaseAndGetDiskIO(long diskIO) throws MaximumLoadExceededException {
-        FakeLoad fakeLoad = FakeLoads.createLoad().withDiskIO(diskIO);
+        FakeLoad fakeLoad = FakeLoads.createLoad().withDiskInput(diskIO);
         systemLoad.increaseBy(fakeLoad);
         return systemLoad.getDiskIO();
     }
 
     private long decreaseAndGetDiskIO(long diskIO) {
-        FakeLoad fakeLoad = FakeLoads.createLoad().withDiskIO(diskIO);
+        FakeLoad fakeLoad = FakeLoads.createLoad().withDiskInput(diskIO);
         systemLoad.decreaseBy(fakeLoad);
         return systemLoad.getDiskIO();
     }
