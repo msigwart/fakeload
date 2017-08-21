@@ -78,8 +78,8 @@ public final class CompositeFakeLoad extends AbstractFakeLoad {
     }
 
     @Override
-    public FakeLoad withDiskInput(long diskIOLoad) {
-        SimpleFakeLoad newOwnLoad = (SimpleFakeLoad) ownLoad.withDiskInput(diskIOLoad);
+    public FakeLoad withDiskInput(long load, MemoryUnit unit) {
+        SimpleFakeLoad newOwnLoad = (SimpleFakeLoad) ownLoad.withDiskInput(load, unit);
         return new CompositeFakeLoad(newOwnLoad, innerLoads, getRepetitions());
     }
 
@@ -143,8 +143,8 @@ public final class CompositeFakeLoad extends AbstractFakeLoad {
     }
 
     @Override
-    public long getDiskIOLoad() {
-        return ownLoad.getDiskIOLoad();
+    public long getDiskInputLoad() {
+        return ownLoad.getDiskInputLoad();
     }
 
     @Override

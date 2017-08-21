@@ -89,7 +89,7 @@ public interface FakeLoad extends Iterable<FakeLoad> {
 
     long getMemoryLoad();
 
-    long getDiskIOLoad();
+    long getDiskInputLoad();
 
     long getDuration();
 

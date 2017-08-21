@@ -456,7 +456,7 @@ public abstract class AbstractFakeLoadTest {
         assertEquals(TimeUnit.MILLISECONDS, actual.getTimeUnit());
         assertEquals(0, actual.getCpuLoad());
         assertEquals(0L, actual.getMemoryLoad());
-        assertEquals(0L, actual.getDiskIOLoad());
+        assertEquals(0L, actual.getDiskInputLoad());
         assertEquals(0, actual.getInnerLoads().size());
     }
     
@@ -466,7 +466,7 @@ public abstract class AbstractFakeLoadTest {
         assertEquals(expectedUnit, actual.getTimeUnit());
         assertEquals(0, actual.getCpuLoad());
         assertEquals(0L, actual.getMemoryLoad());
-        assertEquals(0L, actual.getDiskIOLoad());
+        assertEquals(0L, actual.getDiskInputLoad());
         assertEquals(0, actual.getInnerLoads().size());
     }
 
@@ -476,7 +476,7 @@ public abstract class AbstractFakeLoadTest {
         assertEquals(TimeUnit.MILLISECONDS, actual.getTimeUnit());
         assertEquals(0, actual.getCpuLoad());
         assertEquals(0L, actual.getMemoryLoad());
-        assertEquals(0L, actual.getDiskIOLoad());
+        assertEquals(0L, actual.getDiskInputLoad());
         assertEquals(expectedSize, actual.getInnerLoads().size());
     }
     
@@ -486,7 +486,7 @@ public abstract class AbstractFakeLoadTest {
         assertEquals(TimeUnit.MILLISECONDS, actual.getTimeUnit());
         assertEquals(0, actual.getCpuLoad());
         assertEquals(0L, actual.getMemoryLoad());
-        assertEquals(0L, actual.getDiskIOLoad());
+        assertEquals(0L, actual.getDiskInputLoad());
         assertEquals(0, actual.getInnerLoads().size());
     }
     
@@ -496,7 +496,7 @@ public abstract class AbstractFakeLoadTest {
         assertEquals(TimeUnit.MILLISECONDS, actual.getTimeUnit());
         assertEquals(expectedCpu, actual.getCpuLoad());
         assertEquals(0L, actual.getMemoryLoad());
-        assertEquals(0L, actual.getDiskIOLoad());
+        assertEquals(0L, actual.getDiskInputLoad());
         assertEquals(0, actual.getInnerLoads().size());
     }
     
@@ -506,7 +506,7 @@ public abstract class AbstractFakeLoadTest {
         assertEquals(TimeUnit.MILLISECONDS, actual.getTimeUnit());
         assertEquals(0, actual.getCpuLoad());
         assertEquals(expectedMemory, actual.getMemoryLoad());
-        assertEquals(0L, actual.getDiskIOLoad());
+        assertEquals(0L, actual.getDiskInputLoad());
         assertEquals(0, actual.getInnerLoads().size());
     }
 

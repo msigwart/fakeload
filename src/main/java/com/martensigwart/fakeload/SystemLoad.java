@@ -40,7 +40,7 @@ final class SystemLoad {
 
         this.cpu    += load.getCpuLoad();
         this.memory += load.getMemoryLoad();
-        this.diskIO += load.getDiskIOLoad();
+        this.diskIO += load.getDiskInputLoad();
 
     }
 
@@ -49,7 +49,7 @@ final class SystemLoad {
 
         this.cpu -= load.getCpuLoad();
         this.memory -= load.getMemoryLoad();
-        this.diskIO -= load.getDiskIOLoad();
+        this.diskIO -= load.getDiskInputLoad();
 
     }
 
@@ -70,8 +70,8 @@ final class SystemLoad {
             throw new RuntimeException(String.format("Decrease of %d would cause a negative memory load", load.getMemoryLoad()));
         }
 
-        if (this.diskIO - load.getDiskIOLoad() < 0) {
-            throw new RuntimeException(String.format("Decrease of %d would cause a negative disk IO load", load.getDiskIOLoad()));
+        if (this.diskIO - load.getDiskInputLoad() < 0) {
+            throw new RuntimeException(String.format("Decrease of %d would cause a negative disk IO load", load.getDiskInputLoad()));
         }
 
     }
