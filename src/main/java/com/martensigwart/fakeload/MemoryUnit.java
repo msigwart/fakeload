@@ -1,23 +1,26 @@
 package com.martensigwart.fakeload;
 
 /**
- * Created by martensigwart on 19.07.17.
+ * Enum representing different memory units like bytes, kilobytes, megabytes, gigabytes.
  */
 public enum MemoryUnit {
-    BYTES, KB, MB, GB;
+    BYTES(1),
+    KB(BYTES.multiplier *1024),
+    MB(KB.multiplier *1024),
+    GB(MB.multiplier *1024);
+
+    private final long multiplier;
+
+    MemoryUnit(long multiplier) {
+        this.multiplier = multiplier;
+    }
 
     public long toBytes(long amount) {
-        switch (this) {
-            case BYTES:
-                return amount*1;
-            case KB:
-                return amount*1024;
-            case MB:
-                return amount*1024*1024;
-            case GB:
-                return amount*1024*1024*1024;
-            default:
-                return 0;
-        }
+        return amount* multiplier;
     }
+
+    public static String mbString(long bytes) {
+        return String.format("%d bytes (%.2f MB)", bytes, (double)bytes / (MB.multiplier));
+    }
+
 }
