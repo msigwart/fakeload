@@ -34,15 +34,17 @@ public final class LoadController implements Runnable {
     private final SystemLoad systemLoad;
     private final List<CpuSimulator> cpuSimulators;
     private final MemorySimulator memorySimulator;
+    private final DiskInputSimulator diskInputSimulator;
     private final double stepSize;
     private final Object lock;
 
     private long lastCpu = 0L;
 
-    LoadController(SystemLoad systemLoad, List<CpuSimulator> cpuSimulators, MemorySimulator memorySimulator) {
+    LoadController(SystemLoad systemLoad, List<CpuSimulator> cpuSimulators, MemorySimulator memorySimulator, DiskInputSimulator diskInputSimulator) {
         this.systemLoad = systemLoad;
         this.cpuSimulators = Collections.unmodifiableList(cpuSimulators);
         this.memorySimulator = memorySimulator;
+        this.diskInputSimulator = diskInputSimulator;
         this.stepSize = 1.0 / Runtime.getRuntime().availableProcessors();
         this.lock = new Object();
     }
@@ -84,10 +86,11 @@ public final class LoadController implements Runnable {
         }
 
         synchronized (lock) {
-            lock.notify();
+            lock.notify();      // notify thread executing the run method
         }
 
         memorySimulator.setLoad(systemLoad.getMemory());
+        diskInputSimulator.setLoad(systemLoad.getDiskInput());
         //TODO propagate changes to simulators
     }
 
@@ -150,5 +153,9 @@ public final class LoadController implements Runnable {
 
     public MemorySimulator getMemorySimulator() {
         return memorySimulator;
+    }
+
+    public DiskInputSimulator getDiskInputSimulator() {
+        return diskInputSimulator;
     }
 }

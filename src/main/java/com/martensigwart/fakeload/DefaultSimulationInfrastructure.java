@@ -68,6 +68,7 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
             startLoadController();
             startCpuSimulators();
             startMemorySimulator();
+            startDiskInputSimulator();
 
             started = true;
 
@@ -96,8 +97,9 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
     private void startMemorySimulator() {
 
         MemorySimulator memorySimulator = controller.getMemorySimulator();
-        if (memorySimulator == null)
+        if (memorySimulator == null) {
             return;
+        }
 
         memorySimulator.setLoad(0);
         CompletableFuture<Void> future = CompletableFuture.runAsync(memorySimulator, executorService);
@@ -111,6 +113,16 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
         });
         log.debug("Started Memory Simulator");
 
+    }
+
+    private void startDiskInputSimulator() {
+        DiskInputSimulator diskInputSimulator = controller.getDiskInputSimulator();
+        if (diskInputSimulator == null) {
+            return;
+        }
+
+        CompletableFuture<Void> future = CompletableFuture.runAsync(diskInputSimulator, executorService);
+        log.debug("Started DiskInput Simulator");
     }
 
     /**

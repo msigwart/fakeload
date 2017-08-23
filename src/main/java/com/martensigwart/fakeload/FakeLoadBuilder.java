@@ -25,8 +25,7 @@ public class FakeLoadBuilder {
         private int repetitions     = 0;
         private long cpuLoad        = 0;
         private long memoryLoad     = 0L;
-        private long diskIOLoad     = 0L;
-        private long netIOLoad      = 0L;
+        private long diskInputLoad  = 0L;
 
         // inner loads
         private List<FakeLoad> innerLoads = new ArrayList<>();
@@ -66,15 +65,11 @@ public class FakeLoadBuilder {
             return this;
         }
 
-        public FakeLoadBuilder withDiskIO(long diskIOLoad) {
-            this.diskIOLoad = diskIOLoad;
+        public FakeLoadBuilder withDiskInput(long diskInput, MemoryUnit unit) {
+            this.diskInputLoad = unit.toBytes(diskInput);
             return this;
         }
 
-        public FakeLoadBuilder withNetIO(long netIOLoad) {
-            this.netIOLoad = netIOLoad;
-            return this;
-        }
 
         public FakeLoadBuilder addLoad(FakeLoad load) {
             innerLoads.add(load);
@@ -89,10 +84,10 @@ public class FakeLoadBuilder {
 
         public FakeLoad build() {
             if (innerLoads.isEmpty()) {
-                return new SimpleFakeLoad(duration, unit, repetitions, cpuLoad, memoryLoad, diskIOLoad);
+                return new SimpleFakeLoad(duration, unit, repetitions, cpuLoad, memoryLoad, diskInputLoad);
             } else {
                 return new CompositeFakeLoad(
-                        new SimpleFakeLoad(duration, unit, 0, cpuLoad, memoryLoad, diskIOLoad),
+                        new SimpleFakeLoad(duration, unit, 0, cpuLoad, memoryLoad, diskInputLoad),
                         innerLoads, repetitions);
             }
         }
