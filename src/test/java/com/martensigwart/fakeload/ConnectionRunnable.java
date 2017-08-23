@@ -80,7 +80,7 @@ public class ConnectionRunnable implements Runnable {
                 fakeLoad = fakeLoad.withMemory(increase, MemoryUnit.BYTES);
                 break;
             case DISKIO:
-                fakeLoad = fakeLoad.withDiskInput(increase);
+                fakeLoad = fakeLoad.withDiskInput(increase, MemoryUnit.BYTES);
                 break;
 
         }

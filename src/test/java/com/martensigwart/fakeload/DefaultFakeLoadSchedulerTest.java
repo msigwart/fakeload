@@ -44,13 +44,13 @@ public class DefaultFakeLoadSchedulerTest {
         TimeUnit unit = TimeUnit.SECONDS;
         long cpu = 20;
         long memory = 30;
-        long diskIO = 40;
+        long diskInput = 40;
         long netIO = 50;
 
         FakeLoad fakeLoad = FakeLoads.createLoad().lasting(duration, unit)
                 .withCpu(cpu)
                 .withMemory(memory, MemoryUnit.BYTES)
-                .withDiskInput(diskIO);
+                .withDiskInput(diskInput, MemoryUnit.BYTES);
 
         try {
             Future<Void> future = scheduler.schedule(fakeLoad);
@@ -80,7 +80,7 @@ public class DefaultFakeLoadSchedulerTest {
         FakeLoad fakeLoad = FakeLoads.createLoad().lasting(duration, unit)
                 .withCpu(99)
                 .withMemory(9999, MemoryUnit.BYTES)
-                .withDiskInput(99);
+                .withDiskInput(99, MemoryUnit.BYTES);
 
         loadList.add(fakeLoad);
 
@@ -89,7 +89,7 @@ public class DefaultFakeLoadSchedulerTest {
 
         long startCPU = 1;
         long startMemory = 100;
-        long startDiskIO = 100;
+        long startDiskInput = 100;
 
         // create children
         for (int i=0; i<noOfChildren; i++) {
@@ -98,7 +98,7 @@ public class DefaultFakeLoadSchedulerTest {
             FakeLoad child = FakeLoads.createLoad().lasting(duration, unit)
                     .withCpu(startCPU++)
                     .withMemory(startMemory++, MemoryUnit.BYTES)
-                    .withDiskInput(startDiskIO++);
+                    .withDiskInput(startDiskInput++, MemoryUnit.BYTES);
 
             loadList.add(child);
 
@@ -108,7 +108,7 @@ public class DefaultFakeLoadSchedulerTest {
                 FakeLoad grandChild = FakeLoads.createLoad().lasting(duration, unit)
                         .withCpu(startCPU++)
                         .withMemory(startMemory++, MemoryUnit.BYTES)
-                        .withDiskInput(startDiskIO++);
+                        .withDiskInput(startDiskInput++, MemoryUnit.BYTES);
 
                 loadList.add(grandChild);
 

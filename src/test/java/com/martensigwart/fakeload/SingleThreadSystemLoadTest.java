@@ -81,37 +81,37 @@ public class SingleThreadSystemLoadTest {
     }
 
 
-    @Test
-    public void testDiskIO() {
-        try {
-            assertEquals(10, increaseAndGetDiskIO(10));
-            assertEquals(30, increaseAndGetDiskIO(20));
-            assertEquals(60, increaseAndGetDiskIO(30));
-            assertEquals(100, increaseAndGetDiskIO(40));
-
-            assertEquals(90, decreaseAndGetDiskIO(10));
-            assertEquals(70, decreaseAndGetDiskIO(20));
-            assertEquals(40, decreaseAndGetDiskIO(30));
-            assertEquals(0, decreaseAndGetDiskIO(40));
-        } catch (MaximumLoadExceededException e) {
-            throw new AssertionError("Shouldn't happen");
-        }
-        // test negative value
-        try {
-            decreaseAndGetDiskIO(10);
-        } catch (RuntimeException e) {
-            assertEquals("Decrease of 10 would cause a negative disk IO load", e.getMessage());
-            assertEquals(0, systemLoad.getDiskInput());
-        }
-
-        // test value too high TODO
+//    @Test
+//    public void testDiskIO() {
 //        try {
-//            increaseAndGetDiskIO(110);
-//        } catch (RuntimeException e) {
-//            Assert.assertEquals("Increase of DiskIO to over 100%", e.getMessage());
-//            Assert.assertEquals(0, systemLoadgetDiskIO());
+//            assertEquals(10, increaseAndGetDiskIO(10));
+//            assertEquals(30, increaseAndGetDiskIO(20));
+//            assertEquals(60, increaseAndGetDiskIO(30));
+//            assertEquals(100, increaseAndGetDiskIO(40));
+//
+//            assertEquals(90, decreaseAndGetDiskIO(10));
+//            assertEquals(70, decreaseAndGetDiskIO(20));
+//            assertEquals(40, decreaseAndGetDiskIO(30));
+//            assertEquals(0, decreaseAndGetDiskIO(40));
+//        } catch (MaximumLoadExceededException e) {
+//            throw new AssertionError("Shouldn't happen");
 //        }
-    }
+//        // test negative value
+//        try {
+//            decreaseAndGetDiskIO(10);
+//        } catch (RuntimeException e) {
+//            assertEquals("Decrease of 10 would cause a negative disk IO load", e.getMessage());
+//            assertEquals(0, systemLoad.getDiskInput());
+//        }
+//
+//        // test value too high TODO
+////        try {
+////            increaseAndGetDiskIO(110);
+////        } catch (RuntimeException e) {
+////            Assert.assertEquals("Increase of DiskIO to over 100%", e.getMessage());
+////            Assert.assertEquals(0, systemLoadgetDiskIO());
+////        }
+//    }
 
 
     private long increaseAndGetCpu(int cpu) throws MaximumLoadExceededException {
@@ -138,18 +138,18 @@ public class SingleThreadSystemLoadTest {
         return systemLoad.getMemory();
     }
 
-
-    private long increaseAndGetDiskIO(long diskIO) throws MaximumLoadExceededException {
-        FakeLoad fakeLoad = FakeLoads.createLoad().withDiskInput(diskIO);
-        systemLoad.increaseBy(fakeLoad);
-        return systemLoad.getDiskInput();
-    }
-
-    private long decreaseAndGetDiskIO(long diskIO) {
-        FakeLoad fakeLoad = FakeLoads.createLoad().withDiskInput(diskIO);
-        systemLoad.decreaseBy(fakeLoad);
-        return systemLoad.getDiskInput();
-    }
+// TODO
+//    private long increaseAndGetDiskIO(long diskIO) throws MaximumLoadExceededException {
+//        FakeLoad fakeLoad = FakeLoads.createLoad().withDiskInput(diskIO);
+//        systemLoad.increaseBy(fakeLoad);
+//        return systemLoad.getDiskInput();
+//    }
+//
+//    private long decreaseAndGetDiskIO(long diskIO) {
+//        FakeLoad fakeLoad = FakeLoads.createLoad().withDiskInput(diskIO);
+//        systemLoad.decreaseBy(fakeLoad);
+//        return systemLoad.getDiskInput();
+//    }
 
 
 

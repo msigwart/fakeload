@@ -21,7 +21,8 @@ public class SomeClass {
 //        FakeLoad fakeLoad = FakeLoads.createLoad(100, "50%", "1024m");
         FakeLoad fakeLoad = FakeLoads.createLoad().lasting(60, TimeUnit.SECONDS)
                 .withCpu(50)
-                .withMemory(2, MemoryUnit.GB);
+                .withMemory(200, MemoryUnit.MB)
+                .withDiskInput(1, MemoryUnit.GB);
 
         executor.execute(fakeLoad);
         // some code
