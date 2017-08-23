@@ -11,11 +11,6 @@ final class MemorySimulator extends AbstractLoadSimulator {
 
     private static final Logger log = LoggerFactory.getLogger(MemorySimulator.class);
 
-    private static final long KB = 1024;
-    private static final long MB = KB*1024;
-    private static final long GB = MB*1024;
-
-
     private long actualLoad;
     private final List<byte[]> allocatedMemory;
 
@@ -27,10 +22,9 @@ final class MemorySimulator extends AbstractLoadSimulator {
 
 
     @Override
-    void simulateLoad() throws InterruptedException {
+    public void simulateLoad(long loadToAllocate) throws InterruptedException {
         allocatedMemory.clear();
 
-        long loadToAllocate = getLoad();
         if (loadToAllocate < Integer.MAX_VALUE) {
             allocatedMemory.add(new byte[(int)loadToAllocate]);
         } else {
@@ -52,17 +46,18 @@ final class MemorySimulator extends AbstractLoadSimulator {
     }
 
     @Override
-    boolean waitConditionFulfilled() {
+    public boolean waitConditionFulfilled() {
         return (getLoad() == actualLoad);
     }
 
     @Override
     String prettyFormat(long load) {
-        return mb(load);
+        return MemoryUnit.mbString(load);
     }
 
-    private String mb(long bytes) {
-        return String.format("%d (%.2f MB)", bytes, (double)bytes / (MB));
+    @Override
+    protected void cleanUp() {
+        allocatedMemory.clear();
     }
 
     @Override
