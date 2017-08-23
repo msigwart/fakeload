@@ -7,6 +7,23 @@ import javax.annotation.concurrent.GuardedBy;
 
 /**
  * Skeleton {@code LoadSimulator} implementation.
+ *
+ * <p>
+ * In order to simulate load this class has to be started either as thread directly
+ * or with an {@link java.util.concurrent.ExecutorService}.
+ * Load is simulated by running a while loop inside the class' {@link #run()} method.
+ * In the loop the thread waits when there is nothing to do as indicated by the class'
+ * {@link #waitConditionFulfilled()} method.
+ * When there is something to simulate, load gets simulated via the {@link #simulateLoad(long)} method
+ * which has to be implemented by subclasses.
+ *
+ * <p>
+ * Note: When calling the constructor of this class from a subclass,
+ * passing a value smaller or equal zero as {@code maxValue} will cause the
+ * max value to be {@link java.lang.Long#MAX_VALUE}
+ *
+ * @author Marten Sigwart
+ * @since 1.8
  */
 abstract class AbstractLoadSimulator implements LoadSimulator {
 
@@ -20,26 +37,8 @@ abstract class AbstractLoadSimulator implements LoadSimulator {
 
     AbstractLoadSimulator(long maxValue) {
         this.load = 0L;
-        this.maxValue = (maxValue < 0) ? Long.MAX_VALUE : maxValue;
+        this.maxValue = (maxValue <= 0) ? Long.MAX_VALUE : maxValue;
     }
-
-    /**
-     * Simulates load.
-     *
-     * @throws InterruptedException when the thread is interrupted during load simulation
-     */
-    abstract void simulateLoad() throws InterruptedException;
-
-    /**
-     * Represents the 'wait' condition of a {@code LoadSimulator}.
-     * <p>
-     * In order to save resources, a LoadSimulator should wait when
-     * there is nothing to simulate. For example, when a Memory Simulator
-     * already allocated the desired amount of memory, it can wait for new
-     * memory instructions -> It has nothing to do. This method represents the state "nothing to do".
-     * @return returns true if there is nothing to do and false otherwise.
-     */
-    abstract boolean waitConditionFulfilled();
 
     /**
      * Generates a pretty string representation of the specified load
@@ -61,14 +60,17 @@ abstract class AbstractLoadSimulator implements LoadSimulator {
                     }
                 }
 
-                simulateLoad();
+                simulateLoad(getLoad());
 
             } catch (InterruptedException e) {
                 log.warn("{}Interrupted", idString());
+                cleanUp();
                 running = false;
             }
         }
     }
+
+    protected abstract void cleanUp();
 
 
     @Override
