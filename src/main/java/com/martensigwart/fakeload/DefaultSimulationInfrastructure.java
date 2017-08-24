@@ -10,7 +10,15 @@ import java.util.List;
 import java.util.concurrent.*;
 
 /**
- * Default implementation class of {@link SimulationInfrastructure}.
+ * Default implementation class of {@code SimulationInfrastructure}.
+ *
+ * @since 1.8
+ * @see SimulationInfrastructure
+ * @see FakeLoad
+ * @see LoadController
+ * @see ExecutorService
+ * 
+ * @author Marten Sigwart
  */
 @ThreadSafe
 public final class DefaultSimulationInfrastructure implements SimulationInfrastructure {
@@ -18,18 +26,26 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
     private static final Logger log = LoggerFactory.getLogger(SimulationInfrastructure.class);
 
     /**
-     * Executor service which executes the simulator threads
+     * Thread pool which is used for executing the different simulator threads
      */
     private final ExecutorService executorService;
+
+    /**
+     * Controller thread responsible for controlling the load created by simulator threads,
+     * as well as taking track of the currently executed system load (especially important
+     * in multithreaded scenarios).
+     */
     private final LoadController controller;
 
 
     @GuardedBy("this") private boolean started;
 
     /**
-     *
-     * @param executorService
-     * @param controller
+     * Creates a new {@code DefaultSimulationInfrastructure} instance using the
+     * provided {@link ExecutorService} and {@link LoadController}.
+     * @param executorService the thread pool used for executing simulator threads
+     * @param controller the controller used for controlling simulator threads and
+     *                   overall system load in concurrent scenarios
      */
     public DefaultSimulationInfrastructure(ExecutorService executorService,
                                            LoadController controller) {
