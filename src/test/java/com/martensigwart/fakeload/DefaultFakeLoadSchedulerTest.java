@@ -74,8 +74,8 @@ public class DefaultFakeLoadSchedulerTest {
 
     @Test
     public void testScheduleMethod2() {
-        long duration = 1;
-        TimeUnit unit = TimeUnit.SECONDS;
+        long duration = 100;
+        TimeUnit unit = TimeUnit.MILLISECONDS;
 
         FakeLoad fakeLoad = FakeLoads.createLoad().lasting(duration, unit)
                 .withCpu(99)
