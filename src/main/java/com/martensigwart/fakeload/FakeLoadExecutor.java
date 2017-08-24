@@ -52,7 +52,8 @@ public interface FakeLoadExecutor {
      *
      * @param load the FakeLoad to be executed
      * @throws NullPointerException if the load is null
-     * @throws RuntimeException //TODO exception for illegal loads
+     * @throws RuntimeException if the FakeLoad contains illegal loads or loads that
+     * would exceed the limit of a specific system load (e.g. a CPU load of more than 100%)
      */
     void execute(FakeLoad load);
 
