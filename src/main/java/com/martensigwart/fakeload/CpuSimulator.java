@@ -23,12 +23,12 @@ public abstract class CpuSimulator extends AbstractLoadSimulator {
     /**
      * Performs some calculation/operation to keep the CPU busy
      */
-    abstract void simulateCpu();
+    protected abstract void simulateCpu();
 
 
 
     @Override
-    public void simulateLoad(long load) throws InterruptedException {
+    protected void simulateLoad(long load) throws InterruptedException {
 
         long time = System.currentTimeMillis() + load;
         while (System.currentTimeMillis() < time) {
@@ -38,13 +38,13 @@ public abstract class CpuSimulator extends AbstractLoadSimulator {
     }
 
     @Override
-    public boolean waitConditionFulfilled() {
+    protected boolean waitConditionFulfilled() {
         return (getLoad() == 0);
     }
 
 
     @Override
-    String prettyFormat(long load) {
+    protected String prettyFormat(long load) {
         return String.format("%d%%", load);
     }
 
@@ -54,7 +54,7 @@ public abstract class CpuSimulator extends AbstractLoadSimulator {
     }
 
     @Override
-    String idString() {
+    protected String idString() {
         return String.format("CPU Sim %d - ", id);
     }
 }

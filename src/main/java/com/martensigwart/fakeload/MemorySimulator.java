@@ -7,14 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-final class MemorySimulator extends AbstractLoadSimulator {
+public final class MemorySimulator extends AbstractLoadSimulator {
 
     private static final Logger log = LoggerFactory.getLogger(MemorySimulator.class);
 
     private long actualLoad;
     private final List<byte[]> allocatedMemory;
 
-    MemorySimulator() {
+    public MemorySimulator() {
         super(-1L);
         this.actualLoad = 0L;
         this.allocatedMemory = new ArrayList<>();
@@ -22,7 +22,7 @@ final class MemorySimulator extends AbstractLoadSimulator {
 
 
     @Override
-    public void simulateLoad(long loadToAllocate) throws InterruptedException {
+    protected void simulateLoad(long loadToAllocate) throws InterruptedException {
         allocatedMemory.clear();
 
         if (loadToAllocate < Integer.MAX_VALUE) {
@@ -46,12 +46,12 @@ final class MemorySimulator extends AbstractLoadSimulator {
     }
 
     @Override
-    public boolean waitConditionFulfilled() {
+    protected boolean waitConditionFulfilled() {
         return (getLoad() == actualLoad);
     }
 
     @Override
-    String prettyFormat(long load) {
+    protected String prettyFormat(long load) {
         return MemoryUnit.mbString(load);
     }
 
@@ -61,7 +61,7 @@ final class MemorySimulator extends AbstractLoadSimulator {
     }
 
     @Override
-    String idString() {
+    protected String idString() {
         return "Memory Sim - ";
     }
 }

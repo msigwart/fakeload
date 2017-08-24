@@ -1,29 +1,60 @@
 package com.martensigwart.fakeload;
 
-
+/**
+ * Represents a thread simulating some system load. System load can be CPU, memory, Disk I/O, ...
+ *
+ * <p>
+ * This type simulates some system load when started as a thread.
+ * Further, it defines methods for getting and setting as well as increasing and decreasing
+ * some load parameter. Implementing classes should use the load parameter, set by those methods,
+ * for their simulation logic.
+ *
+ * <p>
+ * Class {@link AbstractLoadSimulator} provides a skeleton implementation of a {@code LoadSimulator}.
+ * Subclassing {@code AbstractLoadSimulator} is the preferred way for clients to create new
+ * {@code LoadSimulator} classes, as it already provides common simulation behavior as well as
+ * synchronization mechanisms.
+ *
+ * @since 1.8
+ * @see Runnable
+ * @see AbstractLoadSimulator
+ * @author Marten Sigwart
+ */
 public interface LoadSimulator extends Runnable {
 
     /**
-     * Simulates load.
+     * Executes the simulation logic.
+     * This method should be used to implement the simulator's main simulation logic,
+     * i.e. the actual system load (CPU, memory, etc.) for which this {@code LoadSimulator}
+     * is responsible should be simulated.
      *
-     * @throws InterruptedException when the thread is interrupted during load simulation
+     * <p>
+     * From {@link Runnable#run()}: {@inheritDoc}
      */
-    void simulateLoad(long load) throws InterruptedException;
+    @Override
+    void run();
 
     /**
-     * Represents the 'wait' condition of a {@code LoadSimulator}.
-     * <p>
-     * In order to save resources, a LoadSimulator should wait when
-     * there is nothing to simulate. For example, when a Memory Simulator
-     * already allocated the desired amount of memory, it can wait for new
-     * memory instructions -> It has nothing to do. This method represents the state "nothing to do".
-     * @return returns true if there is nothing to do and false otherwise.
+     * @return returns the load to be simulated
      */
-    boolean waitConditionFulfilled();
-
     long getLoad();
+
+    /**
+     * Sets the load to be simulated.
+     * @param desiredLoad the load to be simulated
+     */
     void setLoad(long desiredLoad);
+
+    /**
+     * Increases the load of the simulator by {@code delta}.
+     * @param delta the amount by which the load will be increased
+     */
     void increaseLoad(long delta);
+
+    /**
+     * Decreases the load of the simulator by {@code delta}.
+     * @param delta the amount by which the load will be decreased
+     */
     void decreaseLoad(long delta);
 
 }

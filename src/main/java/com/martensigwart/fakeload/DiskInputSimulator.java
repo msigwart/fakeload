@@ -64,7 +64,7 @@ public class DiskInputSimulator extends AbstractLoadSimulator {
     }
 
     @Override
-    String prettyFormat(long load) {
+    protected String prettyFormat(long load) {
         return MemoryUnit.mbString(load);
     }
 
@@ -78,7 +78,7 @@ public class DiskInputSimulator extends AbstractLoadSimulator {
     }
 
     @Override
-    String idString() {
+    protected String idString() {
         return "DiskInputSim - ";
     }
 }
