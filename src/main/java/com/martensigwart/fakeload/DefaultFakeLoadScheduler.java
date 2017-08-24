@@ -7,7 +7,11 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
 /**
- * Default implementation of the {@link FakeLoadScheduler} interface.
+ * Default implementation of the {@code FakeLoadScheduler} interface.
+ *
+ * @since 1.8
+ * @see FakeLoadScheduler
+ * @see FakeLoad
  */
 public final class DefaultFakeLoadScheduler implements FakeLoadScheduler {
 
@@ -20,6 +24,10 @@ public final class DefaultFakeLoadScheduler implements FakeLoadScheduler {
     private final SimulationInfrastructure infrastructure;
 
 
+    /**
+     * Creates a new {@code DefaultFakeLoadScheduler} instance using the specified infrastructure
+     * @param infrastructure the simulation infrastructure to be used
+     */
     public DefaultFakeLoadScheduler(SimulationInfrastructure infrastructure) {
         this.infrastructure = infrastructure;
 
@@ -73,7 +81,5 @@ public final class DefaultFakeLoadScheduler implements FakeLoadScheduler {
         log.debug("Finished scheduling.");
         return completableFuture;
     }
-
-
 
 }
