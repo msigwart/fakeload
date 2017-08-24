@@ -17,7 +17,7 @@ import java.util.concurrent.*;
  * @see FakeLoad
  * @see LoadController
  * @see ExecutorService
- * 
+ *
  * @author Marten Sigwart
  */
 @ThreadSafe
