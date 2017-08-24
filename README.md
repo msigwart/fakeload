@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/msigwart/fakeload.svg?branch=master)](https://travis-ci.org/msigwart/fakeload)
 
 # FakeLoad
-FakeLoad is an open-source Java library which provides a simple way of producing “fake" system loads in applications or tests.
+FakeLoad is an open-source Java library which provides a simple and flexible way of producing “fake" system loads in applications or tests.
 
 Producing system load using FakeLoad is as simple as this:
 ```java
