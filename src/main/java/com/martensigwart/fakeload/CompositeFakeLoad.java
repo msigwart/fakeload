@@ -184,7 +184,7 @@ public final class CompositeFakeLoad extends AbstractFakeLoad {
     public String toString() {
         return "CompositeFakeLoad{" +
                 "ownLoad=" + ownLoad +
-                ", innerLoads=" + innerLoads +
+                ", innerLoads=" + innerLoads +  //TODO maybe only display number of inner loads
                 '}';
     }
 }
