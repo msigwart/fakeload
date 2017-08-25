@@ -136,13 +136,32 @@ public final class LoadController implements Runnable {
 
     private void increaseCpuSimulatorLoads(int delta, int noOfSteps) {
         for (int i=0; i<noOfSteps; i++) {
-            cpuSimulators.get(i % cpuSimulators.size()).increaseLoad(delta);
+            CpuSimulator cpuSimulator = cpuSimulators.get(i % cpuSimulators.size());
+
+            /*
+             * Only increase if load is not maxed out.
+             * Synchronization of simulator is not important here,
+             * if-statement only to prevent unnecessary calls to increase load.
+             */
+            if (!cpuSimulator.isMaximumLoad()) {
+                cpuSimulators.get(i % cpuSimulators.size()).increaseLoad(delta);
+            }
         }
     }
 
+
     private void decreaseCpuSimulatorLoads(int delta, int noOfSteps) {
         for (int i=0; i<noOfSteps; i++) {
-            cpuSimulators.get(i % cpuSimulators.size()).decreaseLoad(delta);
+            CpuSimulator cpuSimulator = cpuSimulators.get(i % cpuSimulators.size());
+
+            /*
+             * Only decrease if load is not zero.
+             * Synchronization of simulator is not important here,
+             * if-statement only to prevent unnecessary calls to decrease load.
+             */
+            if (!cpuSimulator.isZeroLoad()) {
+                cpuSimulators.get(i % cpuSimulators.size()).decreaseLoad(delta);
+            }
         }
     }
 
