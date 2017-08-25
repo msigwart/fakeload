@@ -54,6 +54,7 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
         this.controller = controller;
         this.started = false;
 
+        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
     }
 
 
@@ -157,8 +158,15 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
      * This means shutting down the {@code ExecutorService} with which the simulation tasks are run.
      */
     private void shutdown() {
+        executorService.shutdownNow();
+        try {
+            if (!executorService.awaitTermination(50, TimeUnit.MILLISECONDS)) {
+                log.warn("Still waiting for termination...");
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         log.debug("ExecutorService shutdown");
-        executorService.shutdown();
     }
 
 
