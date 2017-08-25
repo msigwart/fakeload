@@ -104,6 +104,7 @@ public abstract class AbstractLoadSimulator implements LoadSimulator {
                 running = false;
             }
         }
+        log.debug("{}Exited", idString());
     }
 
     @Override
@@ -129,22 +130,22 @@ public abstract class AbstractLoadSimulator implements LoadSimulator {
         }
     }
 
+    @Override
+    public void increaseLoad(long delta) {
+        setLoad(getLoad() + delta);
+    }
+
+    @Override
+    public void decreaseLoad(long delta) {
+        setLoad(getLoad() - delta);
+    }
+
     /**
      * Returns an ID string, which is primarily used for logging purposes.
      * @return the ID string
      *///TODO pass a name(id) string in constructor and delete method
     protected String idString() {
         return "";
-    }
-
-    @Override
-    public synchronized void increaseLoad(long delta) {
-        setLoad(getLoad() + delta);
-    }
-
-    @Override
-    public synchronized void decreaseLoad(long delta) {
-        setLoad(getLoad() - delta);
     }
 
 }
