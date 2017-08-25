@@ -180,6 +180,7 @@
                         <configuration>
                             <mainClass>com.martensigwart.fakeload.TestFrame</mainClass>
                             <classpathScope>test</classpathScope>
+                            <cleanupDaemonThreads>false</cleanupDaemonThreads>
                         </configuration>
                     </plugin>
                 </plugins>
