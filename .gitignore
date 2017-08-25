@@ -1,5 +1,7 @@
 *.log.*
 
+/martensigwart
+
 #=================
 #eclipse-project
 #=================
