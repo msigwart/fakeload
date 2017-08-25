@@ -105,7 +105,12 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
         List<CpuSimulator> cpuSimulators = controller.getCpuSimulators();
 
         for (Runnable thread: cpuSimulators) {
-            CompletableFuture.runAsync(thread, executorService);
+            CompletableFuture<Void> future = CompletableFuture.runAsync(thread, executorService);
+            future.exceptionally(e -> {
+                log.error("Cpu Simulator died: {}", e.getMessage());
+                e.printStackTrace();
+                return null;
+            });
         }
         log.debug("Started {} CPU Simulators", cpuSimulators.size());
     }
@@ -138,6 +143,11 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
         }
 
         CompletableFuture<Void> future = CompletableFuture.runAsync(diskInputSimulator, executorService);
+        future.exceptionally(e -> {
+            log.error("Disk Input Simulator died: {}", e.getMessage());
+            e.printStackTrace();
+            return null;
+        });
         log.debug("Started DiskInput Simulator");
     }
 
