@@ -112,8 +112,17 @@ public abstract class AbstractLoadSimulator implements LoadSimulator {
     }
 
     @Override
-    public synchronized void setLoad(long desiredLoad) {
-        this.load = (desiredLoad < 0) ? 0L : (desiredLoad > maxValue) ? maxValue : desiredLoad;
+    public void setLoad(long desiredLoad) {
+
+        /*
+         * IMPORTANT: synchronized keyword cannot be in method signature to prevent deadlock
+         * that can occur when the LoadController sets the load, while the LoadSimulator is
+         * checking if its waitCondition is fulfilled.
+         */
+        synchronized (this) {
+            this.load = (desiredLoad < 0) ? 0L : (desiredLoad > maxValue) ? maxValue : desiredLoad;
+        }
+
         log.trace("{}Set load to {}", idString(), prettyFormat(this.load));
         synchronized (lock) {
             lock.notify();
