@@ -17,7 +17,7 @@ import javax.annotation.concurrent.GuardedBy;
  *
  * <p>
  * Note: When calling the constructor of this class from a subclass,
- * passing a value smaller or equal zero as {@code maxValue} will cause the
+ * passing a value smaller or equal zero as {@code maximumLoad} will cause the
  * max value to be {@link java.lang.Long#MAX_VALUE}
  *
  * @author Marten Sigwart
@@ -29,13 +29,13 @@ public abstract class AbstractLoadSimulator implements LoadSimulator {
 
 
     @GuardedBy("this") private long load;
-    private final long maxValue;
+    private final long maximumLoad;
     private final Object lock = new Object();
 
 
-    public AbstractLoadSimulator(long maxValue) {
+    public AbstractLoadSimulator(long maximumLoad) {
         this.load = 0L;
-        this.maxValue = (maxValue <= 0) ? Long.MAX_VALUE : maxValue;
+        this.maximumLoad = (maximumLoad <= 0) ? Long.MAX_VALUE : maximumLoad;
     }
 
     /**
@@ -121,7 +121,7 @@ public abstract class AbstractLoadSimulator implements LoadSimulator {
          * checking if its waitCondition is fulfilled.
          */
         synchronized (this) {
-            this.load = (desiredLoad < 0) ? 0L : (desiredLoad > maxValue) ? maxValue : desiredLoad;
+            this.load = (desiredLoad < 0) ? 0L : (desiredLoad > maximumLoad) ? maximumLoad : desiredLoad;
         }
 
         log.trace("{}Set load to {}", idString(), prettyFormat(this.load));
@@ -140,6 +140,21 @@ public abstract class AbstractLoadSimulator implements LoadSimulator {
         setLoad(getLoad() - delta);
     }
 
+    @Override
+    public long getMaximumLoad() {
+        return maximumLoad;
+    }
+
+    @Override
+    public boolean isMaximumLoad() {
+        return getLoad() == maximumLoad;
+    }
+
+    @Override
+    public boolean isZeroLoad() {
+        return getLoad() == 0;
+    }
+
     /**
      * Returns an ID string, which is primarily used for logging purposes.
      * @return the ID string
@@ -147,5 +162,6 @@ public abstract class AbstractLoadSimulator implements LoadSimulator {
     protected String idString() {
         return "";
     }
+
 
 }

@@ -57,4 +57,9 @@ public interface LoadSimulator extends Runnable {
      */
     void decreaseLoad(long delta);
 
+    long getMaximumLoad();
+
+    boolean isMaximumLoad();
+
+    boolean isZeroLoad();
 }
