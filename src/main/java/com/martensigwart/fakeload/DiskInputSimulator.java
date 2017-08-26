@@ -60,7 +60,7 @@ public class DiskInputSimulator extends AbstractLoadSimulator {
 
     @Override
     public boolean waitConditionFulfilled() {
-        return (getLoad() == 0);
+        return isZeroLoad();
     }
 
     @Override
