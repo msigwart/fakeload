@@ -15,8 +15,25 @@ public enum MemoryUnit {
         this.multiplier = multiplier;
     }
 
+
     public long toBytes(long amount) {
         return amount* multiplier;
+    }
+
+    public double toKB(long amount) {
+        return convert(amount, KB);
+    }
+
+    public double toMB(long amount) {
+        return convert(amount, MB);
+    }
+
+    public double toGB(long amount) {
+        return convert(amount, GB);
+    }
+
+    private double convert(long amount, MemoryUnit toUnit) {
+        return (double)amount * ((double)this.multiplier/toUnit.multiplier);
     }
 
     public static String mbString(long bytes) {
