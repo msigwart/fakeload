@@ -30,12 +30,14 @@ public abstract class AbstractLoadSimulator implements LoadSimulator {
 
     @GuardedBy("this") private long load;
     private final long maximumLoad;
+    private final String name;
     private final Object lock = new Object();
 
 
-    public AbstractLoadSimulator(long maximumLoad) {
+    public AbstractLoadSimulator(long maximumLoad, String name) {
         this.load = 0L;
         this.maximumLoad = (maximumLoad <= 0) ? Long.MAX_VALUE : maximumLoad;
+        this.name = name;
     }
 
     /**
@@ -90,21 +92,21 @@ public abstract class AbstractLoadSimulator implements LoadSimulator {
             try {
                 synchronized (lock) {
                     while (waitConditionFulfilled()) {
-                        log.trace("{}Waiting for something to do...", idString());
+                        log.trace("{} - Waiting for something to do...", name);
                         lock.wait();
-                        log.trace("{}Woke up.", idString());
+                        log.trace("{} - Woke up.", name);
                     }
                 }
 
                 simulateLoad(getLoad());
 
             } catch (InterruptedException e) {
-                log.warn("{}Interrupted", idString());
+                log.debug("{} - Interrupted", name);
                 cleanUp();
                 running = false;
             }
         }
-        log.debug("{}Exited", idString());
+        log.debug("{} - Exited", name);
     }
 
     @Override
@@ -124,7 +126,7 @@ public abstract class AbstractLoadSimulator implements LoadSimulator {
             this.load = (desiredLoad < 0) ? 0L : (desiredLoad > maximumLoad) ? maximumLoad : desiredLoad;
         }
 
-        log.trace("{}Set load to {}", idString(), prettyFormat(this.load));
+        log.trace("{} - Set load to {}", name, prettyFormat(this.load));
         synchronized (lock) {
             lock.notify();
         }
@@ -155,13 +157,7 @@ public abstract class AbstractLoadSimulator implements LoadSimulator {
         return getLoad() == 0;
     }
 
-    /**
-     * Returns an ID string, which is primarily used for logging purposes.
-     * @return the ID string
-     *///TODO pass a name(id) string in constructor and delete method
-    protected String idString() {
-        return "";
-    }
+
 
 
 }

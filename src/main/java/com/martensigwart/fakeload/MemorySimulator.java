@@ -15,7 +15,7 @@ public final class MemorySimulator extends AbstractLoadSimulator {
     private final List<byte[]> allocatedMemory;
 
     public MemorySimulator() {
-        super(-1L);
+        super(-1L, "MemorySim");
         this.actualLoad = 0L;
         this.allocatedMemory = new ArrayList<>();
     }
@@ -30,7 +30,7 @@ public final class MemorySimulator extends AbstractLoadSimulator {
         } else {
             int modulo = Math.toIntExact(loadToAllocate % Integer.MAX_VALUE);
             int times = Math.toIntExact((loadToAllocate - modulo) / Integer.MAX_VALUE);
-            log.trace("modulo: {}, times: {}", modulo, times);
+            log.trace("Modulo: {}, times: {}", modulo, times);
 
             for (int i = 0; i < times; i++) {
                 log.trace("Round {} start", i);
@@ -38,7 +38,7 @@ public final class MemorySimulator extends AbstractLoadSimulator {
                 log.trace("Round {} end", i);
             }
 
-            log.debug("now adding {} bytes", modulo);
+            log.debug("Now adding {} bytes", modulo);
             allocatedMemory.add(new byte[modulo]);
         }
 
@@ -60,8 +60,4 @@ public final class MemorySimulator extends AbstractLoadSimulator {
         allocatedMemory.clear();
     }
 
-    @Override
-    protected String idString() {
-        return "Memory Sim - ";
-    }
 }

@@ -10,6 +10,11 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * A {@link LoadSimulator} that simulates disk input.
+ *
+ * This class simulates disk input by reading an amount of bytes from a file.
+ */
 public class DiskInputSimulator extends AbstractLoadSimulator {
 
     private static final Logger log = LoggerFactory.getLogger(DiskInputSimulator.class);
@@ -21,7 +26,7 @@ public class DiskInputSimulator extends AbstractLoadSimulator {
      * @throws FileNotFoundException if no file with the specified file path can be opened
      */
     DiskInputSimulator(String filePath) throws FileNotFoundException {
-        super(-1);
+        super(-1, "DiskInputSim");
         file = new RandomAccessFile(filePath, "r");
     }
 
@@ -35,7 +40,6 @@ public class DiskInputSimulator extends AbstractLoadSimulator {
                 long startRead = System.nanoTime();
                 file.read(bytes);
                 long endRead = System.nanoTime();
-
                 long duration = endRead - startRead;
 
                 log.trace("Read {} in {} ms",
@@ -54,7 +58,8 @@ public class DiskInputSimulator extends AbstractLoadSimulator {
             }
 
         } catch (IOException e) {
-            log.warn(e.getMessage());
+            log.error(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -65,7 +70,7 @@ public class DiskInputSimulator extends AbstractLoadSimulator {
 
     @Override
     protected String prettyFormat(long load) {
-        return MemoryUnit.mbString(load);
+        return MemoryUnit.mbString(load) + " per second";
     }
 
     @Override
@@ -77,8 +82,4 @@ public class DiskInputSimulator extends AbstractLoadSimulator {
         }
     }
 
-    @Override
-    protected String idString() {
-        return "DiskInputSim - ";
-    }
 }

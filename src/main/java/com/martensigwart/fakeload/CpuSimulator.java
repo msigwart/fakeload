@@ -13,11 +13,9 @@ public abstract class CpuSimulator extends AbstractLoadSimulator {
     private static final Logger log = LoggerFactory.getLogger(CpuSimulator.class);
     private static final AtomicInteger cpuIDs = new AtomicInteger(0);
 
-    private final int id;
 
     CpuSimulator() {
-        super(100L);
-        id = cpuIDs.getAndIncrement();
+        super(100L, "CpuSim " + cpuIDs.getAndIncrement());
     }
 
     /**
@@ -53,8 +51,4 @@ public abstract class CpuSimulator extends AbstractLoadSimulator {
         // Do nothing
     }
 
-    @Override
-    protected String idString() {
-        return String.format("CPU Sim %d - ", id);
-    }
 }
