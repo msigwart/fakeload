@@ -35,16 +35,18 @@ public final class LoadController implements Runnable {
     private final List<CpuSimulator> cpuSimulators;
     private final MemorySimulator memorySimulator;
     private final DiskInputSimulator diskInputSimulator;
+    private final DiskOutputSimulator diskOutputSimulator;
     private final double stepSize;
     private final Object lock;
 
     private long lastCpu = 0L;
 
-    LoadController(SystemLoad systemLoad, List<CpuSimulator> cpuSimulators, MemorySimulator memorySimulator, DiskInputSimulator diskInputSimulator) {
+    LoadController(SystemLoad systemLoad, List<CpuSimulator> cpuSimulators, MemorySimulator memorySimulator, DiskInputSimulator diskInputSimulator, DiskOutputSimulator diskOutputSimulator) {
         this.systemLoad = systemLoad;
         this.cpuSimulators = Collections.unmodifiableList(cpuSimulators);
         this.memorySimulator = memorySimulator;
         this.diskInputSimulator = diskInputSimulator;
+        this.diskOutputSimulator = diskOutputSimulator;
         this.stepSize = 1.0 / Runtime.getRuntime().availableProcessors();
         this.lock = new Object();
     }
@@ -91,7 +93,7 @@ public final class LoadController implements Runnable {
 
         memorySimulator.setLoad(systemLoad.getMemory());
         diskInputSimulator.setLoad(systemLoad.getDiskInput());
-        //TODO propagate changes to simulators
+        diskOutputSimulator.setLoad(systemLoad.getDiskOutput());
     }
 
     public void decreaseSystemLoadBy(FakeLoad load) {
@@ -101,7 +103,8 @@ public final class LoadController implements Runnable {
             cpuSim.setLoad(systemLoad.getCpu());
         }
         memorySimulator.setLoad(systemLoad.getMemory());
-        // TODO propagate changes to simulators
+        diskInputSimulator.setLoad(systemLoad.getDiskInput());
+        diskOutputSimulator.setLoad(systemLoad.getDiskOutput());
     }
 
 
@@ -176,5 +179,9 @@ public final class LoadController implements Runnable {
 
     public DiskInputSimulator getDiskInputSimulator() {
         return diskInputSimulator;
+    }
+
+    public DiskOutputSimulator getDiskOutputSimulator() {
+        return diskOutputSimulator;
     }
 }

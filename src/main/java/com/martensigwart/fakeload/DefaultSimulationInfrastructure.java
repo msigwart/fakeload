@@ -86,6 +86,7 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
             startCpuSimulators();
             startMemorySimulator();
             startDiskInputSimulator();
+            startDiskOutputSimulator();
 
             started = true;
 
@@ -101,7 +102,6 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
         log.debug("Started Simulation Control");
     }
 
-
     private void startCpuSimulators() {
         List<CpuSimulator> cpuSimulators = controller.getCpuSimulators();
 
@@ -115,6 +115,7 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
         }
         log.debug("Started {} CPU Simulators", cpuSimulators.size());
     }
+
 
     private void startMemorySimulator() {
 
@@ -150,6 +151,21 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
             return null;
         });
         log.debug("Started DiskInput Simulator");
+    }
+
+    private void startDiskOutputSimulator() {
+        DiskOutputSimulator diskOutputSimulator = controller.getDiskOutputSimulator();
+        if (diskOutputSimulator == null) {
+            return;
+        }
+
+        CompletableFuture<Void> future = CompletableFuture.runAsync(diskOutputSimulator, executorService);
+        future.exceptionally(e -> {
+            log.error("Disk Output Simulator died: {}", e.getMessage());
+            e.printStackTrace();
+            return null;
+        });
+        log.debug("Started Disk Output Simulator");
     }
 
     /**

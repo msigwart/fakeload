@@ -71,11 +71,20 @@ public interface FakeLoad extends Iterable<FakeLoad> {
     /**
      * Returns a {@code FakeLoad} instance with the specified disk input load as bytes/seconds.
      *
-     * @param load the amount of disk inpput to be simulated
-     * @param unit the memory unit for the specified amount
+     * @param load the amount of disk input to be simulated
+     * @param unit the memory unit for the specified amount per seconds
      * @return returns the FakeLoad object containing the provided parameters.
      */
     FakeLoad withDiskInput(long load, MemoryUnit unit);
+
+    /**
+     * Returns a {@code FakeLoad} instance with the specified disk output load as bytes/seconds.
+     *
+     * @param load the amount of disk output to be simulated
+     * @param unit the memory unit for the specified amount per seconds
+     * @return returns the FakeLoad object containing the provided parameters.
+     */
+    FakeLoad withDiskOutput(long load, MemoryUnit unit);
 
     FakeLoad addLoad(FakeLoad load);
 
@@ -90,6 +99,8 @@ public interface FakeLoad extends Iterable<FakeLoad> {
     long getMemoryLoad();
 
     long getDiskInputLoad();
+
+    long getDiskOutputLoad();
 
     long getDuration();
 

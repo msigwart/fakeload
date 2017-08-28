@@ -38,10 +38,11 @@ public final class SimpleFakeLoad extends AbstractFakeLoad {
     private final long cpuLoad;
     private final long memoryLoad;
     private final long diskInputLoad;
+    private final long diskOutputLoad;
 
 
     SimpleFakeLoad(long duration, TimeUnit unit, int repetitions,
-                           long cpuLoad, long memoryLoad, long diskInputLoad) {
+                           long cpuLoad, long memoryLoad, long diskInputLoad, long diskOutputLoad) {
 
         super(repetitions);
 
@@ -50,50 +51,59 @@ public final class SimpleFakeLoad extends AbstractFakeLoad {
         checkArgument(cpuLoad <= 100, "CPU load must be less than 100 percent but was %s", cpuLoad);
         checkArgument(memoryLoad >= 0, "memory load must be nonnegative but was %s", memoryLoad);
         checkArgument(diskInputLoad >= 0, "Disk Input load must be nonnegative but was %s", diskInputLoad);
+        checkArgument(diskOutputLoad >= 0, "Disk Output load must be nonnegative but was %s", diskOutputLoad);
+
 
         this.duration = duration;
         this.unit = checkNotNull(unit);
         this.cpuLoad = cpuLoad;
         this.memoryLoad = memoryLoad;
         this.diskInputLoad = diskInputLoad;
+        this.diskOutputLoad = diskOutputLoad;
 
     }
 
     SimpleFakeLoad() {
         this(0L, TimeUnit.MILLISECONDS, 0,
-                0, 0L, 0L);
+                0, 0L, 0L, 0L);
     }
 
     SimpleFakeLoad(long duration, TimeUnit unit) {
         this(duration, unit, 0,
-                0, 0L, 0L);
+                0, 0L, 0L, 0L);
     }
 
     @Override
     public FakeLoad lasting(long duration, TimeUnit unit) {
-        return new SimpleFakeLoad(duration, unit, getRepetitions(), cpuLoad, memoryLoad, diskInputLoad);
+        return new SimpleFakeLoad(duration, unit, getRepetitions(), cpuLoad, memoryLoad, diskInputLoad, diskOutputLoad);
     }
 
     @Override
     public FakeLoad repeat(int repetitions) {
-        return new SimpleFakeLoad(duration, unit, repetitions, cpuLoad, memoryLoad, diskInputLoad);
+        return new SimpleFakeLoad(duration, unit, repetitions, cpuLoad, memoryLoad, diskInputLoad, diskOutputLoad);
     }
 
     @Override
     public FakeLoad withCpu(long cpuLoad) {
-        return new SimpleFakeLoad(duration, unit, getRepetitions(), cpuLoad, memoryLoad, diskInputLoad);
+        return new SimpleFakeLoad(duration, unit, getRepetitions(), cpuLoad, memoryLoad, diskInputLoad, diskOutputLoad);
     }
 
     @Override
     public FakeLoad withMemory(long amount, MemoryUnit unit) {
         long memoryLoad = unit.toBytes(amount);
-        return new SimpleFakeLoad(duration, this.unit, getRepetitions(), cpuLoad, memoryLoad, diskInputLoad);
+        return new SimpleFakeLoad(duration, this.unit, getRepetitions(), cpuLoad, memoryLoad, diskInputLoad, diskOutputLoad);
     }
 
     @Override
     public FakeLoad withDiskInput(long load, MemoryUnit unit) {
         long diskInputLoad = unit.toBytes(load);
-        return new SimpleFakeLoad(duration, this.unit, getRepetitions(), cpuLoad, memoryLoad, diskInputLoad);
+        return new SimpleFakeLoad(duration, this.unit, getRepetitions(), cpuLoad, memoryLoad, diskInputLoad, diskOutputLoad);
+    }
+
+    @Override
+    public FakeLoad withDiskOutput(long load, MemoryUnit unit) {
+        long diskOutputLoad = unit.toBytes(load);
+        return new SimpleFakeLoad(duration, this.unit, getRepetitions(), cpuLoad, memoryLoad, diskInputLoad, diskOutputLoad);
     }
 
     @Override
@@ -132,6 +142,11 @@ public final class SimpleFakeLoad extends AbstractFakeLoad {
     @Override
     public long getDiskInputLoad() {
         return diskInputLoad;
+    }
+
+    @Override
+    public long getDiskOutputLoad() {
+        return diskOutputLoad;
     }
 
     @Override
@@ -201,6 +216,7 @@ public final class SimpleFakeLoad extends AbstractFakeLoad {
                 ", cpuLoad=" + cpuLoad +
                 ", memoryLoad=" + memoryLoad +
                 ", diskInputLoad=" + diskInputLoad +
+                ", diskOutputLoad=" + diskOutputLoad +
                 ", repetitions=" + getRepetitions() +
                 '}';
     }
