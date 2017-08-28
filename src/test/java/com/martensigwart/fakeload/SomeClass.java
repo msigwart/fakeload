@@ -5,9 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by martensigwart on 30.06.17.
- */
 public class SomeClass {
 
     private static final Logger log = LoggerFactory.getLogger(SomeClass.class);
@@ -22,7 +19,8 @@ public class SomeClass {
         FakeLoad fakeLoad = FakeLoads.createLoad().lasting(60, TimeUnit.SECONDS)
                 .withCpu(50)
                 .withMemory(200, MemoryUnit.MB)
-                .withDiskInput(1, MemoryUnit.GB);
+                .withDiskInput(100, MemoryUnit.MB)
+                .withDiskOutput(100, MemoryUnit.MB);
 
         executor.execute(fakeLoad);
         // some code
