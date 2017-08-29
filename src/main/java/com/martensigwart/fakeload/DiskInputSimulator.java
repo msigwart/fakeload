@@ -4,57 +4,52 @@ package com.martensigwart.fakeload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.EOFException;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.concurrent.TimeUnit;
 
 /**
- * A {@link LoadSimulator} that simulates disk input.
+ * Skeleton implementation of a {@link LoadSimulator} that simulates disk input.
  *
- * This class simulates disk input by reading an amount of bytes from a file.
+ * Disk input is simulated by reading an amount of bytes from a file.
  */
-public class DiskInputSimulator extends AbstractLoadSimulator {
+public abstract class DiskInputSimulator extends AbstractLoadSimulator {
 
     private static final Logger log = LoggerFactory.getLogger(DiskInputSimulator.class);
-    private RandomAccessFile file;
+
+
+    protected DiskInputSimulator() {
+        this("DiskInputSim");
+    }
+
+    protected DiskInputSimulator(String name) {
+        super(-1, name);
+    }
 
     /**
-     *
-     * @param filePath path to the file for simulating disk input (should be bigger than amount of available RAM)
-     * @throws FileNotFoundException if no file with the specified file path can be opened
+     * Reads {@code bytes.length} bytes from file.
+     * @param bytes bytes to read
+     * @throws IOException if an IOException occurs while reading
      */
-    DiskInputSimulator(String filePath) throws FileNotFoundException {
-        super(-1, "DiskInputSim");
-        file = new RandomAccessFile(filePath, "r");
-    }
+    protected abstract void read(byte[] bytes) throws IOException;
 
     @Override
     public void simulateLoad(long load) throws InterruptedException {
         byte bytes[] = new byte[(load > Integer.MAX_VALUE) ? Integer.MAX_VALUE : (int)load];
 
         try {
-            try {
+            long startRead = System.nanoTime();
+            read(bytes);
+            long endRead = System.nanoTime();
+            long duration = endRead - startRead;
 
-                long startRead = System.nanoTime();
-                file.read(bytes);
-                long endRead = System.nanoTime();
-                long duration = endRead - startRead;
+            log.trace("Read {} in {} ms",
+                    MemoryUnit.mbString(bytes.length), TimeUnit.NANOSECONDS.toMillis(duration));
 
-                log.trace("Read {} in {} ms",
-                        MemoryUnit.mbString(bytes.length), TimeUnit.NANOSECONDS.toMillis(duration));
+            long toSleep = TimeUnit.SECONDS.toMillis(1) - TimeUnit.NANOSECONDS.toMillis(duration);
 
-                long toSleep = TimeUnit.SECONDS.toMillis(1) - TimeUnit.NANOSECONDS.toMillis(duration);
-
-                if (toSleep > 0) {
-                    log.trace("Sleeping {} ms", toSleep);
-                    Thread.sleep(toSleep);
-                }
-
-            } catch (EOFException e) {
-                log.debug("End of file reached: Resetting file pointer");
-                file.seek(0);
+            if (toSleep > 0) {
+                log.trace("Sleeping {} ms", toSleep);
+                Thread.sleep(toSleep);
             }
 
         } catch (IOException e) {
@@ -73,13 +68,6 @@ public class DiskInputSimulator extends AbstractLoadSimulator {
         return MemoryUnit.mbString(load) + " per second";
     }
 
-    @Override
-    protected void cleanUp() {
-        try {
-            file.close();
-        } catch (IOException e) {
-            log.error("Failed to close file: {}", e.getMessage());
-        }
-    }
+
 
 }
