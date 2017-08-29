@@ -178,7 +178,7 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <mainClass>com.martensigwart.fakeload.TestFrame</mainClass>
+                            <mainClass>com.example.TestFrame</mainClass>
                             <classpathScope>test</classpathScope>
                             <cleanupDaemonThreads>false</cleanupDaemonThreads>
                         </configuration>
