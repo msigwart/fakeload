@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * @since 1.8
  * @author Marten Sigwart
  */
-public class FakeLoadBuilder {
+public final class FakeLoadBuilder {
 
     // simple load parameters
     private long duration       = 0L;
@@ -35,10 +35,6 @@ public class FakeLoadBuilder {
     public FakeLoadBuilder(long duration, TimeUnit unit) {
         this.duration = duration;
         this.unit = unit;
-    }
-
-    public FakeLoadBuilder(String json) {
-        //TODO parse json
     }
 
     public FakeLoadBuilder() {

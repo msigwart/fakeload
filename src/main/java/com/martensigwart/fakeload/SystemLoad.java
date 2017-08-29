@@ -5,9 +5,14 @@ import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Class representing system load.
+ *
+ * This class keeps variables for representing different system load parameters like CPU, memory, disk I/O, etc.
+ * The class is thread-safe and used within the {@link DefaultSimulationInfrastructure} to aggregate {@link FakeLoad}
+ * objects that were submitted concurrently.
+ *
  */
 @ThreadSafe
-final class SystemLoad {
+public final class SystemLoad {
 
 
     @GuardedBy("this") private long cpu;
@@ -16,29 +21,30 @@ final class SystemLoad {
     @GuardedBy("this") private long diskOutput;
 
 
-    SystemLoad() {
+    public SystemLoad() {
         cpu     = 0L;
         memory  = 0L;
         diskInput = 0L;
+        diskOutput = 0L;
     }
 
-    synchronized long getCpu() {
+    public synchronized long getCpu() {
         return cpu;
     }
 
-    synchronized long getMemory() {
+    public synchronized long getMemory() {
         return memory;
     }
 
-    synchronized long getDiskInput() {
+    public synchronized long getDiskInput() {
         return diskInput;
     }
 
-    synchronized long getDiskOutput() {
+    public synchronized long getDiskOutput() {
         return diskOutput;
     }
 
-    synchronized void increaseBy(FakeLoad load) throws MaximumLoadExceededException {
+    public synchronized void increaseBy(FakeLoad load) throws MaximumLoadExceededException {
         checkMaximumLoadNotExceeded(load);
 
         this.cpu    += load.getCpuLoad();
@@ -49,7 +55,7 @@ final class SystemLoad {
     }
 
 
-    synchronized void decreaseBy(FakeLoad load) {
+    public synchronized void decreaseBy(FakeLoad load) {
         checkNotBelowMinimumLoad(load);
 
         this.cpu -= load.getCpuLoad();
@@ -61,7 +67,7 @@ final class SystemLoad {
 
     private synchronized void checkMaximumLoadNotExceeded(FakeLoad load) throws MaximumLoadExceededException {
         if (this.cpu + load.getCpuLoad() > 100)
-            throw new MaximumLoadExceededException(load.getCpuLoad(), 100, SimulationType.CPU);
+            throw new MaximumLoadExceededException(String.format("Increase of %d would cause a CPU load of over 100%%", load.getCpuLoad()));
 
         // check other load limits
     }

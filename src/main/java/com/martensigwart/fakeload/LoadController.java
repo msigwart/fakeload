@@ -41,7 +41,7 @@ public final class LoadController implements Runnable {
 
     private long lastCpu = 0L;
 
-    LoadController(SystemLoad systemLoad, List<CpuSimulator> cpuSimulators, MemorySimulator memorySimulator, DiskInputSimulator diskInputSimulator, DiskOutputSimulator diskOutputSimulator) {
+    public LoadController(SystemLoad systemLoad, List<CpuSimulator> cpuSimulators, MemorySimulator memorySimulator, DiskInputSimulator diskInputSimulator, DiskOutputSimulator diskOutputSimulator) {
         this.systemLoad = systemLoad;
         this.cpuSimulators = Collections.unmodifiableList(cpuSimulators);
         this.memorySimulator = memorySimulator;
