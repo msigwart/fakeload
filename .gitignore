@@ -23,6 +23,7 @@
 *.iws
 *classes
 *.idea
+release.properties
 
 #=================
 #netbeans-project
