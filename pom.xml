@@ -21,13 +21,13 @@
         <developer>
             <name>Marten Sigwart</name>
             <email>marten@okamaja.de</email>
-            <organizationUrl>http://github.com/msigwart</organizationUrl>
+            <url>http://github.com/msigwart</url>
         </developer>
     </developers>
     <scm>
-        <connection>scm:git:git://github.com/msigwart/fakeload.git</connection>
-        <developerConnection>scm:git:ssh://github.com:msigwart/fakeload.git</developerConnection>
         <url>https://github.com/msigwart/fakeload/tree/master</url>
+        <connection>scm:git:git://github.com/msigwart/fakeload.git</connection>
+        <developerConnection>scm:git:git@github.com:msigwart/fakeload.git</developerConnection>
     </scm>
     <distributionManagement>
         <snapshotRepository>
