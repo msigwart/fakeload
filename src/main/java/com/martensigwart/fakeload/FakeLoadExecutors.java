@@ -36,11 +36,11 @@ public final class FakeLoadExecutors {
 
                 // Create DiskInput Simulator
                 DiskInputSimulator diskInputSimulator;
-                diskInputSimulator = new DiskInputSimulator(DEFAULT_DISK_INPUT_PATH);
+                diskInputSimulator = new RandomAccessDiskInputSimulator(DEFAULT_DISK_INPUT_PATH);
 
                 // Create DiskOutput Simulator
                 DiskOutputSimulator diskOutputSimulator;
-                diskOutputSimulator = new DiskOutputSimulator(DEFAULT_DISK_OUTPUT_PATH);
+                diskOutputSimulator = new RandomAccessDiskOutputSimulator(DEFAULT_DISK_OUTPUT_PATH);
 
                 // Create Memory Simulator
                 MemorySimulator memorySimulator = new MemorySimulator();
