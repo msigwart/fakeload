@@ -35,6 +35,14 @@ Sometimes [NDA](https://en.wikipedia.org/wiki/Non-disclosure_agreement)s might p
 
 ## Getting Started
 ### Installation
+FakeLoad is available on Maven Central under:
+```
+<dependency>
+    <groupId>com.martensigwart</groupId>
+    <artifactId>fakeload</artifactId>
+    <version>0.1.0</version>
+</dependency>
+```
 
 ### Usage
 You can also combine FakeLoads to create more complex "load patterns":
