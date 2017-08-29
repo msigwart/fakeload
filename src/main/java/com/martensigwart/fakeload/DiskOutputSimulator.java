@@ -1,6 +1,8 @@
 package com.martensigwart.fakeload;
 
 
+import com.google.common.io.FileWriteMode;
+import com.google.common.io.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,7 +81,7 @@ public final class DiskOutputSimulator extends AbstractLoadSimulator {
             long toSleep = TimeUnit.SECONDS.toMillis(1) - TimeUnit.NANOSECONDS.toMillis(duration);
 
             if (toSleep > 0) {
-                System.out.println("Sleeping " + toSleep + "ms");
+                log.trace("Sleeping " + toSleep + "ms");
                 Thread.sleep(toSleep);
             }
 
