@@ -22,15 +22,18 @@ import java.util.concurrent.TimeUnit;
  *      .lasting(10, TimeUnit.SECONDS)
  *      .withCpu(30)
  *      .withMemory(300, MemoryUnit.MB)
- *      .withDiskInput(10, MemoryUnit.KB);
+ *      .withDiskInput(10, MemoryUnit.KB)
+ *      .withDiskOutput(20, MemoryUnit.MB);
  * }</pre>
  * Depending on whether the underlying {@code FakeLoad} implementation is mutable or immutable
  * these methods can either merely set specific load parameters or return a completely new
  * {@code FakeLoad} instance containing the new parameters, respectively.
  *
  *
- * @author Marten Sigwart
  * @since 1.8
+ * @see FakeLoads
+ * @see FakeLoadExecutor
+ * @author Marten Sigwart
  */
 public interface FakeLoad extends Iterable<FakeLoad> {
 
@@ -94,13 +97,13 @@ public interface FakeLoad extends Iterable<FakeLoad> {
 
     Collection<FakeLoad> getInnerLoads();
 
-    long getCpuLoad();
+    long getCpu();
 
-    long getMemoryLoad();
+    long getMemory();
 
-    long getDiskInputLoad();
+    long getDiskInput();
 
-    long getDiskOutputLoad();
+    long getDiskOutput();
 
     long getDuration();
 

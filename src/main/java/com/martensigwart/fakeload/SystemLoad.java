@@ -47,10 +47,10 @@ public final class SystemLoad {
     public synchronized void increaseBy(FakeLoad load) throws MaximumLoadExceededException {
         checkMaximumLoadNotExceeded(load);
 
-        this.cpu    += load.getCpuLoad();
-        this.memory += load.getMemoryLoad();
-        this.diskInput += load.getDiskInputLoad();
-        this.diskOutput += load.getDiskOutputLoad();
+        this.cpu    += load.getCpu();
+        this.memory += load.getMemory();
+        this.diskInput += load.getDiskInput();
+        this.diskOutput += load.getDiskOutput();
 
     }
 
@@ -58,40 +58,40 @@ public final class SystemLoad {
     public synchronized void decreaseBy(FakeLoad load) {
         checkNotBelowMinimumLoad(load);
 
-        this.cpu -= load.getCpuLoad();
-        this.memory -= load.getMemoryLoad();
-        this.diskInput -= load.getDiskInputLoad();
-        this.diskOutput -= load.getDiskOutputLoad();
+        this.cpu -= load.getCpu();
+        this.memory -= load.getMemory();
+        this.diskInput -= load.getDiskInput();
+        this.diskOutput -= load.getDiskOutput();
 
     }
 
     private synchronized void checkMaximumLoadNotExceeded(FakeLoad load) throws MaximumLoadExceededException {
-        if (this.cpu + load.getCpuLoad() > 100)
-            throw new MaximumLoadExceededException(String.format("Increase of %d would cause a CPU load of over 100%%", load.getCpuLoad()));
+        if (this.cpu + load.getCpu() > 100)
+            throw new MaximumLoadExceededException(String.format("Increase of %d would cause a CPU load of over 100%%", load.getCpu()));
 
         // check other load limits
     }
 
 
     private synchronized void checkNotBelowMinimumLoad(FakeLoad load) {
-        if (this.cpu - load.getCpuLoad() < 0) {
+        if (this.cpu - load.getCpu() < 0) {
             throw new RuntimeException(String.format("Decrease of %d would cause a negative CPU load",
-                    load.getCpuLoad()));
+                    load.getCpu()));
         }
 
-        if (this.memory - load.getMemoryLoad() < 0) {
+        if (this.memory - load.getMemory() < 0) {
             throw new RuntimeException(String.format("Decrease of %d would cause a negative memory load",
-                    load.getMemoryLoad()));
+                    load.getMemory()));
         }
 
-        if (this.diskInput - load.getDiskInputLoad() < 0) {
+        if (this.diskInput - load.getDiskInput() < 0) {
             throw new RuntimeException(String.format("Decrease of %d would cause a negative disk input load",
-                    load.getDiskInputLoad()));
+                    load.getDiskInput()));
         }
 
-        if (this.diskOutput - load.getDiskOutputLoad() < 0) {
+        if (this.diskOutput - load.getDiskOutput() < 0) {
             throw new RuntimeException(String.format("Decrease of %d would cause a negative disk output load",
-                    load.getDiskOutputLoad()));
+                    load.getDiskOutput()));
         }
 
     }

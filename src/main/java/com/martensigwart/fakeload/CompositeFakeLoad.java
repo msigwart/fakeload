@@ -24,7 +24,7 @@ import static com.google.common.base.Preconditions.*;
  * @since 1.8
  * @author Marten Sigwart
  */
-public final class CompositeFakeLoad extends AbstractFakeLoad {
+final class CompositeFakeLoad extends AbstractFakeLoad {
 
     /**
      * This object's own load instructions
@@ -139,23 +139,23 @@ public final class CompositeFakeLoad extends AbstractFakeLoad {
     }
 
     @Override
-    public long getCpuLoad() {
-        return ownLoad.getCpuLoad();
+    public long getCpu() {
+        return ownLoad.getCpu();
     }
 
     @Override
-    public long getMemoryLoad() {
-        return ownLoad.getMemoryLoad();
+    public long getMemory() {
+        return ownLoad.getMemory();
     }
 
     @Override
-    public long getDiskInputLoad() {
-        return ownLoad.getDiskInputLoad();
+    public long getDiskInput() {
+        return ownLoad.getDiskInput();
     }
 
     @Override
-    public long getDiskOutputLoad() {
-        return ownLoad.getDiskOutputLoad();
+    public long getDiskOutput() {
+        return ownLoad.getDiskOutput();
     }
 
     @Override

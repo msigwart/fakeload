@@ -31,35 +31,35 @@ import static com.google.common.base.Preconditions.*;
  * @author Marten Sigwart
  */
 @Immutable
-public final class SimpleFakeLoad extends AbstractFakeLoad {
+final class SimpleFakeLoad extends AbstractFakeLoad {
 
     private final long duration;
     private final TimeUnit unit;
-    private final long cpuLoad;
-    private final long memoryLoad;
-    private final long diskInputLoad;
-    private final long diskOutputLoad;
+    private final long cpu;
+    private final long memory;
+    private final long diskInput;
+    private final long diskOutput;
 
 
     SimpleFakeLoad(long duration, TimeUnit unit, int repetitions,
-                           long cpuLoad, long memoryLoad, long diskInputLoad, long diskOutputLoad) {
+                   long cpu, long memory, long diskInput, long diskOutput) {
 
         super(repetitions);
 
         checkArgument(duration >= 0, "Duration must be nonnegative but was %s", duration);
-        checkArgument(cpuLoad >= 0, "CPU load must be nonnegative but was %s", cpuLoad);
-        checkArgument(cpuLoad <= 100, "CPU load must be less than 100 percent but was %s", cpuLoad);
-        checkArgument(memoryLoad >= 0, "memory load must be nonnegative but was %s", memoryLoad);
-        checkArgument(diskInputLoad >= 0, "Disk Input load must be nonnegative but was %s", diskInputLoad);
-        checkArgument(diskOutputLoad >= 0, "Disk Output load must be nonnegative but was %s", diskOutputLoad);
+        checkArgument(cpu >= 0, "CPU load must be nonnegative but was %s", cpu);
+        checkArgument(cpu <= 100, "CPU load must be less than 100 percent but was %s", cpu);
+        checkArgument(memory >= 0, "memory load must be nonnegative but was %s", memory);
+        checkArgument(diskInput >= 0, "Disk Input load must be nonnegative but was %s", diskInput);
+        checkArgument(diskOutput >= 0, "Disk Output load must be nonnegative but was %s", diskOutput);
 
 
         this.duration = duration;
         this.unit = checkNotNull(unit);
-        this.cpuLoad = cpuLoad;
-        this.memoryLoad = memoryLoad;
-        this.diskInputLoad = diskInputLoad;
-        this.diskOutputLoad = diskOutputLoad;
+        this.cpu = cpu;
+        this.memory = memory;
+        this.diskInput = diskInput;
+        this.diskOutput = diskOutput;
 
     }
 
@@ -75,35 +75,35 @@ public final class SimpleFakeLoad extends AbstractFakeLoad {
 
     @Override
     public FakeLoad lasting(long duration, TimeUnit unit) {
-        return new SimpleFakeLoad(duration, unit, getRepetitions(), cpuLoad, memoryLoad, diskInputLoad, diskOutputLoad);
+        return new SimpleFakeLoad(duration, unit, getRepetitions(), cpu, memory, diskInput, diskOutput);
     }
 
     @Override
     public FakeLoad repeat(int repetitions) {
-        return new SimpleFakeLoad(duration, unit, repetitions, cpuLoad, memoryLoad, diskInputLoad, diskOutputLoad);
+        return new SimpleFakeLoad(duration, unit, repetitions, cpu, memory, diskInput, diskOutput);
     }
 
     @Override
     public FakeLoad withCpu(long cpuLoad) {
-        return new SimpleFakeLoad(duration, unit, getRepetitions(), cpuLoad, memoryLoad, diskInputLoad, diskOutputLoad);
+        return new SimpleFakeLoad(duration, unit, getRepetitions(), cpuLoad, memory, diskInput, diskOutput);
     }
 
     @Override
     public FakeLoad withMemory(long amount, MemoryUnit unit) {
         long memoryLoad = unit.toBytes(amount);
-        return new SimpleFakeLoad(duration, this.unit, getRepetitions(), cpuLoad, memoryLoad, diskInputLoad, diskOutputLoad);
+        return new SimpleFakeLoad(duration, this.unit, getRepetitions(), cpu, memoryLoad, diskInput, diskOutput);
     }
 
     @Override
     public FakeLoad withDiskInput(long load, MemoryUnit unit) {
         long diskInputLoad = unit.toBytes(load);
-        return new SimpleFakeLoad(duration, this.unit, getRepetitions(), cpuLoad, memoryLoad, diskInputLoad, diskOutputLoad);
+        return new SimpleFakeLoad(duration, this.unit, getRepetitions(), cpu, memory, diskInputLoad, diskOutput);
     }
 
     @Override
     public FakeLoad withDiskOutput(long load, MemoryUnit unit) {
         long diskOutputLoad = unit.toBytes(load);
-        return new SimpleFakeLoad(duration, this.unit, getRepetitions(), cpuLoad, memoryLoad, diskInputLoad, diskOutputLoad);
+        return new SimpleFakeLoad(duration, this.unit, getRepetitions(), cpu, memory, diskInput, diskOutputLoad);
     }
 
     @Override
@@ -130,23 +130,23 @@ public final class SimpleFakeLoad extends AbstractFakeLoad {
     }
 
     @Override
-    public long getCpuLoad() {
-        return cpuLoad;
+    public long getCpu() {
+        return cpu;
     }
 
     @Override
-    public long getMemoryLoad() {
-        return memoryLoad;
+    public long getMemory() {
+        return memory;
     }
 
     @Override
-    public long getDiskInputLoad() {
-        return diskInputLoad;
+    public long getDiskInput() {
+        return diskInput;
     }
 
     @Override
-    public long getDiskOutputLoad() {
-        return diskOutputLoad;
+    public long getDiskOutput() {
+        return diskOutput;
     }
 
     @Override
@@ -196,16 +196,16 @@ public final class SimpleFakeLoad extends AbstractFakeLoad {
         SimpleFakeLoad fakeLoad = (SimpleFakeLoad) o;
 
         if (duration != fakeLoad.duration) return false;
-        if (cpuLoad != fakeLoad.cpuLoad) return false;
-        if (memoryLoad != fakeLoad.memoryLoad) return false;
-        if (diskInputLoad != fakeLoad.diskInputLoad) return false;
+        if (cpu != fakeLoad.cpu) return false;
+        if (memory != fakeLoad.memory) return false;
+        if (diskInput != fakeLoad.diskInput) return false;
         if (getRepetitions() != fakeLoad.getRepetitions()) return false;
         return unit == fakeLoad.unit;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(duration, getRepetitions(), cpuLoad, memoryLoad, diskInputLoad, unit);
+        return Objects.hash(duration, getRepetitions(), cpu, memory, diskInput, unit);
     }
 
     @Override
@@ -213,10 +213,10 @@ public final class SimpleFakeLoad extends AbstractFakeLoad {
         return "SimpleFakeLoad{" +
                 "duration=" + duration +
                 ", unit=" + unit +
-                ", cpuLoad=" + cpuLoad +
-                ", memoryLoad=" + memoryLoad +
-                ", diskInputLoad=" + diskInputLoad +
-                ", diskOutputLoad=" + diskOutputLoad +
+                ", cpu=" + cpu +
+                ", memory=" + memory +
+                ", diskInput=" + diskInput +
+                ", diskOutput=" + diskOutput +
                 ", repetitions=" + getRepetitions() +
                 '}';
     }
