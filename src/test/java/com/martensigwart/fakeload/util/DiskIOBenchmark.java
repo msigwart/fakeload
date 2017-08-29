@@ -28,31 +28,38 @@ public class DiskIOBenchmark {
 //        read(readPath, seconds);
 
 
-        long amount = 200;
-        MemoryUnit unit = MemoryUnit.MB;
-        int iterations = 20;
+        long start = System.nanoTime();
+        long bytes = MemoryUnit.GB.toBytes(1);
+        long mod = bytes % (4 * MemoryUnit.MB.toBytes(1));
+        long end = System.nanoTime();
+        System.out.printf("mod: %d, time: %d\n", mod, end-start);
 
-        String writePath = "/tmp/output.tmp";
-        long[][] data = new long[iterations][2];
-
-        for (int i=0; i<iterations; i++) {
-            data[i][0] = (long) (unit.toBytes(amount)/Math.pow(2, i));
-            data[i][1] = write(writePath, amount, unit, 10, i);
-        }
-
-        try (BufferedWriter br = new BufferedWriter((new FileWriter("disk_output_benchmark_200mb.csv")))) {
-
-            for (int i=0; i<iterations; i++) {
-                StringBuilder sb = new StringBuilder();
-                sb.append(data[i][0]);
-                sb.append(";");
-                sb.append(data[i][1]);
-                br.write(sb.toString());
-                br.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Disk Output test
+//        long amount = 200;
+//        MemoryUnit unit = MemoryUnit.MB;
+//        int iterations = 20;
+//
+//        String writePath = "/tmp/output.tmp";
+//        long[][] data = new long[iterations][2];
+//
+//        for (int i=0; i<iterations; i++) {
+//            data[i][0] = (long) (unit.toBytes(amount)/Math.pow(2, i));
+//            data[i][1] = write(writePath, amount, unit, 10, i);
+//        }
+//
+//        try (BufferedWriter br = new BufferedWriter((new FileWriter("disk_output_benchmark_200mb.csv")))) {
+//
+//            for (int i=0; i<iterations; i++) {
+//                StringBuilder sb = new StringBuilder();
+//                sb.append(data[i][0]);
+//                sb.append(";");
+//                sb.append(data[i][1]);
+//                br.write(sb.toString());
+//                br.newLine();
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
 
@@ -97,7 +104,7 @@ public class DiskIOBenchmark {
         int bytesToWrite = (numberOfBytes > Integer.MAX_VALUE) ? Integer.MAX_VALUE : (int) numberOfBytes;
 
         try (RandomAccessFile file = new RandomAccessFile(filePath, "rws")) {
-
+//        try (BufferedWriter file = new BufferedWriter(new FileWriter(filePath))) {
 
             // Seek position
             long seekStart = System.nanoTime();
