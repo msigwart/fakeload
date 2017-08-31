@@ -34,7 +34,6 @@ FakeLoad can be used to mimick runtime characteristics like CPU usage, etc. with
 Sometimes [NDA](https://en.wikipedia.org/wiki/Non-disclosure_agreement)s might prohibit publication or scientific evaluation involving certain algorithms or data. FakeLoad can be used to "simulate" data or an algorithm's behavior, bypassing the NDA and thus allowing publication.
 
 ## Getting Started
-### Installation
 You can add a dependency on FakeLoad using Maven with:
 ```xml
 <dependency>
@@ -53,7 +52,7 @@ dependencies {
     compile 'com.martensigwart:fakeload:0.1.0'
 }
 ```
-### Usage
+## Usage
 Check out the [User Guide](https://github.com/msigwart/fakeload/wiki) for more usage examples and other information. 
 
 ## How to contribute
