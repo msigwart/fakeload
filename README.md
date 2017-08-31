@@ -54,12 +54,16 @@ dependencies {
 }
 ```
 ### Usage
-You can also combine FakeLoads to create more complex "load patterns":
-```java
+Check out the [User Guide](https://github.com/msigwart/fakeload/wiki) for more usage examples and other information. 
 
-```
+## How to contribute
+FakeLoad was created in the course of a university project so there sure is room for improvements. So feel welcome to file a bug report or submit feature requests through the [issue tracker](https://github.com/msigwart/fakeload/issues). If you want to contribute feel free to submit a pull request.
+
+## Acknowledgements
+This project was started as a support for [VISP](https://visp-streaming.github.io/) – An Ecosystem for Elastic Data Stream Processing for the Internet of Things.
+CPU load generation was inspired by <https://caffinc.github.io/2016/03/cpu-load-generator/>.
+
 ## Licence
 This project is licensed under the MIT License - see the [LICENCE.md](LICENSE.md) file for details
 
-## Acknowledgements
 
