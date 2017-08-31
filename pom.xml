@@ -49,6 +49,7 @@
         <maven.exec.plugin.version>1.6.0</maven.exec.plugin.version>
         <maven.source.plugin.version>3.0.1</maven.source.plugin.version>
         <maven.javadoc.plugin.version>2.10.4</maven.javadoc.plugin.version>
+        <maven.scm.plugin.version>1.1</maven.scm.plugin.version>
         <maven.gpg.plugin.version>1.6</maven.gpg.plugin.version>
     </properties>
 
@@ -141,6 +142,14 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <version>${maven.javadoc.plugin.version}</version>
+                        <configuration>
+                            <aggregate>true</aggregate>
+                            <show>public</show>
+                            <nohelp>true</nohelp>
+                            <header>FakeLoad, ${project.version}</header>
+                            <header>FakeLoad, ${project.version}</header>
+                            <doctitle>FakeLoad, ${project.version}</doctitle>
+                        </configuration>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
