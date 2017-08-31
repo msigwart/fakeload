@@ -18,7 +18,7 @@ executor.execute(fakeload);
 The above snippet would simulate a CPU load of 80% and a memory load of 300 MB for ten seconds.
 
 ## Motivation
-FakeLoad was created with three different contexts in mind:
+FakeLoad was created with three different use cases in mind:
 
 ### 1. Testing of Non-Functional Requirements
 Early verification of non-functional requirements like scalability, performance, availablity, etc. can be vital to a project's success. For example, an application or framework that does elastic data stream processing needs to make sure its auto-scaling behavior or monitoring is working correctly. This can be hard to test if the system is not fully developed yet as some "not yet" implemented parts of the system might have a huge impact on the those dynamic properties. 
@@ -35,15 +35,24 @@ Sometimes [NDA](https://en.wikipedia.org/wiki/Non-disclosure_agreement)s might p
 
 ## Getting Started
 ### Installation
-FakeLoad is available on Maven Central under:
-```
+You can add a dependency on FakeLoad using Maven with:
+```xml
 <dependency>
     <groupId>com.martensigwart</groupId>
     <artifactId>fakeload</artifactId>
     <version>0.1.0</version>
 </dependency>
 ```
+To add a dependency using Gradle, use this:
+```
+repositories {
+    mavenCentral()
+}
 
+dependencies {
+    compile 'com.martensigwart:fakeload:0.1.0'
+}
+```
 ### Usage
 You can also combine FakeLoads to create more complex "load patterns":
 ```java
