@@ -45,7 +45,7 @@ public class DefaultFakeLoadExecutorTest {
     public void testSimpleLoadExecution() {
         long duration = 10;
         TimeUnit unit = TimeUnit.SECONDS;
-        FakeLoad fakeLoad = FakeLoads.createLoad().lasting(duration, unit).withCpu(20);
+        FakeLoad fakeLoad = FakeLoads.create().lasting(duration, unit).withCpu(20);
         assertFakeLoadExecution(duration, unit, fakeLoad);
     }
 
@@ -55,25 +55,25 @@ public class DefaultFakeLoadExecutorTest {
     public void testComplexLoadExecution() {
         long duration = 100;
         TimeUnit unit = TimeUnit.MILLISECONDS;
-        FakeLoad parent = FakeLoads.createLoad().lasting(duration, unit)
+        FakeLoad parent = FakeLoads.create().lasting(duration, unit)
                 .withCpu(99)
                 .withMemory(9999, MemoryUnit.BYTES);
 
         int noOfChildren = 10;
         int noOfGrandChildrenPerChild = 9;
 
-        long startCPU = 1;
+        int startCPU = 1;
         long startMemory = 1000;
 
         // create children
         for (int i=0; i<noOfChildren; i++) {
-            FakeLoad child = FakeLoads.createLoad().lasting(duration, unit)
+            FakeLoad child = FakeLoads.create().lasting(duration, unit)
                     .withCpu(startCPU*i)
                     .withMemory(startMemory*i, MemoryUnit.KB);
 
             // create grand children
             for (int j=0; j<noOfGrandChildrenPerChild; j++) {
-                FakeLoad grandChild = FakeLoads.createLoad().lasting(duration, unit)
+                FakeLoad grandChild = FakeLoads.create().lasting(duration, unit)
                         .withCpu(startCPU+j)
                         .withMemory(startMemory*i+j, MemoryUnit.KB);
 

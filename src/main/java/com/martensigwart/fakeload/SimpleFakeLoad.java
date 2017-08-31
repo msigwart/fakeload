@@ -35,14 +35,14 @@ final class SimpleFakeLoad extends AbstractFakeLoad {
 
     private final long duration;
     private final TimeUnit unit;
-    private final long cpu;
+    private final int cpu;
     private final long memory;
     private final long diskInput;
     private final long diskOutput;
 
 
     SimpleFakeLoad(long duration, TimeUnit unit, int repetitions,
-                   long cpu, long memory, long diskInput, long diskOutput) {
+                   int cpu, long memory, long diskInput, long diskOutput) {
 
         super(repetitions);
 
@@ -84,7 +84,7 @@ final class SimpleFakeLoad extends AbstractFakeLoad {
     }
 
     @Override
-    public FakeLoad withCpu(long cpuLoad) {
+    public FakeLoad withCpu(int cpuLoad) {
         return new SimpleFakeLoad(duration, unit, getRepetitions(), cpuLoad, memory, diskInput, diskOutput);
     }
 
@@ -130,7 +130,7 @@ final class SimpleFakeLoad extends AbstractFakeLoad {
     }
 
     @Override
-    public long getCpu() {
+    public int getCpu() {
         return cpu;
     }
 

@@ -341,7 +341,7 @@ public abstract class AbstractFakeLoadTest {
         List<FakeLoad> children = new ArrayList<>();
         int noOfChildren = 10;
         long startDuration = 1;
-        long startCPU = 10;
+        int startCPU = 10;
         long startMemory = 100;
 
         for (int i=0; i<noOfChildren; i++) {
@@ -388,7 +388,7 @@ public abstract class AbstractFakeLoadTest {
         List<FakeLoad> grandChildren = new ArrayList<>();
 
         long startDuration = 10;
-        long startCPU = 1;
+        int startCPU = 1;
         long startMemory = 1000;
 
         // create children

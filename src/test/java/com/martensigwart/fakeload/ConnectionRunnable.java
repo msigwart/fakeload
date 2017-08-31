@@ -71,10 +71,10 @@ public class ConnectionRunnable implements Runnable {
     }
 
     private FakeLoad initFakeLoad(Instruction.LoadType type, long increase) {
-        FakeLoad fakeLoad = FakeLoads.createLoad();
+        FakeLoad fakeLoad = FakeLoads.create();
         switch (type) {
             case CPU:
-                fakeLoad = fakeLoad.withCpu(increase);
+                fakeLoad = fakeLoad.withCpu((int)increase);
                 break;
             case MEMORY:
                 fakeLoad = fakeLoad.withMemory(increase, MemoryUnit.BYTES);

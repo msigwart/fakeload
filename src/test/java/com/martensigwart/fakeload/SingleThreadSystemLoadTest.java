@@ -115,38 +115,38 @@ public class SingleThreadSystemLoadTest {
 
 
     private long increaseAndGetCpu(int cpu) throws MaximumLoadExceededException {
-        FakeLoad fakeLoad = FakeLoads.createLoad().withCpu(cpu);
+        FakeLoad fakeLoad = FakeLoads.create().withCpu(cpu);
         systemLoad.increaseBy(fakeLoad);
         return systemLoad.getCpu();
     }
 
     private long decreaseAndGetCpu(int cpu) {
-        FakeLoad fakeLoad = FakeLoads.createLoad().withCpu(cpu);
+        FakeLoad fakeLoad = FakeLoads.create().withCpu(cpu);
         systemLoad.decreaseBy(fakeLoad);
         return systemLoad.getCpu();
     }
 
     private long increaseAndGetMemory(long memory) throws MaximumLoadExceededException {
-        FakeLoad fakeLoad = FakeLoads.createLoad().withMemory(memory, MemoryUnit.BYTES);
+        FakeLoad fakeLoad = FakeLoads.create().withMemory(memory, MemoryUnit.BYTES);
         systemLoad.increaseBy(fakeLoad);
         return systemLoad.getMemory();
     }
 
     private long decreaseAndGetMemory(long memory) {
-        FakeLoad fakeLoad = FakeLoads.createLoad().withMemory(memory, MemoryUnit.BYTES);
+        FakeLoad fakeLoad = FakeLoads.create().withMemory(memory, MemoryUnit.BYTES);
         systemLoad.decreaseBy(fakeLoad);
         return systemLoad.getMemory();
     }
 
 // TODO
 //    private long increaseAndGetDiskIO(long diskIO) throws MaximumLoadExceededException {
-//        FakeLoad fakeLoad = FakeLoads.createLoad().withDiskInput(diskIO);
+//        FakeLoad fakeLoad = FakeLoads.create().withDiskInput(diskIO);
 //        systemLoad.increaseBy(fakeLoad);
 //        return systemLoad.getDiskInput();
 //    }
 //
 //    private long decreaseAndGetDiskIO(long diskIO) {
-//        FakeLoad fakeLoad = FakeLoads.createLoad().withDiskInput(diskIO);
+//        FakeLoad fakeLoad = FakeLoads.create().withDiskInput(diskIO);
 //        systemLoad.decreaseBy(fakeLoad);
 //        return systemLoad.getDiskInput();
 //    }

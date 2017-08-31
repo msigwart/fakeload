@@ -2,9 +2,7 @@ package com.martensigwart.fakeload;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -29,7 +27,7 @@ public class DefaultSimulationInfrastructureTest {
 
     @Test
     public void increaseSystemLoadBy() throws Exception {
-        FakeLoad fakeLoad = FakeLoads.createLoad().lasting(10, TimeUnit.SECONDS).withCpu(50);
+        FakeLoad fakeLoad = FakeLoads.create().lasting(10, TimeUnit.SECONDS).withCpu(50);
 
         infrastructure.increaseSystemLoadBy(fakeLoad);
 
@@ -38,7 +36,7 @@ public class DefaultSimulationInfrastructureTest {
 
     @Test
     public void decreaseSystemLoadBy() throws Exception {
-        FakeLoad fakeLoad = FakeLoads.createLoad().lasting(10, TimeUnit.SECONDS).withCpu(50);
+        FakeLoad fakeLoad = FakeLoads.create().lasting(10, TimeUnit.SECONDS).withCpu(50);
 
         infrastructure.decreaseSystemLoadBy(fakeLoad);
 

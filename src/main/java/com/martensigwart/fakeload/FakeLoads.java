@@ -17,7 +17,7 @@ public final class FakeLoads {
      * Creates a new empty {@code FakeLoad} instance.
      * @return a newly created {@code LoadPattern} instance
      */
-    public static FakeLoad createLoad() {
+    public static FakeLoad create() {
         return new SimpleFakeLoad();
     }
 
@@ -34,7 +34,7 @@ public final class FakeLoads {
 //     * @param duration how long the specified loads shall be executed in milliseconds (ms)
 //     * @param loads strings containing specific load instructions for different aspects.
 //     */
-//    public static FakeLoad createLoad(long duration, String... loads) {
+//    public static FakeLoad create(long duration, String... loads) {
 //        // TODO return FakeLoad with provided parameters
 //        return new SimpleFakeLoad();
 //    }

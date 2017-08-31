@@ -66,7 +66,7 @@ final class CompositeFakeLoad extends AbstractFakeLoad {
     }
 
     @Override
-    public FakeLoad withCpu(long cpuLoad) {
+    public FakeLoad withCpu(int cpuLoad) {
         SimpleFakeLoad newOwnLoad = (SimpleFakeLoad) ownLoad.withCpu(cpuLoad);
         return new CompositeFakeLoad(newOwnLoad, innerLoads, getRepetitions());
     }
@@ -139,7 +139,7 @@ final class CompositeFakeLoad extends AbstractFakeLoad {
     }
 
     @Override
-    public long getCpu() {
+    public int getCpu() {
         return ownLoad.getCpu();
     }
 

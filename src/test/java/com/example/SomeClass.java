@@ -16,8 +16,8 @@ public class SomeClass {
         log.info("Entered someMethod()");
 
         // Execute FakeLoad
-//        FakeLoad fakeLoad = FakeLoads.createLoad(100, "50%", "1024m");
-        FakeLoad fakeLoad = FakeLoads.createLoad().lasting(60, TimeUnit.SECONDS)
+//        FakeLoad fakeLoad = FakeLoads.create(100, "50%", "1024m");
+        FakeLoad fakeLoad = FakeLoads.create().lasting(60, TimeUnit.SECONDS)
                 .withCpu(50)
                 .withMemory(200, MemoryUnit.MB)
                 .withDiskInput(100, MemoryUnit.MB)
@@ -71,7 +71,7 @@ public class SomeClass {
     public void yetAnotherMethod() {
         log.info("Entered yetAnotherMethod()");
 
-        FakeLoad fakeLoad = FakeLoads.createLoad()
+        FakeLoad fakeLoad = FakeLoads.create()
                 .lasting(30, TimeUnit.SECONDS)
                 .withCpu(80)
                 .withMemory(300, MemoryUnit.MB);

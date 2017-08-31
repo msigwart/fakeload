@@ -42,12 +42,12 @@ public class DefaultFakeLoadSchedulerTest {
     public void testScheduleMethod() {
         long duration = 5;
         TimeUnit unit = TimeUnit.SECONDS;
-        long cpu = 20;
+        int cpu = 20;
         long memory = 30;
         long diskInput = 40;
         long netIO = 50;
 
-        FakeLoad fakeLoad = FakeLoads.createLoad().lasting(duration, unit)
+        FakeLoad fakeLoad = FakeLoads.create().lasting(duration, unit)
                 .withCpu(cpu)
                 .withMemory(memory, MemoryUnit.BYTES)
                 .withDiskInput(diskInput, MemoryUnit.BYTES);
@@ -77,7 +77,7 @@ public class DefaultFakeLoadSchedulerTest {
         long duration = 100;
         TimeUnit unit = TimeUnit.MILLISECONDS;
 
-        FakeLoad fakeLoad = FakeLoads.createLoad().lasting(duration, unit)
+        FakeLoad fakeLoad = FakeLoads.create().lasting(duration, unit)
                 .withCpu(99)
                 .withMemory(9999, MemoryUnit.BYTES)
                 .withDiskInput(99, MemoryUnit.BYTES);
@@ -87,7 +87,7 @@ public class DefaultFakeLoadSchedulerTest {
         int noOfChildren = 10;
         int noOfGrandChildrenPerChild = 9;
 
-        long startCPU = 1;
+        int startCPU = 1;
         long startMemory = 100;
         long startDiskInput = 100;
 
@@ -95,7 +95,7 @@ public class DefaultFakeLoadSchedulerTest {
         for (int i=0; i<noOfChildren; i++) {
 
 
-            FakeLoad child = FakeLoads.createLoad().lasting(duration, unit)
+            FakeLoad child = FakeLoads.create().lasting(duration, unit)
                     .withCpu(startCPU++)
                     .withMemory(startMemory++, MemoryUnit.BYTES)
                     .withDiskInput(startDiskInput++, MemoryUnit.BYTES);
@@ -105,7 +105,7 @@ public class DefaultFakeLoadSchedulerTest {
             // create grand children
             for (int j=0; j<noOfGrandChildrenPerChild; j++) {
 
-                FakeLoad grandChild = FakeLoads.createLoad().lasting(duration, unit)
+                FakeLoad grandChild = FakeLoads.create().lasting(duration, unit)
                         .withCpu(startCPU++)
                         .withMemory(startMemory++, MemoryUnit.BYTES)
                         .withDiskInput(startDiskInput++, MemoryUnit.BYTES);
@@ -150,11 +150,11 @@ public class DefaultFakeLoadSchedulerTest {
         long duration = 2;
         TimeUnit unit = TimeUnit.SECONDS;
 
-        FakeLoad load = FakeLoads.createLoad().lasting(duration, unit)
+        FakeLoad load = FakeLoads.create().lasting(duration, unit)
                 .withCpu(50);
         loadList.add(load);
 
-        FakeLoad load2 = FakeLoads.createLoad().lasting(duration, unit)
+        FakeLoad load2 = FakeLoads.create().lasting(duration, unit)
                 .withCpu(60);
         loadList.add(load2);
 

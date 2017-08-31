@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * Note: All setter methods return a {@code FakeLoad} instance themselves, thus allowing a kind
  * of fluent interface like this:
  * <pre>
- * {@code FakeLoad fakeload = FakeLoads.createLoad()
+ * {@code FakeLoad fakeload = FakeLoads.create()
  *      .lasting(10, TimeUnit.SECONDS)
  *      .withCpu(30)
  *      .withMemory(300, MemoryUnit.MB)
@@ -60,7 +60,7 @@ public interface FakeLoad extends Iterable<FakeLoad> {
      * @param cpuLoad the fake CPU load in percent (0-100%)
      * @return returns the FakeLoad object containing the provided parameters.
      */
-    FakeLoad withCpu(long cpuLoad);
+    FakeLoad withCpu(int cpuLoad);
 
     /**
      * Returns a {@code FakeLoad} instance with the specified memory load.
@@ -97,7 +97,7 @@ public interface FakeLoad extends Iterable<FakeLoad> {
 
     Collection<FakeLoad> getInnerLoads();
 
-    long getCpu();
+    int getCpu();
 
     long getMemory();
 

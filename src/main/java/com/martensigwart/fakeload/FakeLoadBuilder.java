@@ -23,7 +23,7 @@ public final class FakeLoadBuilder {
     private long duration       = 0L;
     private TimeUnit unit       = TimeUnit.MILLISECONDS;
     private int repetitions     = 0;
-    private long cpuLoad        = 0;
+    private int cpuLoad        = 0;
     private long memoryLoad     = 0L;
     private long diskInputLoad  = 0L;
     private long diskOutputLoad = 0L;
