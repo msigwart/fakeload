@@ -1,6 +1,8 @@
 [![Build Status](https://travis-ci.org/msigwart/fakeload.svg?branch=master)](https://travis-ci.org/msigwart/fakeload)
 
 # FakeLoad
+
+[![Join the chat at https://gitter.im/fakeload/Lobby](https://badges.gitter.im/fakeload/Lobby.svg)](https://gitter.im/fakeload/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 FakeLoad is an open-source Java library which provides a simple and flexible way of producing “fake" system loads in applications or tests.
 
 Producing system load using FakeLoad is as simple as this:
