@@ -149,6 +149,7 @@
                             <header>FakeLoad, ${project.version}</header>
                             <header>FakeLoad, ${project.version}</header>
                             <doctitle>FakeLoad, ${project.version}</doctitle>
+                            <author>false</author>
                         </configuration>
                         <executions>
                             <execution>
