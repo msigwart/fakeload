@@ -45,13 +45,14 @@ public class DefaultFakeLoadSchedulerTest {
         int cpu = 20;
         long memory = 30;
         long diskInput = 40;
-        long netIO = 50;
 
+        // Creation
         FakeLoad fakeLoad = FakeLoads.create().lasting(duration, unit)
                 .withCpu(cpu)
                 .withMemory(memory, MemoryUnit.BYTES)
                 .withDiskInput(diskInput, MemoryUnit.BYTES);
 
+        // Execution
         try {
             Future<Void> future = scheduler.schedule(fakeLoad);
             future.get();
@@ -60,7 +61,7 @@ public class DefaultFakeLoadSchedulerTest {
             e.printStackTrace();
         }
 
-        // verification
+        // Verification
         InOrder inOrder = inOrder(mockedInfrastructure);
         try {
             inOrder.verify(mockedInfrastructure).increaseSystemLoadBy(fakeLoad);
@@ -77,6 +78,7 @@ public class DefaultFakeLoadSchedulerTest {
         long duration = 100;
         TimeUnit unit = TimeUnit.MILLISECONDS;
 
+        // Creation
         FakeLoad fakeLoad = FakeLoads.create().lasting(duration, unit)
                 .withCpu(99)
                 .withMemory(9999, MemoryUnit.BYTES)
@@ -121,6 +123,7 @@ public class DefaultFakeLoadSchedulerTest {
 
         assertEquals(noOfChildren+noOfChildren*noOfGrandChildrenPerChild+1, loadList.size());
 
+        // Execution
         try {
             Future<Void> future = scheduler.schedule(fakeLoad);
             future.get();
@@ -129,7 +132,7 @@ public class DefaultFakeLoadSchedulerTest {
             e.printStackTrace();
         }
 
-        // verification
+        // Verification
         InOrder inOrder = inOrder(mockedInfrastructure);
         try {
             for (int i=0; i<loadList.size(); i++){
@@ -150,6 +153,7 @@ public class DefaultFakeLoadSchedulerTest {
         long duration = 2;
         TimeUnit unit = TimeUnit.SECONDS;
 
+        // Creation
         FakeLoad load = FakeLoads.create().lasting(duration, unit)
                 .withCpu(50);
         loadList.add(load);
@@ -159,6 +163,7 @@ public class DefaultFakeLoadSchedulerTest {
         loadList.add(load2);
 
 
+        // Execution
         Thread t1 = new Thread(() -> {
             try {
                 Future<Void> future = scheduler.schedule(load);
@@ -189,7 +194,7 @@ public class DefaultFakeLoadSchedulerTest {
             e.printStackTrace();
         }
 
-        // verification
+        // Verification
         InOrder inOrder = inOrder(mockedInfrastructure);
         try {
             inOrder.verify(mockedInfrastructure).increaseSystemLoadBy(loadList.get(0));
@@ -197,6 +202,102 @@ public class DefaultFakeLoadSchedulerTest {
             inOrder.verify(mockedInfrastructure).decreaseSystemLoadBy(loadList.get(0));
             inOrder.verify(mockedInfrastructure).decreaseSystemLoadBy(loadList.get(1));
 
+        } catch (MaximumLoadExceededException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
+    public void testRepetitions() {
+        int noOfRepetitions = 3;
+
+        // Creation
+        FakeLoad fakeLoad = FakeLoads.create()
+                .lasting(500, TimeUnit.MILLISECONDS)
+                .withCpu(30)
+                .repeat(noOfRepetitions);
+
+        // Execution
+        try {
+            Future<Void> future = scheduler.schedule(fakeLoad);
+            future.get();
+
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        // Verification
+        InOrder inOrder = inOrder(mockedInfrastructure);
+        try {
+            for (int i=0; i<noOfRepetitions; i++) {
+                inOrder.verify(mockedInfrastructure).increaseSystemLoadBy(fakeLoad);
+                inOrder.verify(mockedInfrastructure).decreaseSystemLoadBy(fakeLoad);
+            }
+        } catch (MaximumLoadExceededException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testRepetitions2() {
+        int parentRepetitions = 2;
+        int childRepetitions = 3;
+
+        // Creation
+        FakeLoad parent = FakeLoads.create()
+                .lasting(500, TimeUnit.MILLISECONDS)
+                .withCpu(10)
+                .repeat(parentRepetitions);
+
+        loadList.add(parent);
+
+        // create child
+        FakeLoad child = FakeLoads.create();
+
+        // create grand children
+        FakeLoad g1 = FakeLoads.create()
+                .lasting(500, TimeUnit.MILLISECONDS)
+                .withCpu(20);
+        loadList.add(g1);
+
+        FakeLoad g2 = FakeLoads.create()
+                .lasting(500, TimeUnit.MILLISECONDS)
+                .withCpu(30);
+        loadList.add(g2);
+
+        child = child.addLoad(g1).addLoad(g2).repeat(childRepetitions);
+
+        parent = parent.addLoad(child);
+
+
+        // Execution
+        try {
+            Future<Void> future = scheduler.schedule(parent);
+            future.get();
+
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        // Verification
+        InOrder inOrder = inOrder(mockedInfrastructure);
+        try {
+            for (int i=0; i<parentRepetitions; i++) {
+                inOrder.verify(mockedInfrastructure).increaseSystemLoadBy(loadList.get(0));
+                inOrder.verify(mockedInfrastructure).decreaseSystemLoadBy(loadList.get(0));
+
+                for (int j=0; j<childRepetitions; j++) {
+                    // grandchild 1
+                    inOrder.verify(mockedInfrastructure).increaseSystemLoadBy(loadList.get(1));
+                    inOrder.verify(mockedInfrastructure).decreaseSystemLoadBy(loadList.get(1));
+
+                    // grandchild 2
+                    inOrder.verify(mockedInfrastructure).increaseSystemLoadBy(loadList.get(2));
+                    inOrder.verify(mockedInfrastructure).decreaseSystemLoadBy(loadList.get(2));
+
+                }
+            }
         } catch (MaximumLoadExceededException e) {
             e.printStackTrace();
         }
