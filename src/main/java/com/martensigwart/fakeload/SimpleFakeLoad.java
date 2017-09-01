@@ -64,12 +64,12 @@ final class SimpleFakeLoad extends AbstractFakeLoad {
     }
 
     SimpleFakeLoad() {
-        this(0L, TimeUnit.MILLISECONDS, 0,
+        this(0L, TimeUnit.MILLISECONDS, 1,
                 0, 0L, 0L, 0L);
     }
 
     SimpleFakeLoad(long duration, TimeUnit unit) {
-        this(duration, unit, 0,
+        this(duration, unit, 1,
                 0, 0L, 0L, 0L);
     }
 
@@ -169,17 +169,17 @@ final class SimpleFakeLoad extends AbstractFakeLoad {
     public Iterator<FakeLoad> iterator() {
         return new Iterator<FakeLoad>() {
 
-            private boolean hasNext = true;
+            private int repetitions = 0;
 
             @Override
             public boolean hasNext() {
-                return hasNext;
+                return (repetitions < SimpleFakeLoad.this.getRepetitions());
             }
 
             @Override
             public FakeLoad next() {
-                if (hasNext) {
-                    this.hasNext = false;
+                if (hasNext()) {
+                    repetitions++;
                     return SimpleFakeLoad.this;
                 } throw new NoSuchElementException();
             }

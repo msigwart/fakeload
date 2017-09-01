@@ -247,8 +247,7 @@ public class DefaultFakeLoadSchedulerTest {
         // Creation
         FakeLoad parent = FakeLoads.create()
                 .lasting(500, TimeUnit.MILLISECONDS)
-                .withCpu(10)
-                .repeat(parentRepetitions);
+                .withCpu(10);
 
         loadList.add(parent);
 
@@ -268,7 +267,7 @@ public class DefaultFakeLoadSchedulerTest {
 
         child = child.addLoad(g1).addLoad(g2).repeat(childRepetitions);
 
-        parent = parent.addLoad(child);
+        parent = parent.addLoad(child).repeat(parentRepetitions);
 
 
         // Execution

@@ -1,6 +1,7 @@
 package com.martensigwart.fakeload;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -49,6 +50,10 @@ public interface FakeLoad extends Iterable<FakeLoad> {
     /**
      * Returns a {@code FakeLoad} instance with the number of specified repetitions set.
      *
+     * The default value is 1. That means a {@code FakeLoad} is executed exactly as many
+     * times as the number of repetitions, e.g. a {@code FakeLoad} with repetitions set to 3,
+     * will be executed exactly three times.
+     *
      * @param noOfRepetitions number of repetitions of the returned FakeLoad
      * @return returns the FakeLoad object containing the provided parameters.
      */
@@ -95,6 +100,10 @@ public interface FakeLoad extends Iterable<FakeLoad> {
 
     boolean contains(FakeLoad load);
 
+    /**
+     * Returns the inner {@code FakeLoad} objects of this {@code FakeLoad}
+     * @return a collection of {@code FakeLoad} objects
+     */
     Collection<FakeLoad> getInnerLoads();
 
     int getCpu();
@@ -110,4 +119,18 @@ public interface FakeLoad extends Iterable<FakeLoad> {
     TimeUnit getTimeUnit();
 
     int getRepetitions();
+
+    /**
+     * Returns an iterator of this {@code FakeLoad} object.
+     *
+     * <p>
+     * Generally, the iterator first returns the load information of the {@code FakeLoad} object on
+     * which the method was called, and then the load information contained in its inner {@code FakeLoad} objects.
+     * The iterator also takes the number of repetitions set by a {@code FakeLoad} into account.
+     * If a simple {@code FakeLoad} has repetitions set to two, it will be returned twice by the iterator.
+     * This applies also to any inner children {@code FakeLoad}s.
+     * @return an iterator over {@code FakeLoad} objects
+     */
+    @Override
+    Iterator<FakeLoad> iterator();
 }

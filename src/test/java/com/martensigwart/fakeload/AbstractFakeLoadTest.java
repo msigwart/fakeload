@@ -451,7 +451,7 @@ public abstract class AbstractFakeLoadTest {
 
 
     void assertDefault(FakeLoad actual) {
-        assertEquals(0, actual.getRepetitions());
+        assertEquals(1, actual.getRepetitions());
         assertEquals(0L, actual.getDuration());
         assertEquals(TimeUnit.MILLISECONDS, actual.getTimeUnit());
         assertEquals(0, actual.getCpu());
@@ -461,7 +461,7 @@ public abstract class AbstractFakeLoadTest {
     }
     
     void assertDuration(long expectedDuration, TimeUnit expectedUnit, FakeLoad actual) {
-        assertEquals(0, actual.getRepetitions());
+        assertEquals(1, actual.getRepetitions());
         assertEquals(expectedDuration, actual.getDuration());
         assertEquals(expectedUnit, actual.getTimeUnit());
         assertEquals(0, actual.getCpu());
@@ -471,7 +471,7 @@ public abstract class AbstractFakeLoadTest {
     }
 
     void assertInnerLoadsSize(int expectedSize, FakeLoad actual) {
-        assertEquals(0, actual.getRepetitions());
+        assertEquals(1, actual.getRepetitions());
         assertEquals(0L, actual.getDuration());
         assertEquals(TimeUnit.MILLISECONDS, actual.getTimeUnit());
         assertEquals(0, actual.getCpu());
@@ -491,7 +491,7 @@ public abstract class AbstractFakeLoadTest {
     }
     
     private void assertCpuLoad(int expectedCpu, FakeLoad actual) {
-        assertEquals(0, actual.getRepetitions());
+        assertEquals(1, actual.getRepetitions());
         assertEquals(0L, actual.getDuration());
         assertEquals(TimeUnit.MILLISECONDS, actual.getTimeUnit());
         assertEquals(expectedCpu, actual.getCpu());
@@ -501,7 +501,7 @@ public abstract class AbstractFakeLoadTest {
     }
     
     private void assertMemoryLoad(long expectedMemory, FakeLoad actual) {
-        assertEquals(0, actual.getRepetitions());
+        assertEquals(1, actual.getRepetitions());
         assertEquals(0L, actual.getDuration());
         assertEquals(TimeUnit.MILLISECONDS, actual.getTimeUnit());
         assertEquals(0, actual.getCpu());

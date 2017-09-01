@@ -10,7 +10,6 @@ import java.util.concurrent.Future;
  * <p>
  * This interface is provided as kind of utility type for the {@link DefaultFakeLoadExecutor}
  * to take over the responsibility of actually scheduling FakeLoads in a correct manner.
- * It is not part of the published API of the FakeLoad library.
  *
  * <p>
  * As the method provided by the {@code FakeLoadScheduler} {@link #schedule(FakeLoad)} returns
@@ -19,7 +18,13 @@ import java.util.concurrent.Future;
  * as required by its contract.
  *
  * <p>
- * Class {@link DefaultFakeLoadScheduler} provides a default implementation of this interface.
+ * Class {@link DefaultFakeLoadScheduler} provides a default implementation of this interface that uses
+ * the {@link FakeLoad#iterator()} method as its scheduling mechanism.
+ *
+ * @since 1.8
+ * @see FakeLoad
+ * @see DefaultFakeLoadScheduler
+ * @see DefaultFakeLoadExecutor
  */
 public interface FakeLoadScheduler {
 

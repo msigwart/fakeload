@@ -38,7 +38,7 @@ final class CompositeFakeLoad extends AbstractFakeLoad {
 
     CompositeFakeLoad(SimpleFakeLoad ownLoad, List<FakeLoad> innerLoads, int repetitions) {
         super(repetitions);
-        this.ownLoad = checkNotNull(ownLoad);
+        this.ownLoad = (SimpleFakeLoad) checkNotNull(ownLoad).repeat(1);
         this.innerLoads = ImmutableList.copyOf(checkNotNull(innerLoads));
     }
 
@@ -47,7 +47,7 @@ final class CompositeFakeLoad extends AbstractFakeLoad {
     }
 
     CompositeFakeLoad(List<FakeLoad> innerLoads) {
-        this(innerLoads, 0);
+        this(innerLoads, 1);
     }
 
     CompositeFakeLoad() {
@@ -170,9 +170,16 @@ final class CompositeFakeLoad extends AbstractFakeLoad {
 
     @Override
     public Iterator<FakeLoad> iterator() {
-        Iterator<FakeLoad> iterator = ownLoad.iterator();
-        for (FakeLoad load: innerLoads) {
-            iterator = Iterators.concat(iterator, load.iterator());
+        Iterator<FakeLoad> iterator = null;
+        for (int i=0; i<getRepetitions(); i++) {
+            if (iterator == null) {
+                iterator = ownLoad.iterator();
+            } else {
+                iterator = Iterators.concat(iterator, ownLoad.iterator());
+            }
+            for (FakeLoad load : innerLoads) {
+                iterator = Iterators.concat(iterator, load.iterator());
+            }
         }
         return iterator;
     }
@@ -181,9 +188,9 @@ final class CompositeFakeLoad extends AbstractFakeLoad {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CompositeFakeLoad fakeLoads = (CompositeFakeLoad) o;
-        return Objects.equal(ownLoad, fakeLoads.ownLoad) &&
-                Objects.equal(innerLoads, fakeLoads.innerLoads);
+        CompositeFakeLoad fakeload = (CompositeFakeLoad) o;
+        return Objects.equal(ownLoad, fakeload.ownLoad) &&
+                Objects.equal(innerLoads, fakeload.innerLoads);
     }
 
     @Override

@@ -9,6 +9,15 @@ import java.util.concurrent.Future;
 /**
  * Default implementation of the {@code FakeLoadScheduler} interface.
  *
+ * {@link FakeLoad} objects are scheduled for execution via the {@link #schedule(FakeLoad)} method.
+ *
+ * This class uses the {@link FakeLoad#iterator()} method to determine the order for
+ * scheduling of the {@code FakeLoad} object.
+ * As the iterator already takes the number of repetitions under account, the default
+ * scheduler can just iterate over the submitted {@code FakeLoad} object in a foreach loop.
+ *
+ * The actual scheduling is done using {@link CompletableFuture}s and the common thread pool.
+ *
  * @since 1.8
  * @see FakeLoadScheduler
  * @see FakeLoad
@@ -47,7 +56,6 @@ public final class DefaultFakeLoadScheduler implements FakeLoadScheduler {
         CompletableFuture<Void> completableFuture = new CompletableFuture<>();
         completableFuture.complete(null);       // Complete with null value as CompletableFuture is of type Void
 
-        //TODO implement repetitions
         for (FakeLoad load: fakeLoad) {
 
             // schedule increase

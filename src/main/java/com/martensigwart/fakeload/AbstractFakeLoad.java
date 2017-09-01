@@ -9,7 +9,7 @@ abstract class AbstractFakeLoad implements FakeLoad {
 
 
     AbstractFakeLoad(int repetitions) {
-        checkArgument(repetitions >= 0, "Repetitions must be non-negative but was %s", repetitions);
+        checkArgument(repetitions >= 1, "Number of repetitions must be at least 1 but was %s", repetitions);
 
         this.repetitions = repetitions;
     }
