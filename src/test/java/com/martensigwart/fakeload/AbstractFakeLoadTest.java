@@ -4,6 +4,7 @@ import com.martensigwart.fakeload.util.MoreAsserts;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -438,6 +439,40 @@ public abstract class AbstractFakeLoadTest {
         // now throws an exception
         iterator.next();
 
+    }
+
+
+    @Test
+    public void testSerialization() {
+        FakeLoad child1 = FakeLoads.create().lasting(1, TimeUnit.SECONDS).withCpu(20);
+        FakeLoad child2 = FakeLoads.create().lasting(200, TimeUnit.MILLISECONDS)
+                .withDiskInput(20, MemoryUnit.MB).withDiskOutput(1000, MemoryUnit.BYTES);
+
+        FakeLoad grandchild1 = FakeLoads.create().lasting(1, TimeUnit.MINUTES).withMemory(200, MemoryUnit.BYTES);
+        FakeLoad grandchild2 = FakeLoads.create().lasting(10, TimeUnit.SECONDS).withCpu(80);
+
+        child1 = child1.addLoad(grandchild1).addLoad(grandchild2);
+
+        FakeLoad out = FakeLoads.create().lasting(20, TimeUnit.SECONDS)
+                .withCpu(20).withMemory(300, MemoryUnit.MB)
+                .withDiskInput(100, MemoryUnit.KB).withDiskOutput(200, MemoryUnit.MB)
+                .addLoad(child1).addLoad(child2);
+
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(out);
+
+            ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+            ObjectInputStream ois = new ObjectInputStream(bis);
+            FakeLoad in = (FakeLoad) ois.readObject();
+
+            assertEquals(out, in);
+
+        } catch (IOException | ClassNotFoundException e) {
+            fail();
+            e.printStackTrace();
+        }
     }
 
 
