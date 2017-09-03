@@ -4,9 +4,25 @@ package com.martensigwart.fakeload;
  * Enum representing different memory units like bytes, kilobytes, megabytes, gigabytes.
  */
 public enum MemoryUnit {
+
+    /**
+     * Represents bytes
+     */
     BYTES(1),
+
+    /**
+     * Represents kilobytes, 1 kilobyte = 1024 bytes ({@link #BYTES}).
+     */
     KB(BYTES.multiplier *1024),
+
+    /**
+     * Represents megabytes, 1 megabyte = 1024 kilobytes ({@link #KB}).
+     */
     MB(KB.multiplier *1024),
+
+    /**
+     * Represents gigabytes, 1 gigabyte = 1024 megabytes ({@link #MB}).
+     */
     GB(MB.multiplier *1024);
 
     private final long multiplier;
