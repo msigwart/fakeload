@@ -22,7 +22,7 @@ public final class FakeLoadBuilder {
     // simple load parameters
     private long duration       = 0L;
     private TimeUnit unit       = TimeUnit.MILLISECONDS;
-    private int repetitions     = 0;
+    private int repetitions     = 1;
     private int cpuLoad        = 0;
     private long memoryLoad     = 0L;
     private long diskInputLoad  = 0L;
@@ -89,7 +89,7 @@ public final class FakeLoadBuilder {
             return new SimpleFakeLoad(duration, unit, repetitions, cpuLoad, memoryLoad, diskInputLoad, diskOutputLoad);
         } else {
             return new CompositeFakeLoad(
-                    new SimpleFakeLoad(duration, unit, 0, cpuLoad, memoryLoad, diskInputLoad, diskOutputLoad),
+                    new SimpleFakeLoad(duration, unit, 1, cpuLoad, memoryLoad, diskInputLoad, diskOutputLoad),
                     innerLoads, repetitions);
         }
     }
