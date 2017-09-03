@@ -124,9 +124,9 @@ public abstract class AbstractLoadSimulator implements LoadSimulator {
          */
         synchronized (this) {
             this.load = (desiredLoad < 0) ? 0L : (desiredLoad > maximumLoad) ? maximumLoad : desiredLoad;
+            log.trace("{} - Set load to {}", name, prettyFormat(this.load));
         }
 
-        log.trace("{} - Set load to {}", name, prettyFormat(this.load));
         synchronized (lock) {
             lock.notify();
         }
