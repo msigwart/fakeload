@@ -1,5 +1,6 @@
 package com.martensigwart.fakeload;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
@@ -36,7 +37,7 @@ import java.util.concurrent.TimeUnit;
  * @see FakeLoadExecutor
  * @author Marten Sigwart
  */
-public interface FakeLoad extends Iterable<FakeLoad> {
+public interface FakeLoad extends Iterable<FakeLoad>, Serializable {
 
     /**
      * Returns a {@code FakeLoad} instance containing the specified duration.
@@ -133,4 +134,5 @@ public interface FakeLoad extends Iterable<FakeLoad> {
      */
     @Override
     Iterator<FakeLoad> iterator();
+
 }

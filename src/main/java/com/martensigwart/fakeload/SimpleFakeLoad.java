@@ -3,6 +3,8 @@ package com.martensigwart.fakeload;
 import com.google.common.collect.ImmutableList;
 
 import javax.annotation.concurrent.Immutable;
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
 import java.util.*;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -219,6 +221,15 @@ final class SimpleFakeLoad extends AbstractFakeLoad {
                 ", diskOutput=" + diskOutput +
                 ", repetitions=" + getRepetitions() +
                 '}';
+    }
+
+    // readObject method for the serialization proxy pattern
+    private void readObject(ObjectInputStream stream) throws InvalidObjectException {
+        throw new InvalidObjectException("Proxy required");
+    }
+
+    private Object writeReplace() {
+        return new SerializationProxy(this);
     }
 
 }

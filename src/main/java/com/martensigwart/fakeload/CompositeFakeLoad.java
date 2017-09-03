@@ -4,6 +4,8 @@ import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterators;
 
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -34,7 +36,7 @@ final class CompositeFakeLoad extends AbstractFakeLoad {
     /**
      * This object's inner/children loads
      */
-    private final List<FakeLoad> innerLoads;
+    private final ImmutableList<FakeLoad> innerLoads;
 
     CompositeFakeLoad(SimpleFakeLoad ownLoad, List<FakeLoad> innerLoads, int repetitions) {
         super(repetitions);
@@ -202,7 +204,16 @@ final class CompositeFakeLoad extends AbstractFakeLoad {
     public String toString() {
         return "CompositeFakeLoad{" +
                 "ownLoad=" + ownLoad +
-                ", innerLoads=" + innerLoads +  //TODO maybe only display number of inner loads
+                ", innerLoads=" + innerLoads +
                 '}';
+    }
+
+    // readObject method for the serialization proxy pattern
+    private void readObject(ObjectInputStream stream) throws InvalidObjectException {
+        throw new InvalidObjectException("Proxy required");
+    }
+
+    private Object writeReplace() {
+        return new SerializationProxy(this);
     }
 }
