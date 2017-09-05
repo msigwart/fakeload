@@ -26,7 +26,6 @@ import java.util.concurrent.*;
  * @see FakeLoadExecutor
  * @see FakeLoadScheduler
  * @see FakeLoad
- * @see Future
  *
  * @author Marten Sigwart
  */
