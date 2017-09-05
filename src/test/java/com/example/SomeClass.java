@@ -17,13 +17,22 @@ public class SomeClass {
 
         // Execute FakeLoad
 //        FakeLoad fakeLoad = FakeLoads.create(100, "50%", "1024m");
-        FakeLoad fakeLoad = FakeLoads.create().lasting(60, TimeUnit.SECONDS)
+        FakeLoad fakeLoad = FakeLoads.create().lasting(10, TimeUnit.SECONDS)
+                .withCpu(50);
+//                .withMemory(200, MemoryUnit.MB)
+//                .withDiskInput(100, MemoryUnit.MB)
+//                .withDiskOutput(100, MemoryUnit.MB);
+        FakeLoad fakeLoad2 = FakeLoads.create().lasting(5, TimeUnit.SECONDS)
+                .withDiskInput(200, MemoryUnit.KB);
+
+        FakeLoad fakeLoad3 = FakeLoads.create().lasting(5, TimeUnit.SECONDS)
                 .withCpu(50)
-                .withMemory(200, MemoryUnit.MB)
-                .withDiskInput(100, MemoryUnit.MB)
-                .withDiskOutput(100, MemoryUnit.MB);
+                .withDiskInput(300, MemoryUnit.KB);
 
         executor.execute(fakeLoad);
+        log.info("CPU simulation successful");
+        executor.execute(fakeLoad2);        // should fail if no input.tmp file exists
+        executor.execute(fakeLoad3);
         // some code
         log.info("Leaving someMethod()...");
     }
