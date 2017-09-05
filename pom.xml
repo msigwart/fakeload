@@ -4,7 +4,7 @@
 
     <groupId>com.martensigwart</groupId>
     <artifactId>fakeload</artifactId>
-    <version>0.3.1</version>
+    <version>0.3.1-SNAPSHOT</version>
 
     <name>FakeLoad</name>
     <description>A library which provides a simple and flexible way of producing “fake" system loads in applications or tests.</description>
