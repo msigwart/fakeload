@@ -4,13 +4,11 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 /**
  * Factory methods that create {@link FakeLoadExecutor} instances.
@@ -27,6 +25,32 @@ public final class FakeLoadExecutors {
     private static final String DEFAULT_DISK_OUTPUT_PATH = System.getProperty("java.io.tmpdir") + "/" + DISK_OUTPUT_FILE;
     private static SimulationInfrastructure defaultInfrastructure;
 
+    /**
+     * Creates a {@link DefaultFakeLoadExecutor} instance for executing {@link FakeLoad} objects.
+     *
+     * <p>
+     * The created executor contains everything necessary to perform system load simulation of CPU,
+     * memory and disk I/O.
+     *
+     * <p>
+     * The returned executor is thread safe and can be used concurrently.
+     * However, clients can create as many executors as they want using this method,
+     * without compromising concurrent behavior. All {@code DefaultFakeLoadExecutor}
+     * instances returned by this method, use the same {@link SimulationInfrastructure}
+     * below the surface.
+     *
+     * <p>
+     * <b>Important:</b> Disk input is simulated by reading from a file called "input.tmp"
+     * located in the temporary directory as indicated by system property "java.io.tmpdir".
+     * This directory is typically "/tmp", or "/var/tmp" on Unix-like platforms.
+     * On Microsoft Windows systems the java.io.tmpdir property is typically "C:\WINNT\TEMP".
+     * You can set the property with <i>-Djava.io.tmpdir=/your-tmpdirectory</i>.
+     * The file needs to be created prior to disk input simulation.
+     * To prevent caching of the file system, the file should be at least twice as big as the
+     * available RAM.
+     *
+     * @return a {@code DefaultFakeLoadExecutor} instance
+     */
     public static synchronized FakeLoadExecutor newDefaultExecutor() {
         // create infrastructure if it hasn't been created yet
         if (defaultInfrastructure == null) {
@@ -67,12 +91,6 @@ public final class FakeLoadExecutors {
             /*
              * Catch blocks in case paths can be passed as parameters.
              */
-            } catch (FileNotFoundException e) {
-                log.error("File {} used for simulating disk input does not exist. " +
-                        "(The file should be at least twice as big as available RAM to prevent caching)",
-                        DEFAULT_DISK_INPUT_PATH);
-                throw new IllegalArgumentException(e);
-
             } catch (IOException e) {
                 log.error("File {} used for simulating disk output could not be created.", DEFAULT_DISK_OUTPUT_PATH);
                 throw new IllegalArgumentException(e);

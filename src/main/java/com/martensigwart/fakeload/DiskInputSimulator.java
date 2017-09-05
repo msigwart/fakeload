@@ -55,6 +55,7 @@ public abstract class DiskInputSimulator extends AbstractLoadSimulator {
         } catch (IOException e) {
             log.error(e.getMessage());
             e.printStackTrace();
+            setLoad(0);
         }
     }
 

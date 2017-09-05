@@ -14,21 +14,31 @@ import java.io.RandomAccessFile;
 public final class RandomAccessDiskInputSimulator extends DiskInputSimulator {
 
     private static final Logger log = LoggerFactory.getLogger(RandomAccessDiskInputSimulator.class);
+    private final String filePath;
     private RandomAccessFile file;
 
     /**
      * @param filePath path to the file for simulating disk input (should be bigger than amount of available RAM)
      * @throws FileNotFoundException if no file with the specified file path can be opened
      */
-    public RandomAccessDiskInputSimulator(String filePath) throws FileNotFoundException {
+    public RandomAccessDiskInputSimulator(String filePath) {
         super();
-        file = new RandomAccessFile(filePath, "r");
+        this.filePath = filePath;
     }
 
     @Override
     protected void read(byte[] bytes) throws IOException {
         try {
+            if (file == null) {
+                file = new RandomAccessFile(filePath, "r");
+                log.trace("Opened file {}", filePath);
+            }
+
             file.read(bytes);
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException(String.format("File %s used for simulating disk input does not exist. " +
+                      "(The file should be at least twice as big as available RAM to prevent caching)", filePath));
+
         } catch (EOFException e) {
             log.debug("End of file reached: Resetting file pointer");
             file.seek(0);
@@ -38,7 +48,9 @@ public final class RandomAccessDiskInputSimulator extends DiskInputSimulator {
     @Override
     protected void cleanUp() {
         try {
-            file.close();
+            if (file != null) {
+                file.close();
+            }
         } catch (IOException e) {
             log.error("Failed to close file: {}", e.getMessage());
             e.printStackTrace();
