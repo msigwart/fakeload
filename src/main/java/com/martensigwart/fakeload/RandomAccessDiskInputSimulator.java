@@ -19,7 +19,6 @@ public final class RandomAccessDiskInputSimulator extends DiskInputSimulator {
 
     /**
      * @param filePath path to the file for simulating disk input (should be bigger than amount of available RAM)
-     * @throws FileNotFoundException if no file with the specified file path can be opened
      */
     public RandomAccessDiskInputSimulator(String filePath) {
         super();
