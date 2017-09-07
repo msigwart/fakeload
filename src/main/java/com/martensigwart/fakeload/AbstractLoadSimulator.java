@@ -87,14 +87,15 @@ public abstract class AbstractLoadSimulator implements LoadSimulator {
 
     @Override
     public void run() {
+        log.debug("{} - Started", name);
         boolean running = true;
         while (running) {
             try {
                 synchronized (lock) {
                     while (waitConditionFulfilled()) {
-                        log.trace("{} - Waiting for something to do...", name);
+                        log.debug("{} - Waiting for something to do...", name);
                         lock.wait();
-                        log.trace("{} - Woke up.", name);
+                        log.debug("{} - Woke up.", name);
                     }
                 }
 

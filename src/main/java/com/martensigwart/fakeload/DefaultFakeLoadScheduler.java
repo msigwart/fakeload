@@ -51,7 +51,7 @@ public final class DefaultFakeLoadScheduler implements FakeLoadScheduler {
 
 
     private Future<Void> scheduleLoad(FakeLoad fakeLoad) {
-        log.debug("Started scheduling...");
+        log.trace("Started scheduling...");
 
         CompletableFuture<Void> completableFuture = new CompletableFuture<>();
         completableFuture.complete(null);       // Complete with null value as CompletableFuture is of type Void
@@ -61,7 +61,7 @@ public final class DefaultFakeLoadScheduler implements FakeLoadScheduler {
             // schedule increase
             completableFuture = completableFuture.thenRunAsync(() -> {
                 try {
-                    log.debug("Increasing system load by {}", load);
+                    log.trace("Increasing system load by {}", load);
                     infrastructure.increaseSystemLoadBy(load);
 
                 } catch (MaximumLoadExceededException e) {
@@ -79,14 +79,14 @@ public final class DefaultFakeLoadScheduler implements FakeLoadScheduler {
                     throw new RuntimeException(e);
                 }
 
-                log.debug("Decreasing system load by {}", load);
+                log.trace("Decreasing system load by {}", load);
                 infrastructure.decreaseSystemLoadBy(load);
 
             });
         }
 
 
-        log.debug("Finished scheduling.");
+        log.trace("Finished scheduling.");
         return completableFuture;
     }
 

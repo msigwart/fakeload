@@ -54,7 +54,7 @@ public final class LoadController implements Runnable {
 
     @Override
     public void run() {
-        log.trace("LoadController - Started");
+        log.debug("LoadController - Started");
 
         boolean running = true;
         operatingSystem.getProcessCpuLoad();    // the first value reported is always zero
@@ -62,9 +62,9 @@ public final class LoadController implements Runnable {
             try {
                 synchronized (lock) {
                     while (systemLoad.getCpu() == 0) {
-                        log.trace("LoadController - Nothing to control, waiting...");
+                        log.debug("LoadController - Nothing to control, waiting...");
                         lock.wait();
-                        log.trace("LoadController - Woke Up");
+                        log.debug("LoadController - Woke Up");
                     }
                 }
                 Thread.sleep(SLEEP_PERIOD);
@@ -72,7 +72,7 @@ public final class LoadController implements Runnable {
 
 
             } catch (InterruptedException e) {
-                log.warn("LoadController - Interrupted");
+                log.debug("LoadController - Interrupted");
                 running = false;
             }
         }
