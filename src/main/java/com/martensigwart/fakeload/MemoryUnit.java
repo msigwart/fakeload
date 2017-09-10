@@ -2,6 +2,13 @@ package com.martensigwart.fakeload;
 
 /**
  * Enum representing different memory units like bytes, kilobytes, megabytes, gigabytes.
+ *
+ * The orders of magnitude between bytes, kilobytes, megabytes, and gigabytes are hereby represented as binary.
+ * I.e. one kilobyte are 1024, one megabyte are 10242 and one gigabyte are 10243 bytes.
+ * These representations are sometimes also known as kibibytes (kiB), mebibytes(MiB) and gibibytes(GiB).
+ *
+ * @author Marten Sigwart
+ * @since 1.8
  */
 public enum MemoryUnit {
 
