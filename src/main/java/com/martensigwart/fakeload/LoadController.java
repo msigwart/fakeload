@@ -56,6 +56,7 @@ public final class LoadController implements Runnable {
     private final Object lock;
 
     private long lastCpu = 0L;
+    private long oldDesiredCpu = 0L;
 
     public LoadController(SystemLoad systemLoad, List<CpuSimulator> cpuSimulators, MemorySimulator memorySimulator, DiskInputSimulator diskInputSimulator, DiskOutputSimulator diskOutputSimulator) {
         this.systemLoad = systemLoad;
@@ -124,11 +125,35 @@ public final class LoadController implements Runnable {
     }
 
 
-
+    /**
+     * Controls and adjusts the <i>actual</i> CPU load produced by CPU simulator threads.
+     *
+     * <p>
+     * CPU load adjustment is done in the following way:
+     *
+     * <p>
+     * First, the desired CPU load is retrieved from the {@link SystemLoad} instance.
+     * The desired load is compared to the last desired CPU load recorded by the method.
+     * When the desired load has been adjusted recently and old and new desired load differ,
+     * the old load is set to the new one and the method returns with no load adjustment
+     * taking place, as simulator threads might not have had the time to catch up to change
+     * in desired load yet.
+     *
+     * <p>
+     * When there is no difference between the new and old desired CPU load, the desired
+     * load is compared to the actual CPU load currently produced by the simulator threads.
+     * When desired and actual CPU load differ by more than a defined threshold, and actual
+     * CPU load is <b>not</b> currently changing, CPU load will be adjusted.
+     *
+     */
     private void controlCpuLoad() {
-        long actualCpu = (long)(operatingSystem.getProcessCpuLoad() * 100);
         long desiredCpu = systemLoad.getCpu();
+        if (desiredCpu != oldDesiredCpu) {
+            oldDesiredCpu = desiredCpu;
+            return;
+        }
 
+        long actualCpu = (long)(operatingSystem.getProcessCpuLoad() * 100);
         log.trace("Desired CPU: {}, Actual CPU: {}, Last CPU: {}", desiredCpu, actualCpu, lastCpu);
 
         long difference = actualCpu - desiredCpu;
@@ -137,7 +162,7 @@ public final class LoadController implements Runnable {
                 Math.abs(lastCpu - actualCpu) <= CPU_CONTROL_THRESHOLD) {
 
             int noOfSteps = (int)(Math.abs(difference) / stepSize);
-            log.trace("{}",noOfSteps);
+            log.trace("Number of adjustment steps: {}",noOfSteps);
             if (difference < 0) {   // actual load smaller than desired load
                 log.trace("Increasing CPU load, difference {}", difference);
                 increaseCpuSimulatorLoads(1, noOfSteps);
