@@ -55,7 +55,8 @@ public final class LoadController implements Runnable {
     private final double stepSize;
     private final Object lock;
 
-    private long lastCpu = 0L;
+    // Set to lower then CPU_CONTROL_THRESHOLD
+    private long lastCpu = -CPU_CONTROL_THRESHOLD-1;
     private long oldDesiredCpu = 0L;
 
     public LoadController(SystemLoad systemLoad, List<CpuSimulator> cpuSimulators, MemorySimulator memorySimulator, DiskInputSimulator diskInputSimulator, DiskOutputSimulator diskOutputSimulator) {
@@ -149,6 +150,7 @@ public final class LoadController implements Runnable {
     private void controlCpuLoad() {
         long desiredCpu = systemLoad.getCpu();
         if (desiredCpu != oldDesiredCpu) {
+            log.trace("Last desired load: {}, new desired load: {} --> Not adjusting CPU load", oldDesiredCpu, desiredCpu);
             oldDesiredCpu = desiredCpu;
             return;
         }
