@@ -56,8 +56,10 @@ public final class LoadController implements Runnable {
     private final Object lock;
 
     // Set to lower then CPU_CONTROL_THRESHOLD
-    private long lastCpu = -CPU_CONTROL_THRESHOLD-1;
+    private double lastCpu = -CPU_CONTROL_THRESHOLD-1;
     private long oldDesiredCpu = 0L;
+    private int increaseCpuIndex;
+    private int decreaseCpuIndex;
 
     public LoadController(SystemLoad systemLoad, List<CpuSimulator> cpuSimulators, MemorySimulator memorySimulator, DiskInputSimulator diskInputSimulator, DiskOutputSimulator diskOutputSimulator) {
         this.systemLoad = systemLoad;
@@ -65,7 +67,11 @@ public final class LoadController implements Runnable {
         this.memorySimulator = memorySimulator;
         this.diskInputSimulator = diskInputSimulator;
         this.diskOutputSimulator = diskOutputSimulator;
-        this.stepSize = 1.0 / Runtime.getRuntime().availableProcessors();
+
+        int noOfCores = Runtime.getRuntime().availableProcessors();
+        this.stepSize = 1.0 / noOfCores;
+        this.increaseCpuIndex = 0;
+        this.decreaseCpuIndex = noOfCores-1;
         this.lock = new Object();
     }
 
@@ -155,10 +161,10 @@ public final class LoadController implements Runnable {
             return;
         }
 
-        long actualCpu = (long)(operatingSystem.getProcessCpuLoad() * 100);
+        double actualCpu = operatingSystem.getProcessCpuLoad() * 100;
         log.trace("Desired CPU: {}, Actual CPU: {}, Last CPU: {}", desiredCpu, actualCpu, lastCpu);
 
-        long difference = actualCpu - desiredCpu;
+        double difference = actualCpu - desiredCpu;
 
         if (    Math.abs(difference) > CPU_CONTROL_THRESHOLD &&
                 Math.abs(lastCpu - actualCpu) <= CPU_CONTROL_THRESHOLD) {
@@ -182,7 +188,10 @@ public final class LoadController implements Runnable {
 
     private void increaseCpuSimulatorLoads(int delta, int noOfSteps) {
         for (int i=0; i<noOfSteps; i++) {
-            CpuSimulator cpuSimulator = cpuSimulators.get(i % cpuSimulators.size());
+            CpuSimulator cpuSimulator = cpuSimulators.get(increaseCpuIndex);
+
+            decreaseCpuIndex = increaseCpuIndex;
+            increaseCpuIndex = (increaseCpuIndex + 1) % cpuSimulators.size();
 
             /*
              * Only increase if load is not maxed out.
@@ -190,7 +199,7 @@ public final class LoadController implements Runnable {
              * if-statement only to prevent unnecessary calls to increase load.
              */
             if (!cpuSimulator.isMaximumLoad()) {
-                cpuSimulators.get(i % cpuSimulators.size()).increaseLoad(delta);
+                cpuSimulator.increaseLoad(delta);
             }
         }
     }
@@ -198,7 +207,10 @@ public final class LoadController implements Runnable {
 
     private void decreaseCpuSimulatorLoads(int delta, int noOfSteps) {
         for (int i=0; i<noOfSteps; i++) {
-            CpuSimulator cpuSimulator = cpuSimulators.get(i % cpuSimulators.size());
+            CpuSimulator cpuSimulator = cpuSimulators.get(decreaseCpuIndex);
+
+            increaseCpuIndex = decreaseCpuIndex;
+            decreaseCpuIndex = (cpuSimulators.size() - 1 + decreaseCpuIndex) % cpuSimulators.size();
 
             /*
              * Only decrease if load is not zero.
@@ -206,7 +218,7 @@ public final class LoadController implements Runnable {
              * if-statement only to prevent unnecessary calls to decrease load.
              */
             if (!cpuSimulator.isZeroLoad()) {
-                cpuSimulators.get(i % cpuSimulators.size()).decreaseLoad(delta);
+                cpuSimulator.decreaseLoad(delta);
             }
         }
     }
