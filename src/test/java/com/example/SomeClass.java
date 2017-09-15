@@ -18,21 +18,21 @@ public class SomeClass {
         // Execute FakeLoad
 //        FakeLoad fakeLoad = FakeLoads.create(100, "50%", "1024m");
         FakeLoad fakeLoad = FakeLoads.create().lasting(10, TimeUnit.SECONDS)
-                .withCpu(50);
-//                .withMemory(200, MemoryUnit.MB)
-//                .withDiskInput(100, MemoryUnit.MB)
-//                .withDiskOutput(100, MemoryUnit.MB);
-        FakeLoad fakeLoad2 = FakeLoads.create().lasting(5, TimeUnit.SECONDS)
-                .withDiskInput(200, MemoryUnit.KB);
-
-        FakeLoad fakeLoad3 = FakeLoads.create().lasting(5, TimeUnit.SECONDS)
-                .withCpu(50)
-                .withDiskInput(300, MemoryUnit.KB);
+//                .withCpu(50);
+//                .withMemory(200, MemoryUnit.MB);
+                .withDiskInput(100, MemoryUnit.MB)
+                .withDiskOutput(100, MemoryUnit.MB);
+//        FakeLoad fakeLoad2 = FakeLoads.create().lasting(5, TimeUnit.SECONDS)
+//                .withDiskInput(200, MemoryUnit.KB);
+//
+//        FakeLoad fakeLoad3 = FakeLoads.create().lasting(5, TimeUnit.SECONDS)
+//                .withCpu(50)
+//                .withDiskInput(300, MemoryUnit.KB);
 
         executor.execute(fakeLoad);
         log.info("CPU simulation successful");
-        executor.execute(fakeLoad2);        // should fail if no input.tmp file exists
-        executor.execute(fakeLoad3);
+//        executor.execute(fakeLoad2);        // should fail if no input.tmp file exists
+//        executor.execute(fakeLoad3);
         // some code
         log.info("Leaving someMethod()...");
     }
@@ -40,25 +40,37 @@ public class SomeClass {
     public void someOtherMethod() {
         log.info("Entered someOtherMethod()");
 
-        // Create FakeLoad with Builder pattern
-        FakeLoad fakeload = new FakeLoadBuilder()
-                .lasting(60, TimeUnit.SECONDS)
-                .withCpu(30)
-                .withMemory(1024, MemoryUnit.MB).build();
+//        // Create FakeLoad with Builder pattern
+//        FakeLoad fakeload = new FakeLoadBuilder()
+//                .lasting(60, TimeUnit.SECONDS)
+//                .withCpu(30)
+//                .withMemory(1024, MemoryUnit.MB).build();
+//
+//        // Execute FakeLoad
+//        executor.execute(fakeload);
 
-        // Execute FakeLoad
-        executor.execute(fakeload);
+//        fakeload = new FakeLoadBuilder(20, TimeUnit.SECONDS)
+//                .withCpu(20).withMemory(100, MemoryUnit.KB)
+//                .addLoad(new FakeLoadBuilder(20, TimeUnit.SECONDS)
+//                    .withCpu(40).withMemory(200, MemoryUnit.KB).build())
+//                .addLoad(new FakeLoadBuilder(20, TimeUnit.SECONDS)
+//                    .withCpu(60).withMemory(300, MemoryUnit.KB).build())
+//                .addLoad(new FakeLoadBuilder(20, TimeUnit.SECONDS)
+//                    .withCpu(80).withMemory(400, MemoryUnit.KB).build())
+//                .addLoad(new FakeLoadBuilder(20, TimeUnit.SECONDS)
+//                    .withCpu(100).withMemory(500, MemoryUnit.KB).build())
+//                .build();
 
-        fakeload = new FakeLoadBuilder(20, TimeUnit.SECONDS)
-                .withCpu(20).withMemory(100, MemoryUnit.KB)
-                .addLoad(new FakeLoadBuilder(20, TimeUnit.SECONDS)
-                    .withCpu(40).withMemory(200, MemoryUnit.KB).build())
-                .addLoad(new FakeLoadBuilder(20, TimeUnit.SECONDS)
-                    .withCpu(60).withMemory(300, MemoryUnit.KB).build())
-                .addLoad(new FakeLoadBuilder(20, TimeUnit.SECONDS)
-                    .withCpu(80).withMemory(400, MemoryUnit.KB).build())
-                .addLoad(new FakeLoadBuilder(20, TimeUnit.SECONDS)
-                    .withCpu(100).withMemory(500, MemoryUnit.KB).build())
+        FakeLoad fakeload = new FakeLoadBuilder(60, TimeUnit.SECONDS)
+                .withCpu(20)
+                .addLoad(new FakeLoadBuilder(60, TimeUnit.SECONDS)
+                        .withCpu(40).build())
+                .addLoad(new FakeLoadBuilder(60, TimeUnit.SECONDS)
+                        .withCpu(60).build())
+                .addLoad(new FakeLoadBuilder(60, TimeUnit.SECONDS)
+                        .withCpu(80).build())
+                .addLoad(new FakeLoadBuilder(60, TimeUnit.SECONDS)
+                        .withCpu(100).build())
                 .build();
 
         executor.execute(fakeload);
