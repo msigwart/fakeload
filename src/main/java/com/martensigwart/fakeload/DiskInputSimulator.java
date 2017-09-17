@@ -30,7 +30,7 @@ public abstract class DiskInputSimulator extends AbstractLoadSimulator {
      * @param bytes bytes to read
      * @throws IOException if an IOException occurs while reading
      */
-    protected abstract void read(byte[] bytes) throws IOException;
+    protected abstract int read(byte[] bytes) throws IOException;
 
     @Override
     public void simulateLoad(long load) throws InterruptedException {
@@ -38,12 +38,12 @@ public abstract class DiskInputSimulator extends AbstractLoadSimulator {
 
         try {
             long startRead = System.nanoTime();
-            read(bytes);
+            int bytesRead = read(bytes);
             long endRead = System.nanoTime();
             long duration = endRead - startRead;
 
             log.trace("Read {} in {} ms",
-                    MemoryUnit.mbString(bytes.length), TimeUnit.NANOSECONDS.toMillis(duration));
+                    MemoryUnit.mbString(bytesRead), TimeUnit.NANOSECONDS.toMillis(duration));
 
             long toSleep = TimeUnit.SECONDS.toMillis(1) - TimeUnit.NANOSECONDS.toMillis(duration);
 

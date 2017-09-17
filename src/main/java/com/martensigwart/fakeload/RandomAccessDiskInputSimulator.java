@@ -3,7 +3,6 @@ package com.martensigwart.fakeload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.EOFException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -26,22 +25,30 @@ public final class RandomAccessDiskInputSimulator extends DiskInputSimulator {
     }
 
     @Override
-    protected void read(byte[] bytes) throws IOException {
+    protected int read(byte[] bytes) throws IOException {
         try {
             if (file == null) {
                 file = new RandomAccessFile(filePath, "r");
                 log.trace("Opened file {}", filePath);
             }
 
-            file.read(bytes);
+            int bytesRead = file.read(bytes);
+            if (bytesRead == bytes.length) {
+                return bytesRead;
+            }
+            // Could not read fully: reset file pointer and read rest of bytes
+            if (bytesRead < bytes.length) {
+                log.debug("End of file reached: Resetting file pointer");
+                file.seek(0);
+                file.read(bytes, bytesRead, bytes.length - bytesRead);
+            }
+            return bytes.length;
+
         } catch (FileNotFoundException e) {
             throw new FileNotFoundException(String.format("File %s used for simulating disk input does not exist. " +
                       "(The file should be at least twice as big as available RAM to prevent caching)", filePath));
-
-        } catch (EOFException e) {
-            log.debug("End of file reached: Resetting file pointer");
-            file.seek(0);
         }
+
     }
 
     @Override
