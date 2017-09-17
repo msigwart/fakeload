@@ -14,8 +14,8 @@ public class TestFrame {
 
         SomeClass someClass = new SomeClass();
 
-        someClass.someMethod();
-//        someClass.someOtherMethod();
+//        someClass.someMethod();
+        someClass.someOtherMethod();
 //        someClass.yetAnotherMethod();
 
     }

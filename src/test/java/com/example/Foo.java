@@ -11,8 +11,9 @@ public class Foo extends DiskInputSimulator {
     }
 
     @Override
-    protected void read(byte[] bytes) throws IOException {
+    protected int read(byte[] bytes) throws IOException {
 
+        return 0;
     }
 
     @Override

@@ -40,11 +40,20 @@ public class SomeClass {
     public void someOtherMethod() {
         log.info("Entered someOtherMethod()");
 
-//        // Create FakeLoad with Builder pattern
-//        FakeLoad fakeload = new FakeLoadBuilder()
-//                .lasting(60, TimeUnit.SECONDS)
-//                .withCpu(30)
-//                .withMemory(1024, MemoryUnit.MB).build();
+        // Create FakeLoad with Builder pattern
+        FakeLoad fakeload = new FakeLoadBuilder(60, TimeUnit.SECONDS)
+                .addLoad(new FakeLoadBuilder(60, TimeUnit.SECONDS).withCpu(10).build())
+                .addLoad(new FakeLoadBuilder(60, TimeUnit.SECONDS).withCpu(20).build())
+                .addLoad(new FakeLoadBuilder(60, TimeUnit.SECONDS).withCpu(30).build())
+                .addLoad(new FakeLoadBuilder(60, TimeUnit.SECONDS).withCpu(40).build())
+                .addLoad(new FakeLoadBuilder(60, TimeUnit.SECONDS).withCpu(50).build())
+                .addLoad(new FakeLoadBuilder(60, TimeUnit.SECONDS).withCpu(60).build())
+                .addLoad(new FakeLoadBuilder(60, TimeUnit.SECONDS).withCpu(70).build())
+                .addLoad(new FakeLoadBuilder(60, TimeUnit.SECONDS).withCpu(80).build())
+                .addLoad(new FakeLoadBuilder(60, TimeUnit.SECONDS).withCpu(90).build())
+                .addLoad(new FakeLoadBuilder(60, TimeUnit.SECONDS).withCpu(100).build())
+                .addLoad(new FakeLoadBuilder(60, TimeUnit.SECONDS).build())
+                .build();
 //
 //        // Execute FakeLoad
 //        executor.execute(fakeload);
@@ -61,17 +70,29 @@ public class SomeClass {
 //                    .withCpu(100).withMemory(500, MemoryUnit.KB).build())
 //                .build();
 
-        FakeLoad fakeload = new FakeLoadBuilder(60, TimeUnit.SECONDS)
-                .withCpu(20)
-                .addLoad(new FakeLoadBuilder(60, TimeUnit.SECONDS)
-                        .withCpu(40).build())
-                .addLoad(new FakeLoadBuilder(60, TimeUnit.SECONDS)
-                        .withCpu(60).build())
-                .addLoad(new FakeLoadBuilder(60, TimeUnit.SECONDS)
-                        .withCpu(80).build())
-                .addLoad(new FakeLoadBuilder(60, TimeUnit.SECONDS)
-                        .withCpu(100).build())
-                .build();
+//        FakeLoad fakeload = new FakeLoadBuilder(0, TimeUnit.SECONDS)
+//                .addLoad(new FakeLoadBuilder(30, TimeUnit.SECONDS)
+//                        .withDiskOutput(50, MemoryUnit.MB).build())
+//                .addLoad(new FakeLoadBuilder(30, TimeUnit.SECONDS)
+//                        .withDiskOutput(100, MemoryUnit.MB).build())
+//                .addLoad(new FakeLoadBuilder(30, TimeUnit.SECONDS)
+//                        .withDiskOutput(150, MemoryUnit.MB).build())
+//                .addLoad(new FakeLoadBuilder(30, TimeUnit.SECONDS)
+//                        .withDiskOutput(200, MemoryUnit.MB).build())
+//                .addLoad(new FakeLoadBuilder(30, TimeUnit.SECONDS)
+//                        .withDiskOutput(250, MemoryUnit.MB).build())
+//                .addLoad(new FakeLoadBuilder(30, TimeUnit.SECONDS)
+//                        .withDiskOutput(300, MemoryUnit.MB).build())
+//                .addLoad(new FakeLoadBuilder(30, TimeUnit.SECONDS)
+//                        .withDiskOutput(350, MemoryUnit.MB).build())
+//                .addLoad(new FakeLoadBuilder(30, TimeUnit.SECONDS)
+//                        .withDiskOutput(400, MemoryUnit.MB).build())
+//                .build();
+
+//        fakeload = new FakeLoadBuilder(0, TimeUnit.SECONDS)
+//                .addLoad(new FakeLoadBuilder(60, TimeUnit.SECONDS)
+//                        .withDiskOutput(1, MemoryUnit.GB).build())
+//                .build();
 
         executor.execute(fakeload);
 
