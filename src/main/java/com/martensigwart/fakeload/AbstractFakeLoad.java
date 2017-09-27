@@ -5,7 +5,8 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static com.martensigwart.fakeload.Preconditions.checkArgument;
+
 
 abstract class AbstractFakeLoad implements FakeLoad {
 

@@ -1,7 +1,5 @@
 package com.martensigwart.fakeload;
 
-import com.google.common.collect.ImmutableList;
-
 import javax.annotation.concurrent.Immutable;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
@@ -9,7 +7,8 @@ import java.util.*;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import static com.google.common.base.Preconditions.*;
+import static com.martensigwart.fakeload.Preconditions.checkArgument;
+import static com.martensigwart.fakeload.Preconditions.checkNotNull;
 
 /**
  * A simple representation of a {@link FakeLoad}, which contains only simple

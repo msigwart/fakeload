@@ -1,18 +1,11 @@
 package com.martensigwart.fakeload;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterators;
-
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static com.google.common.base.Preconditions.*;
+import static com.martensigwart.fakeload.Preconditions.checkNotNull;
 
 /**
  * Implementation of interface {@link FakeLoad} representing composite
@@ -36,12 +29,12 @@ final class CompositeFakeLoad extends AbstractFakeLoad {
     /**
      * This object's inner/children loads
      */
-    private final ImmutableList<FakeLoad> innerLoads;
+    private final List<FakeLoad> innerLoads;
 
     CompositeFakeLoad(SimpleFakeLoad ownLoad, List<FakeLoad> innerLoads, int repetitions) {
         super(repetitions);
         this.ownLoad = (SimpleFakeLoad) checkNotNull(ownLoad).repeat(1);
-        this.innerLoads = ImmutableList.copyOf(checkNotNull(innerLoads));
+        this.innerLoads = Collections.unmodifiableList(innerLoads);     // TODO maybe deep copy inner loads list to remove reference to it
     }
 
     CompositeFakeLoad(List<FakeLoad> innerLoads, int repetitions) {
@@ -98,9 +91,12 @@ final class CompositeFakeLoad extends AbstractFakeLoad {
 
         List<FakeLoad> newLoads;
         if (this.innerLoads.isEmpty()) {
-            newLoads = ImmutableList.of(load);
+            newLoads = new ArrayList<>();
+            newLoads.add(load);
         } else {
-            newLoads = ImmutableList.<FakeLoad>builder().addAll(this.innerLoads).add(load).build();
+            newLoads = new ArrayList<>();
+            newLoads.addAll(this.innerLoads);
+            newLoads.add(load);
         }
         return new CompositeFakeLoad(ownLoad, newLoads, getRepetitions());
     }
@@ -111,9 +107,12 @@ final class CompositeFakeLoad extends AbstractFakeLoad {
 
         List<FakeLoad> newLoads;
         if (this.innerLoads.isEmpty()) {
-            newLoads = ImmutableList.copyOf(loads);
+            newLoads = new ArrayList<>();
+            newLoads.addAll(loads);
         } else {
-            newLoads = ImmutableList.<FakeLoad>builder().addAll(this.innerLoads).addAll(loads).build();
+            newLoads = new ArrayList<>();
+            newLoads.addAll(this.innerLoads);
+            newLoads.addAll(loads);
         }
         return new CompositeFakeLoad(ownLoad, newLoads, getRepetitions());
     }
