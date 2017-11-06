@@ -16,6 +16,7 @@
  *  - Removed checkState() methods
  *  - Removed checkElementIndex() methods
  *  - Removed CanIgnoreReturnValue annotations
+ *  - Removed most checkArgument() methods
  *
  */
 package com.martensigwart.fakeload;
@@ -26,323 +27,24 @@ import javax.annotation.Nullable;
 final class Preconditions {
     private Preconditions() {}
 
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * @param expression a boolean expression
-     * @throws IllegalArgumentException if {@code expression} is false
-     */
-    static void checkArgument(boolean expression) {
-        if (!expression) {
-            throw new IllegalArgumentException();
-        }
-    }
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * @param expression a boolean expression
-     * @param errorMessage the exception message to use if the check fails; will be converted to a
-     *     string using {@link String#valueOf(Object)}
-     * @throws IllegalArgumentException if {@code expression} is false
-     */
-    static void checkArgument(boolean expression, @Nullable Object errorMessage) {
-        if (!expression) {
-            throw new IllegalArgumentException(String.valueOf(errorMessage));
-        }
-    }
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * @param expression a boolean expression
-     * @param errorMessageTemplate a template for the exception message should the check fail. The
-     *     message is formed by replacing each {@code %s} placeholder in the template with an
-     *     argument. These are matched by position - the first {@code %s} gets {@code
-     *     errorMessageArgs[0]}, etc. Unmatched arguments will be appended to the formatted message in
-     *     square braces. Unmatched placeholders will be left as-is.
-     * @param errorMessageArgs the arguments to be substituted into the message template. Arguments
-     *     are converted to strings using {@link String#valueOf(Object)}.
-     * @throws IllegalArgumentException if {@code expression} is false
-     */
-    static void checkArgument(
-            boolean expression,
-            @Nullable String errorMessageTemplate,
-            @Nullable Object... errorMessageArgs) {
-        if (!expression) {
-            throw new IllegalArgumentException(format(errorMessageTemplate, errorMessageArgs));
-        }
-    }
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    static void checkArgument(boolean b, @Nullable String errorMessageTemplate, char p1) {
-        if (!b) {
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1));
-        }
-    }
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
     static void checkArgument(boolean b, @Nullable String errorMessageTemplate, int p1) {
         if (!b) {
             throw new IllegalArgumentException(format(errorMessageTemplate, p1));
         }
     }
 
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
     static void checkArgument(boolean b, @Nullable String errorMessageTemplate, long p1) {
         if (!b) {
             throw new IllegalArgumentException(format(errorMessageTemplate, p1));
         }
     }
 
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    static void checkArgument(
-            boolean b, @Nullable String errorMessageTemplate, @Nullable Object p1) {
-        if (!b) {
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1));
-        }
-    }
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    static void checkArgument(
-            boolean b, @Nullable String errorMessageTemplate, char p1, char p2) {
+    static void checkArgument(boolean b, @Nullable String errorMessageTemplate, int p1, int p2) {
         if (!b) {
             throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
         }
     }
 
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    static void checkArgument(
-            boolean b, @Nullable String errorMessageTemplate, char p1, int p2) {
-        if (!b) {
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-        }
-    }
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    static void checkArgument(
-            boolean b, @Nullable String errorMessageTemplate, char p1, long p2) {
-        if (!b) {
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-        }
-    }
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    static void checkArgument(
-            boolean b, @Nullable String errorMessageTemplate, char p1, @Nullable Object p2) {
-        if (!b) {
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-        }
-    }
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    static void checkArgument(
-            boolean b, @Nullable String errorMessageTemplate, int p1, char p2) {
-        if (!b) {
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-        }
-    }
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    static void checkArgument(
-            boolean b, @Nullable String errorMessageTemplate, int p1, int p2) {
-        if (!b) {
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-        }
-    }
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    static void checkArgument(
-            boolean b, @Nullable String errorMessageTemplate, int p1, long p2) {
-        if (!b) {
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-        }
-    }
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    static void checkArgument(
-            boolean b, @Nullable String errorMessageTemplate, int p1, @Nullable Object p2) {
-        if (!b) {
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-        }
-    }
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    static void checkArgument(
-            boolean b, @Nullable String errorMessageTemplate, long p1, char p2) {
-        if (!b) {
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-        }
-    }
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    static void checkArgument(
-            boolean b, @Nullable String errorMessageTemplate, long p1, int p2) {
-        if (!b) {
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-        }
-    }
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    static void checkArgument(
-            boolean b, @Nullable String errorMessageTemplate, long p1, long p2) {
-        if (!b) {
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-        }
-    }
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    static void checkArgument(
-            boolean b, @Nullable String errorMessageTemplate, long p1, @Nullable Object p2) {
-        if (!b) {
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-        }
-    }
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    static void checkArgument(
-            boolean b, @Nullable String errorMessageTemplate, @Nullable Object p1, char p2) {
-        if (!b) {
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-        }
-    }
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    static void checkArgument(
-            boolean b, @Nullable String errorMessageTemplate, @Nullable Object p1, int p2) {
-        if (!b) {
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-        }
-    }
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    static void checkArgument(
-            boolean b, @Nullable String errorMessageTemplate, @Nullable Object p1, long p2) {
-        if (!b) {
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-        }
-    }
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    static void checkArgument(
-            boolean b, @Nullable String errorMessageTemplate, @Nullable Object p1, @Nullable Object p2) {
-        if (!b) {
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-        }
-    }
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    static void checkArgument(
-            boolean b,
-            @Nullable String errorMessageTemplate,
-            @Nullable Object p1,
-            @Nullable Object p2,
-            @Nullable Object p3) {
-        if (!b) {
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2, p3));
-        }
-    }
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    static void checkArgument(
-            boolean b,
-            @Nullable String errorMessageTemplate,
-            @Nullable Object p1,
-            @Nullable Object p2,
-            @Nullable Object p3,
-            @Nullable Object p4) {
-        if (!b) {
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2, p3, p4));
-        }
-    }
 
     /**
      * Ensures that an object reference passed as a parameter to the calling method is not null.
@@ -623,7 +325,7 @@ final class Preconditions {
      *
      * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
      */
-    
+
     static <T> T checkNotNull(
             T obj, @Nullable String errorMessageTemplate, @Nullable Object p1, long p2) {
         if (obj == null) {

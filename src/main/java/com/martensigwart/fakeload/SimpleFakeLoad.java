@@ -110,7 +110,8 @@ final class SimpleFakeLoad extends AbstractFakeLoad {
     @Override
     public FakeLoad addLoad(FakeLoad load) {
         checkNotNull(load);
-        List<FakeLoad> newLoads = ImmutableList.<FakeLoad>builder().add(load).build();
+        List<FakeLoad> newLoads = new ArrayList<>();
+        newLoads.add(load);
         return new CompositeFakeLoad(this, newLoads, getRepetitions());
 
     }
@@ -119,7 +120,7 @@ final class SimpleFakeLoad extends AbstractFakeLoad {
     public FakeLoad addLoads(Collection<FakeLoad> loads) {
         checkNotNull(loads);
 
-        List<FakeLoad> newLoads = ImmutableList.copyOf(loads);
+        List<FakeLoad> newLoads = new ArrayList<>(loads);
 
         return new CompositeFakeLoad(this, newLoads, getRepetitions());
     }

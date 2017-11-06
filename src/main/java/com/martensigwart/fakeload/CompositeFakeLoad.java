@@ -1,5 +1,6 @@
 package com.martensigwart.fakeload;
 
+import javax.annotation.Nonnull;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.util.*;
@@ -34,7 +35,12 @@ final class CompositeFakeLoad extends AbstractFakeLoad {
     CompositeFakeLoad(SimpleFakeLoad ownLoad, List<FakeLoad> innerLoads, int repetitions) {
         super(repetitions);
         this.ownLoad = (SimpleFakeLoad) checkNotNull(ownLoad).repeat(1);
-        this.innerLoads = Collections.unmodifiableList(innerLoads);     // TODO maybe deep copy inner loads list to remove reference to it
+        /*
+         * It is okay to just take the argument innerLoads as input to method
+         * Collections.unmodifiableList(), because the constructor is not part of
+         * the public API and the reference to the argument is not leaked.
+         */
+        this.innerLoads = Collections.unmodifiableList(innerLoads);
     }
 
     CompositeFakeLoad(List<FakeLoad> innerLoads, int repetitions) {
@@ -107,11 +113,9 @@ final class CompositeFakeLoad extends AbstractFakeLoad {
 
         List<FakeLoad> newLoads;
         if (this.innerLoads.isEmpty()) {
-            newLoads = new ArrayList<>();
-            newLoads.addAll(loads);
+            newLoads = new ArrayList<>(loads);
         } else {
-            newLoads = new ArrayList<>();
-            newLoads.addAll(this.innerLoads);
+            newLoads = new ArrayList<>(this.innerLoads);
             newLoads.addAll(loads);
         }
         return new CompositeFakeLoad(ownLoad, newLoads, getRepetitions());
@@ -170,16 +174,15 @@ final class CompositeFakeLoad extends AbstractFakeLoad {
     }
 
     @Override
+    @Nonnull
     public Iterator<FakeLoad> iterator() {
-        Iterator<FakeLoad> iterator = null;
+        Iterator<FakeLoad> iterator = ownLoad.iterator();
         for (int i=0; i<getRepetitions(); i++) {
-            if (iterator == null) {
-                iterator = ownLoad.iterator();
-            } else {
-                iterator = Iterators.concat(iterator, ownLoad.iterator());
+            if (i != 0) {
+                iterator = new IteratorOfIterators<>(iterator, ownLoad.iterator());
             }
             for (FakeLoad load : innerLoads) {
-                iterator = Iterators.concat(iterator, load.iterator());
+                iterator = new IteratorOfIterators<>(iterator, load.iterator());
             }
         }
         return iterator;
@@ -190,13 +193,13 @@ final class CompositeFakeLoad extends AbstractFakeLoad {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CompositeFakeLoad fakeload = (CompositeFakeLoad) o;
-        return Objects.equal(ownLoad, fakeload.ownLoad) &&
-                Objects.equal(innerLoads, fakeload.innerLoads);
+        return Objects.equals(ownLoad, fakeload.ownLoad) &&
+                Objects.equals(innerLoads, fakeload.innerLoads);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(ownLoad, innerLoads);
+        return Objects.hash(ownLoad, innerLoads);
     }
 
     @Override
