@@ -81,7 +81,7 @@ public final class LoadController implements Runnable {
         log.debug("LoadController - Started");
 
         boolean running = true;
-        operatingSystem.getProcessCpuLoad();    // the first value reported is always zero
+        operatingSystem.getCpuLoad();    // the first value reported is always zero
         while(running) {
             try {
                 synchronized (lock) {
@@ -161,7 +161,7 @@ public final class LoadController implements Runnable {
             return;
         }
 
-        double actualCpu = operatingSystem.getProcessCpuLoad() * 100;
+        double actualCpu = operatingSystem.getCpuLoad() * 100;
         log.trace("Desired CPU: {}, Actual CPU: {}, Last CPU: {}", desiredCpu, actualCpu, lastCpu);
 
         double difference = actualCpu - desiredCpu;
