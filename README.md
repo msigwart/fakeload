@@ -17,7 +17,32 @@ executor.execute(fakeload);
 ```
 The above snippet would simulate a CPU load of 80% and a memory load of 300 MB for ten seconds.
 
-## Motivation
+# Getting Started
+You can add a dependency on FakeLoad using Maven with:
+```xml
+<dependency>
+    <groupId>com.martensigwart</groupId>
+    <artifactId>fakeload</artifactId>
+    <version>0.5.0</version>
+</dependency>
+```
+To add a dependency using Gradle, use this:
+```
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.martensigwart:fakeload:0.5.0'
+}
+```
+
+> Note: In versions <= 0.4.0, the CPU load simulation does not work correctly if FakeLoad is executed in a containerized environment (e.g., Docker). This issue was [resolved](https://bugs.openjdk.java.net/browse/JDK-8228428) in Java 14. Thus, if you plan to use FakeLoad in containerized environment, you should use versions >= 0.5.0 and Java 14.
+
+# Usage
+Check out the [User Guide](https://github.com/msigwart/fakeload/wiki/User-Guide) for more usage examples and other information. The javadocs can be found [here](https://www.javadoc.io/doc/com.martensigwart/fakeload/).
+
+## Use Cases
 FakeLoad was created with three different use cases in mind:
 
 ### 1. Testing of Non-Functional Requirements
@@ -32,28 +57,6 @@ FakeLoad can be used to mimick runtime characteristics like CPU usage, etc. with
 
 ### 3. Faking of "real" Data or Algorithms
 Sometimes [NDA](https://en.wikipedia.org/wiki/Non-disclosure_agreement)s might prohibit publication or scientific evaluation involving certain algorithms or data. FakeLoad can be used to "simulate" data or an algorithm's behavior, bypassing the NDA and thus allowing publication.
-
-# Getting Started
-You can add a dependency on FakeLoad using Maven with:
-```xml
-<dependency>
-    <groupId>com.martensigwart</groupId>
-    <artifactId>fakeload</artifactId>
-    <version>0.4.0</version>
-</dependency>
-```
-To add a dependency using Gradle, use this:
-```
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    compile 'com.martensigwart:fakeload:0.4.0'
-}
-```
-# Usage
-Check out the [User Guide](https://github.com/msigwart/fakeload/wiki/User-Guide) for more usage examples and other information. The javadocs can be found [here](https://www.javadoc.io/doc/com.martensigwart/fakeload/).
 
 # How to contribute
 FakeLoad was created in the course of a university project so there sure is room for improvements. Feel welcome to file a bug report or submit feature requests through the [issue tracker](https://github.com/msigwart/fakeload/issues). If you want to contribute feel free to submit a pull request.
