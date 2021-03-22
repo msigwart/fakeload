@@ -23,21 +23,29 @@ public class DefaultFakeLoadExecutorTest {
     @Before
     public void setup() {
 
-        executor = new DefaultFakeLoadExecutor(fakeLoad -> {
+        executor = new DefaultFakeLoadExecutor(new FakeLoadScheduler() {
 
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-            return executorService.submit(() -> {
-                for (FakeLoad f: fakeLoad) {
-                    try {
-                        Thread.sleep(f.getTimeUnit().toMillis(f.getDuration()));
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException("Should not happen");
+            @Override
+            public Future<Void> schedule(FakeLoad fakeLoad) {
+
+                return executorService.submit(() -> {
+                    for (FakeLoad f : fakeLoad) {
+                        try {
+                            Thread.sleep(f.getTimeUnit().toMillis(f.getDuration()));
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException("Should not happen");
+                        }
                     }
-                }
-                return null;
-            });
+                    return null;
+                });
+            }
 
+            @Override
+            public void shutdown() {
+                executorService.shutdown();
+            }
         });
 
         scheduler = Executors.newSingleThreadScheduledExecutor();

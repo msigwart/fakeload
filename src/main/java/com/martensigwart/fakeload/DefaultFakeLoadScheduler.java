@@ -80,4 +80,8 @@ public final class DefaultFakeLoadScheduler implements FakeLoadScheduler {
         });
     }
 
+    @Override
+    public void shutdown() {
+        infrastructure.shutdown();
+    }
 }

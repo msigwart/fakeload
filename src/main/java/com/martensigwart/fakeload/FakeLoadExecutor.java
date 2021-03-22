@@ -82,4 +82,12 @@ public interface FakeLoadExecutor {
      */
     Future<Void> executeAsync(FakeLoad load);
 
+    /**
+     * Shuts down the FakeLoad executor after it is no longer needed.
+     * <p>
+     * Note: Implementing classes should clean up any resources used for the fake load simulation
+     * such as threads, executor services, etc.
+     */
+    void shutdown();
+
 }

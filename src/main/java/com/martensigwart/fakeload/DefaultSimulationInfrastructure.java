@@ -66,7 +66,6 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
     @Override
     public void decreaseSystemLoadBy(FakeLoad load) {
         controller.decreaseSystemLoadBy(load);
-        // TODO check if system load is now zero, if yes start timer to cancel simulator tasks.
     }
 
 
@@ -172,7 +171,8 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
      * <p>
      * This means shutting down the {@code ExecutorService} with which the simulation tasks are run.
      */
-    private void shutdown() {
+    @Override
+    public void shutdown() {
         executorService.shutdownNow();
         try {
             if (!executorService.awaitTermination(50, TimeUnit.MILLISECONDS)) {
@@ -183,8 +183,5 @@ public final class DefaultSimulationInfrastructure implements SimulationInfrastr
         }
         log.debug("ExecutorService shutdown");
     }
-
-
-
 
 }

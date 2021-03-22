@@ -36,4 +36,6 @@ public interface FakeLoadScheduler {
      */
     Future<Void> schedule(FakeLoad fakeLoad);
 
+    void shutdown();
+
 }

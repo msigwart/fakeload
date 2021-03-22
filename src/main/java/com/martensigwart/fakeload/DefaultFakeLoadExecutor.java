@@ -64,4 +64,9 @@ public final class DefaultFakeLoadExecutor implements FakeLoadExecutor {
     public Future<Void> executeAsync(FakeLoad load) {
         return scheduler.schedule(load);
     }
+
+    @Override
+    public void shutdown() {
+        scheduler.shutdown();
+    }
 }

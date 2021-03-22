@@ -38,4 +38,9 @@ public interface SimulationInfrastructure {
      * @throws RuntimeException in case the specified decrease would cause an illegal (e.g. negative) system load
      */
     void decreaseSystemLoadBy(FakeLoad load);
+
+    /**
+     * Shuts down the simulation infrastructure.
+     */
+    void shutdown();
 }
