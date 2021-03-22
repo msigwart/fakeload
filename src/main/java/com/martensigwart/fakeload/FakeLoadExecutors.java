@@ -96,11 +96,8 @@ public final class FakeLoadExecutors {
             }
         }
 
-        return new DefaultFakeLoadExecutor(new DefaultFakeLoadScheduler(defaultInfrastructure));
+        return new DefaultFakeLoadExecutor(defaultInfrastructure);
     }
-
-        //TODO factory method where CpuSimulator type and ExecutorService or DiskInput is passed
-        //TODO utitily method to reset or kill infrastructure
 
         // prevent instantiation by suppressing default constructor
     private FakeLoadExecutors() {

@@ -37,7 +37,7 @@ import java.util.concurrent.Future;
 public interface FakeLoadExecutor {
 
     /**
-     * Executes the specified fake load in a blocking way.
+     * Executes the 'fake' system loads in a blocking way.
      *
      * <p>
      * The 'fake' system load instructions (CPU, memory, other FakeLoad objects, etc.)

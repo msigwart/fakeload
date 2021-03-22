@@ -13,9 +13,9 @@ import java.util.concurrent.*;
  * Tests for class {@link DefaultFakeLoadExecutor}
  *
  */
-public class DefaultFakeLoadExecutorTest {
+public class FakeLoadExecutionDurationTest {
 
-    private static final Logger log = LoggerFactory.getLogger(DefaultFakeLoadExecutorTest.class);
+    private static final Logger log = LoggerFactory.getLogger(FakeLoadExecutionDurationTest.class);
 
     private FakeLoadExecutor executor;
     private ScheduledExecutorService scheduler;
@@ -23,28 +23,20 @@ public class DefaultFakeLoadExecutorTest {
     @Before
     public void setup() {
 
-        executor = new DefaultFakeLoadExecutor(new FakeLoadScheduler() {
-
-            private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executor = new DefaultFakeLoadExecutor(new SimulationInfrastructure() {
+            @Override
+            public void increaseSystemLoadBy(FakeLoad load) {
+                // do nothing
+            }
 
             @Override
-            public Future<Void> schedule(FakeLoad fakeLoad) {
-
-                return executorService.submit(() -> {
-                    for (FakeLoad f : fakeLoad) {
-                        try {
-                            Thread.sleep(f.getTimeUnit().toMillis(f.getDuration()));
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException("Should not happen");
-                        }
-                    }
-                    return null;
-                });
+            public void decreaseSystemLoadBy(FakeLoad load) {
+                // do nothing
             }
 
             @Override
             public void shutdown() {
-                executorService.shutdown();
+                // do nothing
             }
         });
 
