@@ -3,8 +3,7 @@ package com.martensigwart.fakeload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 /**
  * Default implementation of the {@code FakeLoadScheduler} interface.
@@ -53,41 +52,32 @@ public final class DefaultFakeLoadScheduler implements FakeLoadScheduler {
     private Future<Void> scheduleLoad(FakeLoad fakeLoad) {
         log.trace("Started scheduling...");
 
-        CompletableFuture<Void> completableFuture = new CompletableFuture<>();
-        completableFuture.complete(null);       // Complete with null value as CompletableFuture is of type Void
-
-        for (FakeLoad load: fakeLoad) {
-
-            // schedule increase
-            completableFuture = completableFuture.thenRunAsync(() -> {
-                try {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        return executor.submit(() -> {
+            FakeLoad lastStartedLoad = null;
+            try {
+                for (FakeLoad load: fakeLoad) {
                     log.trace("Increasing system load by {}", load);
+                    lastStartedLoad = load;
                     infrastructure.increaseSystemLoadBy(load);
-
-                } catch (MaximumLoadExceededException e) {
-                    log.warn(e.getMessage());
-                    throw new RuntimeException(e.getMessage());
-                }
-            });
-
-            // schedule decrease
-            completableFuture = completableFuture.thenRunAsync(() -> {
-                try {
                     Thread.sleep(load.getTimeUnit().toMillis(load.getDuration()));
-                } catch (InterruptedException e) {
-                    // should never happen
-                    throw new RuntimeException(e);
+                    log.trace("Decreasing system load by {}", load);
+                    infrastructure.decreaseSystemLoadBy(load);
                 }
-
-                log.trace("Decreasing system load by {}", load);
-                infrastructure.decreaseSystemLoadBy(load);
-
-            });
-        }
-
-
-        log.trace("Finished scheduling.");
-        return completableFuture;
+                lastStartedLoad = null;
+                return null;
+            } catch (MaximumLoadExceededException e) {
+                log.warn(e.getMessage());
+                throw new RuntimeException(e.getMessage());
+            } catch (InterruptedException e) {
+                log.trace("FakeLoad execution cancelled");
+                // make sure to decrease the system load again when the thread was interrupted
+                infrastructure.decreaseSystemLoadBy(lastStartedLoad);
+                return null;
+            } finally {
+                executor.shutdown();
+            }
+        });
     }
 
 }

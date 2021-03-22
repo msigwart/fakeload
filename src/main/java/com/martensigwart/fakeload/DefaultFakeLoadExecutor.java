@@ -52,12 +52,16 @@ public final class DefaultFakeLoadExecutor implements FakeLoadExecutor {
         try {
             log.info("Starting FakeLoad execution...");
             log.debug("Executing {}", load);
-            Future<Void> future = scheduler.schedule(load);
-            future.get();
+            Future<Void> execution = scheduler.schedule(load);
+            execution.get();
             log.info("Finished FakeLoad execution.");
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
     }
 
+    @Override
+    public Future<Void> executeAsync(FakeLoad load) {
+        return scheduler.schedule(load);
+    }
 }

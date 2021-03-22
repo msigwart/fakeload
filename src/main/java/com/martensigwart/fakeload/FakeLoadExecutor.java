@@ -1,5 +1,7 @@
 package com.martensigwart.fakeload;
 
+import java.util.concurrent.Future;
+
 /**
  * An object that executes submitted {@link FakeLoad} objects.
  * This interface provides a way of decoupling FakeLoad submission from the mechanics of how a FakeLoad
@@ -35,20 +37,20 @@ package com.martensigwart.fakeload;
 public interface FakeLoadExecutor {
 
     /**
-     * Executes the specified fake load.
+     * Executes the specified fake load in a blocking way.
      *
      * <p>
-     * This means the 'fake' system load instructions (CPU, memory, other FakeLoad objects, etc.)
-     * contained withing the provided {@code FakeLoad} instance are simulated and executed by the executor.
-     * For example after calling {@code execute} with a FakeLoad object specifying a CPU load of 80% and
+     * The 'fake' system load instructions (CPU, memory, other FakeLoad objects, etc.)
+     * provided by the {@code FakeLoad} instance are simulated and executed by the executor.
+     * After calling {@code execute} with a FakeLoad object specifying a CPU load of 80% and
      * a duration of 10 seconds, the executor will generate a CPU load of 80% for the next 10 seconds.
      *
      * <p>
-     * Note: This should be a blocking call, meaning within a single thread the method call blocks until
-     * the execution of a fake load has finished. This is due to the fact that a fake load represents
-     * a space holder for some real computation. A real computation would take all the time it needs
-     * (and would therefore block) until it has finished, therefore the fake computation should do so as well.
-     * However, different threads calling {@code execute()} should be able to do so at the same time.
+     * Note: This is a blocking call, meaning the method call blocks until
+     * the execution of the fake load has finished. This makes sense since a fake load represents
+     * a space holder for some real computation which blocks the current thread until it has finished.
+     * However, different threads calling {@code execute()} are able to do so at the same time.
+     * For a non-blocking call, see {@link FakeLoadExecutor#executeAsync(FakeLoad)}
      *
      * @param load the FakeLoad to be executed
      * @throws NullPointerException if the load is null
@@ -57,5 +59,27 @@ public interface FakeLoadExecutor {
      */
     void execute(FakeLoad load);
 
+    /**
+     * Executes the specified fake load in a non-blocking way.
+     *
+     * <p>
+     * The 'fake' system load instructions (CPU, memory, other FakeLoad objects, etc.)
+     * provided by the {@code FakeLoad} instance are simulated and executed by the executor.
+     * After calling {@code execute} with a FakeLoad object specifying a CPU load of 80% and
+     * a duration of 10 seconds, the executor will generate a CPU load of 80% for the next 10 seconds.
+     *
+     * <p>
+     * Note: This is a non-blocking call, meaning the method returns a {@code Future} that completes
+     * when the execution of the fake load has finished.
+     * The returned Future enables the caller to cancel the fake load execution
+     * (contrary to {@link FakeLoadExecutor#execute(FakeLoad)}.
+     *
+     * @param load the FakeLoad to be executed
+     * @throws NullPointerException if the load is null
+     * @throws RuntimeException if the FakeLoad contains illegal loads or loads that
+     * would exceed the limit of a specific system load (e.g. a CPU load of more than 100%)
+     * @return A Future that completes when the fake load execution is done.
+     */
+    Future<Void> executeAsync(FakeLoad load);
 
 }

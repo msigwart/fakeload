@@ -1,8 +1,11 @@
 package com.martensigwart.fakeload;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.*;
 
@@ -12,33 +15,37 @@ import java.util.concurrent.*;
  */
 public class DefaultFakeLoadExecutorTest {
 
+    private static final Logger log = LoggerFactory.getLogger(DefaultFakeLoadExecutorTest.class);
+
     private FakeLoadExecutor executor;
+    private ScheduledExecutorService scheduler;
 
     @Before
-    public void setUp() {
+    public void setup() {
 
-        executor = new DefaultFakeLoadExecutor(new FakeLoadScheduler() {
-            @Override
-            public Future<Void> schedule(FakeLoad fakeLoad) {
+        executor = new DefaultFakeLoadExecutor(fakeLoad -> {
 
-                ExecutorService executorService = Executors.newSingleThreadExecutor();
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-                return executorService.submit(new Callable<Void>() {
-                    @Override
-                    public Void call() throws Exception {
-                        for (FakeLoad f: fakeLoad) {
-                            try {
-                                Thread.sleep(f.getTimeUnit().toMillis(f.getDuration()));
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException("Should not happen");
-                            }
-                        }
-                        return null;
+            return executorService.submit(() -> {
+                for (FakeLoad f: fakeLoad) {
+                    try {
+                        Thread.sleep(f.getTimeUnit().toMillis(f.getDuration()));
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException("Should not happen");
                     }
-                });
+                }
+                return null;
+            });
 
-            }
         });
+
+        scheduler = Executors.newSingleThreadScheduledExecutor();
+    }
+
+    @After
+    public void cleanup() {
+        scheduler.shutdown();
     }
 
     @Test
@@ -46,7 +53,8 @@ public class DefaultFakeLoadExecutorTest {
         long duration = 10;
         TimeUnit unit = TimeUnit.SECONDS;
         FakeLoad fakeLoad = FakeLoads.create().lasting(duration, unit).withCpu(20);
-        assertFakeLoadExecution(duration, unit, fakeLoad);
+        Future<Void> execution = executor.executeAsync(fakeLoad);
+        assertFakeLoadExecution(duration, unit, execution);
     }
 
 
@@ -66,16 +74,16 @@ public class DefaultFakeLoadExecutorTest {
         long startMemory = 1000;
 
         // create children
-        for (int i=0; i<noOfChildren; i++) {
+        for (int i = 0; i < noOfChildren; i++) {
             FakeLoad child = FakeLoads.create().lasting(duration, unit)
-                    .withCpu(startCPU*i)
-                    .withMemory(startMemory*i, MemoryUnit.KB);
+                    .withCpu(startCPU * i)
+                    .withMemory(startMemory * i, MemoryUnit.KB);
 
             // create grand children
-            for (int j=0; j<noOfGrandChildrenPerChild; j++) {
+            for (int j = 0; j < noOfGrandChildrenPerChild; j++) {
                 FakeLoad grandChild = FakeLoads.create().lasting(duration, unit)
-                        .withCpu(startCPU+j)
-                        .withMemory(startMemory*i+j, MemoryUnit.KB);
+                        .withCpu(startCPU + j)
+                        .withMemory(startMemory * i + j, MemoryUnit.KB);
 
                 child = child.addLoad(grandChild);
             }
@@ -84,16 +92,35 @@ public class DefaultFakeLoadExecutorTest {
 
         }
 
-        assertFakeLoadExecution(duration+duration*noOfChildren*noOfGrandChildrenPerChild, unit, parent);
+        Future<Void> execution = executor.executeAsync(parent);
+
+        assertFakeLoadExecution(duration + duration * noOfChildren * noOfGrandChildrenPerChild, unit, execution);
+    }
+
+    @Test
+    public void testInterruptedLoadExecution() {
+        FakeLoad fakeLoad = FakeLoads.create().lasting(10, TimeUnit.SECONDS).withCpu(20);
+        Future<Void> execution = executor.executeAsync(fakeLoad);
+        scheduler.schedule(() -> {
+            execution.cancel(true);
+        }, 5, TimeUnit.SECONDS);
+        assertFakeLoadExecution(5, TimeUnit.SECONDS, execution);
     }
 
 
-    private void assertFakeLoadExecution(long expectedDuration, TimeUnit unit, FakeLoad fakeLoad) {
+    private void assertFakeLoadExecution(long expectedDuration, TimeUnit unit, Future<Void> execution) {
+        log.info("Test should run for {} {}", expectedDuration, unit);
         long startTime = System.nanoTime();
-        executor.execute(fakeLoad);
+        try {
+            execution.get();
+        } catch (InterruptedException | ExecutionException | CancellationException e) {
+            log.info("Execution interrupted");
+        }
         long stopTime = System.nanoTime();
-        long executedTime = stopTime -startTime;
-        Assert.assertTrue(executedTime >= unit.toNanos(expectedDuration));
+        long executedTime = stopTime - startTime;
+        // check fake load execution time (with 2 second buffer)
+        Assert.assertTrue(executedTime >= unit.toNanos(expectedDuration) - TimeUnit.SECONDS.toNanos(2));
+        Assert.assertTrue(executedTime <= unit.toNanos(expectedDuration) + TimeUnit.SECONDS.toNanos(2));
     }
 
 }
