@@ -5,15 +5,23 @@ FakeLoad is an open-source Java library which provides a simple and flexible way
 
 Producing system load using FakeLoad is as simple as this:
 ```java
-// Creation
+// Create FakeLoad
 FakeLoad fakeload = FakeLoads.create()
     .lasting(10, TimeUnit.SECONDS)
     .withCpu(80)
     .withMemory(300, MemoryUnit.MB);
  
-// Execution
-FakeLoadExecutor executor = FakeLoadExecutors.newDefaultExecutor(); 
+// Execute FakeLoad synchronously
+FakeLoadExecutor executor = FakeLoadExecutors.newDefaultExecutor();
 executor.execute(fakeload);
+
+// Execute FakeLoad asynchronously
+Future<Void> execution = executor.executeAsync();
+execution.get(); // wait for completion
+execution.cancel(); // cancel execution
+
+// Shutdown executor
+executor.shutdown();
 ```
 The above snippet would simulate a CPU load of 80% and a memory load of 300 MB for ten seconds.
 
@@ -64,7 +72,7 @@ Sometimes [NDA](https://en.wikipedia.org/wiki/Non-disclosure_agreement)s might p
 * [FAQ](https://github.com/msigwart/fakeload/wiki/FAQ) - Frequently Asked Questions
 
 # How to contribute
-FakeLoad was created in the course of a university project so there sure is room for improvements. Feel welcome to file a bug report or submit feature requests through the [issue tracker](https://github.com/msigwart/fakeload/issues). If you want to contribute feel free to submit a pull request.
+FakeLoad was created as part of a university project so any contribution is welcome. Feel free to report bugs, request features or submit a pull request.
 
 # Acknowledgements
 * This project was started as a support for [VISP](https://visp-streaming.github.io/) – An Ecosystem for Elastic Data Stream Processing for the Internet of Things. You can find the Github project [here](https://github.com/visp-streaming).
