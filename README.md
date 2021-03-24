@@ -16,7 +16,7 @@ FakeLoadExecutor executor = FakeLoadExecutors.newDefaultExecutor();
 executor.execute(fakeload);
 
 // Execute FakeLoad asynchronously
-Future<Void> execution = executor.executeAsync();
+Future<Void> execution = executor.executeAsync(fakeload);
 execution.get(); // wait for completion
 execution.cancel(); // cancel execution
 
