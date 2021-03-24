@@ -4,7 +4,7 @@
 
     <groupId>com.martensigwart</groupId>
     <artifactId>fakeload</artifactId>
-    <version>0.7.0-SNAPSHOT</version>
+    <version>0.6.0-SNAPSHOT</version>
 
     <name>FakeLoad</name>
     <description>A library which provides a simple and flexible way of producing “fake" system loads in applications or tests.</description>
@@ -27,7 +27,7 @@
         <connection>scm:git:git://github.com/msigwart/fakeload.git</connection>
         <developerConnection>scm:git:git@github.com:msigwart/fakeload.git</developerConnection>
         <tag>v0.6.0</tag>
-  </scm>
+    </scm>
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
