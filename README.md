@@ -33,7 +33,7 @@ You can add a dependency on FakeLoad using Maven with:
 <dependency>
     <groupId>com.martensigwart</groupId>
     <artifactId>fakeload</artifactId>
-    <version>0.6.0</version>
+    <version>0.7.0</version>
 </dependency>
 ```
 To add a dependency using Gradle, use this:
@@ -43,7 +43,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.martensigwart:fakeload:0.6.0'
+    compile 'com.martensigwart:fakeload:0.7.0'
 }
 ```
 
