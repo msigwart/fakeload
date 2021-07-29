@@ -81,7 +81,10 @@ public final class LoadController implements Runnable {
         log.debug("LoadController - Started");
 
         boolean running = true;
-        operatingSystem.getCpuLoad();    // the first value reported is always zero
+        // Note: we use getSystemCpuLoad instead of getCpuLoad to allow
+        // backwards compatibility with LTS Java version 8/11.
+        // The first value reported is always zero
+        operatingSystem.getSystemCpuLoad();
         while(running) {
             try {
                 synchronized (lock) {
@@ -161,7 +164,9 @@ public final class LoadController implements Runnable {
             return;
         }
 
-        double actualCpu = operatingSystem.getCpuLoad() * 100;
+        // Note: we use getSystemCpuLoad instead of getCpuLoad to allow
+        // backwards compatibility with LTS Java version 8/11.
+        double actualCpu = operatingSystem.getSystemCpuLoad() * 100;
         log.trace("Desired CPU: {}, Actual CPU: {}, Last CPU: {}", desiredCpu, actualCpu, lastCpu);
 
         double difference = actualCpu - desiredCpu;
